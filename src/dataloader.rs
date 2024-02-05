@@ -1,0 +1,372 @@
+use std::{path::Path, usize};
+
+use image::Rgb;
+use imageproc::{
+    drawing::{draw_hollow_rect_mut, draw_text_mut},
+    rect::Rect,
+};
+use itertools::Itertools;
+use log::*;
+use rusttype::{Font, Scale};
+use serde::{Deserialize, Serialize};
+
+use crate::errors::SceneError;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Scene {
+    width: u32,
+    height: u32,
+    image_path: String,
+    objects: Vec<SceneObject>,
+    triplets: Vec<Triplet>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct SceneObject {
+    name: String,
+    top_left_corner: (u32, u32),
+    size: (u32, u32),
+    parent: Option<String>,
+    children: Vec<String>,
+    attributes: Vec<(String, String)>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Triplet {
+    from: String,
+    predicate: String,
+    to: String,
+}
+
+impl ToString for Triplet {
+    fn to_string(&self) -> String {
+        return format!(
+            "{} {} {}",
+            self.from.replace(' ', "_"),
+            self.predicate.replace(' ', "_"),
+            self.to.replace(' ', "_")
+        );
+    }
+}
+
+impl SceneObject {
+    /// Returns the name of the object, which serves as its ID.
+    /// Names must be unique in their scenes.
+    pub fn get_name(&self) -> &str {
+        return &self.name;
+    }
+
+    /// Returns coordinates (x, y) of the top left corner of the bounding box.
+    /// The unit is pixels of the original image with origin being top-left corner.
+    pub fn get_bbox_top_left_corner(&self) -> (u32, u32) {
+        return self.top_left_corner;
+    }
+
+    /// Returns the size (w, h) of bounding box of the object.
+    /// The unit is pixels of the original image.
+    pub fn get_bbox_size(&self) -> (u32, u32) {
+        return self.size;
+    }
+
+    /// Transforms the object into list of triplets that completely describe the object.
+    pub fn crumble(&self) -> Vec<Triplet> {
+        let mut triplets: Vec<Triplet> = vec![
+            Triplet {
+                from: self.name.clone(),
+                predicate: String::from("x min"),
+                to: self.top_left_corner.0.to_string(),
+            },
+            Triplet {
+                from: self.name.clone(),
+                predicate: String::from("y min"),
+                to: self.top_left_corner.1.to_string(),
+            },
+            Triplet {
+                from: self.name.clone(),
+                predicate: String::from("x max"),
+                to: self.top_left_corner.0.to_string(),
+            },
+            Triplet {
+                from: self.name.clone(),
+                predicate: String::from("y max"),
+                to: self.top_left_corner.0.to_string(),
+            },
+        ];
+        self.attributes.iter().for_each(|(k, v)| {
+            triplets.push(Triplet {
+                from: self.name.clone(),
+                predicate: k.clone(),
+                to: v.clone(),
+            })
+        });
+        if let Some(parent_name) = &self.parent {
+            triplets.push(Triplet {
+                from: self.name.clone(),
+                predicate: String::from("is part of"),
+                to: parent_name.clone(),
+            })
+        }
+        self.children.iter().for_each(|c| {
+            triplets.push(Triplet {
+                from: self.name.clone(),
+                predicate: String::from("has child object"),
+                to: c.clone(),
+            })
+        });
+        return triplets;
+    }
+}
+
+impl Scene {
+    /// Creates triplet-only representation from the scene.
+    /// All objects and their attributes will be transformed into triplets as well as the hierarchy.
+    pub fn crumble(&self) -> Vec<Triplet> {
+        let mut triplets: Vec<Triplet> = vec![];
+        for object in &self.objects {
+            triplets.append(&mut object.crumble())
+        }
+        triplets.append(&mut self.triplets.clone());
+        return triplets;
+    }
+
+    pub fn show_image(&self, labeled: bool) {
+        let red = Rgb([255u8, 0u8, 0u8]);
+        let font = Vec::from(include_bytes!("../data/Iosevka-Regular.ttf") as &[u8]);
+        let font = Font::try_from_vec(font).expect("Font loading failed");
+        let height = 13.0;
+        let scale = Scale {
+            x: height * 1.5,
+            y: height,
+        };
+        let mut img = image::open(&self.image_path).unwrap().to_rgb8();
+        if !labeled {
+            imageproc::window::display_image(&self.image_path, &img, 1920, 1080)
+        } else {
+            for obj in &self.objects {
+                let rect = Rect::at(obj.top_left_corner.0 as i32, obj.top_left_corner.1 as i32)
+                    .of_size(obj.size.0, obj.size.1);
+                draw_hollow_rect_mut(&mut img, rect, red);
+                draw_text_mut(
+                    &mut img,
+                    red,
+                    obj.top_left_corner.0 as i32,
+                    obj.top_left_corner.1 as i32,
+                    scale,
+                    &font,
+                    &obj.name,
+                )
+            }
+            imageproc::window::display_image(&self.image_path, &img, 1920, 1080)
+        }
+    }
+
+    pub fn get_object(&self, name: &str) -> Option<&SceneObject> {
+        return self.objects.iter().find(|&obj| return obj.name == name);
+    }
+
+    pub fn get_object_count(&self) -> usize {
+        return self.objects.len();
+    }
+
+    pub fn get_triplet_count(&self) -> usize {
+        return self.triplets.len();
+    }
+
+    pub fn from_file(path: &Path) -> Result<Scene, String> {
+        let Ok(raw_str) = std::fs::read_to_string(path) else {
+            return Err(format!("Can't read file '{}'", path.to_string_lossy()));
+        };
+        trace!("File '{}' succesfully loaded.", path.to_string_lossy());
+
+        let scene: Scene = match serde_json::from_str(&raw_str) {
+            Ok(scene) => scene,
+            Err(e) => {
+                return Err(format!(
+                    "Can't parse file '{}', err message: {}",
+                    path.to_string_lossy(),
+                    e
+                ));
+            }
+        };
+        trace!(
+            "File '{}' succesfully parsed into Scene.",
+            path.to_string_lossy()
+        );
+
+        for problem in scene.check() {
+            error!("{}", problem.long_info());
+        }
+
+        return Ok(scene);
+    }
+
+    /// Checks the [Scene] for:
+    ///     1. names of objects must be unique
+    ///     2. coordinates of the objects must be valid (not out of bounds)
+    ///     3. references to other objects (child/parent) must exist and be both ways
+    ///
+    /// Returns found issues as vector of [SceneError] or empty vector if everything is okay.
+    fn check(&self) -> Vec<SceneError> {
+        let mut errs: Vec<SceneError> = vec![];
+        if let Some(e) = self.check_image() {
+            errs.push(e)
+        }
+        errs.append(&mut self.check_duplicit_names());
+        errs.append(&mut self.check_coordinates());
+        errs.append(&mut self.check_object_links());
+        return errs;
+    }
+
+    /// Checks if the image associated with this scene exists on given path.
+    fn check_image(&self) -> Option<SceneError> {
+        trace!("Checking image file...");
+        if !Path::new(&self.image_path)
+            .try_exists()
+            .is_ok_and(|exists| return exists)
+        {
+            trace!("Image file was not found or is unreadable.");
+            return Some(SceneError::ImageNotFound {
+                path: self.image_path.clone(),
+            });
+        }
+        trace!("OK - image file is readable");
+        return None;
+    }
+
+    /// Checks if all objects have valid links, which means:
+    ///     1. object must not reference itself
+    ///     2. referenced objects must exist
+    ///     3. parent-child links must be both-ways
+    /// Returns a list of [SceneError] or empty list of no problems are found.
+    fn check_object_links(&self) -> Vec<SceneError> {
+        trace!("Checking for reference problems...");
+        let mut errs: Vec<SceneError> = vec![];
+        let object_names = &self
+            .objects
+            .iter()
+            .unique_by(|obj| return &obj.name)
+            .map(|obj| return &obj.name)
+            .collect_vec();
+        self.objects.iter().for_each(|obj| {
+            // object has reference to some parent:
+            if let Some(parent_name) = &obj.parent {
+                // 1. check if it is self-reference
+                if &obj.name == parent_name {
+                    errs.push(SceneError::SelfReference {
+                        name: obj.name.clone(),
+                    })
+                }
+                // 2. check if it is non-existing reference
+                if !object_names.contains(&&obj.name) {
+                    errs.push(SceneError::ParentNotFound {
+                        child_name: obj.name.clone(),
+                        parent_name: parent_name.clone(),
+                    })
+                }
+                // 3. check if parent objects have this object listed as a child
+                self.objects
+                    .iter()
+                    .filter(|o| return &o.name == parent_name)
+                    .for_each(|parent| {
+                        if !parent.children.contains(&obj.name) {
+                            errs.push(SceneError::MissingChild {
+                                child_name: obj.name.clone(),
+                                parent_name: parent_name.clone(),
+                            })
+                        }
+                    });
+            }
+
+            // for all children:
+            for child_name in &obj.children {
+                // 1. check if it is self-reference
+                if &obj.name == child_name {
+                    errs.push(SceneError::SelfReference {
+                        name: child_name.clone(),
+                    })
+                }
+                // 2. check if the referenced objects exist
+                if !object_names.contains(&child_name) {
+                    errs.push(SceneError::ChildNotFound {
+                        child_name: child_name.clone(),
+                        parent_name: obj.name.clone(),
+                    })
+                }
+                // 3. check if the children have this object listed as parent
+                self.objects
+                    .iter()
+                    .filter(|o| return &o.name == child_name)
+                    .for_each(|child| match &child.parent {
+                        None => errs.push(SceneError::MissingParent {
+                            child_name: child.name.clone(),
+                            parent_name: obj.name.clone(),
+                        }),
+                        Some(parent_name) => {
+                            if parent_name != &obj.name {
+                                errs.push(SceneError::ParentMismatch {
+                                    child_name: child.name.clone(),
+                                    current_parent_name: parent_name.clone(),
+                                    target_parent_name: obj.name.clone(),
+                                })
+                            }
+                        }
+                    })
+            }
+        });
+        match errs.len() {
+            0 => trace!("OK - no problems with references found."),
+            n => trace!("Found {} problems with referencing.", n),
+        }
+        return errs;
+    }
+
+    /// Checks if all objects have bounding boxes inside the actual image.
+    /// Returns a vector of [SceneError::BboxOutOfBounds] or empty vector if no outlayers are found.
+    fn check_coordinates(&self) -> Vec<SceneError> {
+        trace!("Checking for bounding box outlayers...");
+        let max_x = self.width;
+        let max_y = self.height;
+        let outlayers = self
+            .objects
+            .iter()
+            .filter(|obj| {
+                let obj_x = obj.top_left_corner.0 + obj.size.0;
+                let obj_y = obj.top_left_corner.1 + obj.size.1;
+                let is_out_of_bounds = obj_x > max_x || obj_y > max_y;
+                return is_out_of_bounds;
+            })
+            .map(|obj| {
+                return SceneError::BboxOutOfBounds {
+                    object: obj.clone(),
+                    scene_size: (max_x, max_y),
+                };
+            })
+            .collect_vec();
+        match outlayers.len() {
+            0 => trace!("OK - no outlayers were found."),
+            n => trace!("Found {} outlayers", n),
+        };
+        return outlayers;
+    }
+
+    /// Checks if all objects in a given Scene have unique names.
+    /// Returns vector of [SceneError::DuplicitName] or empty list if no duplicates are found.
+    fn check_duplicit_names(&self) -> Vec<SceneError> {
+        trace!("Checking for name duplicates...");
+        let mut errs: Vec<SceneError> = vec![];
+        let name_map = &self.objects.iter().counts_by(|obj| return &obj.name);
+        for (key, val) in name_map {
+            if *val > 1 {
+                errs.push(SceneError::DuplicitName {
+                    name: key.to_string(),
+                    number_of_occurences: *val as u32,
+                })
+            }
+        }
+        match errs.len() {
+            0 => trace!("OK - no duplicates found."),
+            n => trace!("Found {} duplicate(s)", n),
+        }
+        return errs;
+    }
+}

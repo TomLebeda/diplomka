@@ -1,0 +1,261 @@
+{
+  "width": 1413,
+  "height": 531,
+  "image_path": "imgs/summer_simple.png",
+  "objects": [
+    {
+      "name": "sun",
+      "top_left_corner": [
+        168,
+        23
+      ],
+      "size": [
+        245,
+        145
+      ],
+      "parent": null,
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "yellow"
+        ]
+      ]
+    },
+    {
+      "name": "clouds",
+      "top_left_corner": [
+        36,
+        90
+      ],
+      "size": [
+        564,
+        87
+      ],
+      "parent": null,
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "dog",
+      "top_left_corner": [
+        711,
+        379
+      ],
+      "size": [
+        288,
+        135
+      ],
+      "parent": null,
+      "children": [
+        "leash"
+      ],
+      "attributes": [
+        [
+          "color",
+          "brown"
+        ]
+      ]
+    },
+    {
+      "name": "squirrel",
+      "top_left_corner": [
+        1006,
+        331
+      ],
+      "size": [
+        145,
+        93
+      ],
+      "parent": null,
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "orange"
+        ]
+      ]
+    },
+    {
+      "name": "tree #2",
+      "top_left_corner": [
+        905,
+        5
+      ],
+      "size": [
+        489,
+        517
+      ],
+      "parent": null,
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "green"
+        ]
+      ]
+    },
+    {
+      "name": "bird",
+      "top_left_corner": [
+        349,
+        225
+      ],
+      "size": [
+        112,
+        59
+      ],
+      "parent": null,
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "branch",
+      "top_left_corner": [
+        392,
+        273
+      ],
+      "size": [
+        138,
+        32
+      ],
+      "parent": "tree #1",
+      "children": [],
+      "attributes": []
+    },
+    {
+      "name": "tree #1",
+      "top_left_corner": [
+        464,
+        169
+      ],
+      "size": [
+        319,
+        266
+      ],
+      "parent": null,
+      "children": [
+        "branch"
+      ],
+      "attributes": [
+        [
+          "color",
+          "green"
+        ]
+      ]
+    },
+    {
+      "name": "plane",
+      "top_left_corner": [
+        718,
+        69
+      ],
+      "size": [
+        147,
+        47
+      ],
+      "parent": null,
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "sky",
+      "top_left_corner": [
+        0,
+        0
+      ],
+      "size": [
+        1413,
+        419
+      ],
+      "parent": null,
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "ground",
+      "top_left_corner": [
+        0,
+        418
+      ],
+      "size": [
+        1413,
+        113
+      ],
+      "parent": null,
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "leash",
+      "top_left_corner": [
+        712,
+        377
+      ],
+      "size": [
+        233,
+        61
+      ],
+      "parent": "dog",
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    }
+  ],
+  "triplets": [
+    {
+      "from": "dog",
+      "predicate": "chasing",
+      "to": "squirrel"
+    },
+    {
+      "from": "squirrel",
+      "predicate": "running away from",
+      "to": "dog"
+    },
+    {
+      "from": "bird",
+      "predicate": "sitting on",
+      "to": "branch"
+    },
+    {
+      "from": "sun",
+      "predicate": "is hidden behind",
+      "to": "clouds"
+    },
+    {
+      "from": "squirrel",
+      "predicate": "climbing",
+      "to": "tree #2"
+    }
+  ]
+}
