@@ -1,32 +1,38 @@
-use std::path::Path;
-
-use dataloader::Scene;
-use log::debug;
-
+mod cli;
 mod dataloader;
 mod errors;
 
+use clap::Parser;
+use cli::*;
+use dataloader::Scene;
+use log::*;
+
 fn main() {
+    let cli = Cli::parse();
+
     env_logger::Builder::new()
-        .filter_level(log::LevelFilter::Trace)
+        .filter_level(cli.log_level.to_log_filter())
         .init();
 
-    let fp = Path::new("data/summer_simple.json");
-    match Scene::from_file(fp) {
+    match cli.command {
+        Commands::Check(args) => check_scene(args),
+    };
+}
+
+fn check_scene(args: cli::CheckArgs) {
+    match Scene::from_file(&args.path) {
         Ok(scene) => {
-            debug!(
-                "Loaded succesfully scene with {} objects and {} triplets.",
-                scene.get_object_count(),
-                scene.get_triplet_count()
-            );
-            for triplet in scene.crumble() {
-                println!("{}", triplet.to_string())
+            let problems = scene.check();
+            if problems.is_empty() {
+                info!("Scene file is OK.");
+            } else {
+                for problem in problems {
+                    error!("Scene problem: {}", problem.long_info())
+                }
             }
-            // scene.show_image(true);
         }
         Err(e) => {
-            println!("Can't load scene from file: {}", e);
-            std::process::exit(1)
+            error!("Can't load scene from file: {}", e)
         }
-    };
+    }
 }

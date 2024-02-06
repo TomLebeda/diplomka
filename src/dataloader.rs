@@ -172,6 +172,8 @@ impl Scene {
         return self.triplets.len();
     }
 
+    /// Loads scene from JSON file.
+    /// Returns error when the file is not found or is unreadable
     pub fn from_file(path: &Path) -> Result<Scene, String> {
         let Ok(raw_str) = std::fs::read_to_string(path) else {
             return Err(format!("Can't read file '{}'", path.to_string_lossy()));
@@ -193,10 +195,6 @@ impl Scene {
             path.to_string_lossy()
         );
 
-        for problem in scene.check() {
-            error!("{}", problem.long_info());
-        }
-
         return Ok(scene);
     }
 
@@ -206,7 +204,7 @@ impl Scene {
     ///     3. references to other objects (child/parent) must exist and be both ways
     ///
     /// Returns found issues as vector of [SceneError] or empty vector if everything is okay.
-    fn check(&self) -> Vec<SceneError> {
+    pub fn check(&self) -> Vec<SceneError> {
         let mut errs: Vec<SceneError> = vec![];
         if let Some(e) = self.check_image() {
             errs.push(e)
