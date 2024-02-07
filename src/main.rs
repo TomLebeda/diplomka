@@ -26,7 +26,21 @@ fn main() {
         Commands::Check(args) => print_check(args),
         Commands::Stats(args) => print_stats(args),
         Commands::List(args) => print_list(args),
+        Commands::Crumble(args) => print_crumbles(args),
     };
+}
+
+/// Crumbles the scene and prints out the generates triplets.
+fn print_crumbles(args: CrumbleArgs) {
+    match Scene::from_file(&args.path) {
+        Ok(scene) => scene
+            .crumble()
+            .iter()
+            .for_each(|crumb| println!("{}", crumb.to_string())),
+        Err(e) => {
+            error!("{}", e)
+        }
+    }
 }
 
 /// Lists selected information about the provided scene.
@@ -57,6 +71,10 @@ fn print_list(args: ListArgs) {
                 .get_attribute_values()
                 .iter()
                 .for_each(|val| println!("{}", val)),
+            ListItems::AttributesGrouped => scene
+                .get_attributes_grouped()
+                .iter()
+                .for_each(|(key, vals)| println!("{}: {}", key, vals.join(", "))),
         },
         Err(e) => {
             error!("{}", e)

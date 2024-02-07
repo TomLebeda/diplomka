@@ -1,4 +1,5 @@
 use std::{
+    collections::HashMap,
     path::{Path, PathBuf},
     usize,
 };
@@ -523,5 +524,19 @@ impl Scene {
             n => trace!("found {} duplicate(s)", n),
         }
         return errs;
+    }
+
+    /// Returns all attributes in the scene grouped by key
+    pub fn get_attributes_grouped(&self) -> Vec<(String, Vec<String>)> {
+        let attributes = self.get_attributes();
+        let mut map: HashMap<String, Vec<String>> = HashMap::new();
+        for attr in attributes {
+            if let Some(current) = map.get_mut(&attr.0) {
+                current.push(attr.1)
+            } else {
+                map.insert(attr.0, vec![attr.1]);
+            }
+        }
+        return map.into_iter().map(|(k, v)| return (k, v)).collect_vec();
     }
 }

@@ -25,6 +25,15 @@ pub enum Commands {
     Stats(StatsArgs),
     /// List selected items from the provided scene.
     List(ListArgs),
+    /// Crumbles the scene into triplets (including object attributes) and prints them.
+    Crumble(CrumbleArgs),
+}
+
+#[derive(Args, Debug)]
+/// Arguments for the "crumble" CLI command
+pub struct CrumbleArgs {
+    /// path of the JSON file containing scene description
+    pub path: PathBuf,
 }
 
 #[derive(Args, Debug)]
@@ -52,6 +61,8 @@ pub enum ListItems {
     AttributeNames,
     /// List all the attribute values used in the scene.
     AttributeVals,
+    /// List all the attributes grouped by key
+    AttributesGrouped,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
