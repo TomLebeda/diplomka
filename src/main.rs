@@ -8,6 +8,8 @@ mod dataloader;
 /// error types and associated functions
 mod errors;
 
+use std::path::PathBuf;
+
 use clap::Parser;
 use cli::*;
 use dataloader::Scene;
@@ -21,14 +23,50 @@ fn main() {
         .init();
 
     match cli.command {
-        Commands::Check(args) => check_scene(args),
-        Commands::Info(args) => print_info(args),
+        Commands::Check(args) => print_check(args),
+        Commands::Stats(args) => print_stats(args),
+        Commands::List(args) => print_list(args),
     };
+}
+
+/// Lists selected information about the provided scene.
+fn print_list(args: ListArgs) {
+    match Scene::from_file(&args.path) {
+        Ok(scene) => match args.items {
+            ListItems::Objects => scene
+                .get_object_names()
+                .iter()
+                .for_each(|name| println!("{}", name)),
+            ListItems::Triplets => scene
+                .get_all_triplets()
+                .iter()
+                .for_each(|triplet| println!("{}", triplet.to_string())),
+            ListItems::AttributeNames => scene
+                .get_attribute_names()
+                .iter()
+                .for_each(|name| println!("{}", name)),
+            ListItems::Predicates => scene
+                .get_predicates()
+                .iter()
+                .for_each(|pred| println!("{}", pred)),
+            ListItems::Attributes => scene
+                .get_attributes()
+                .iter()
+                .for_each(|attr| println!("{}: {}", attr.0, attr.1)),
+            ListItems::AttributeVals => scene
+                .get_attribute_values()
+                .iter()
+                .for_each(|val| println!("{}", val)),
+        },
+        Err(e) => {
+            error!("{}", e)
+        }
+    }
 }
 
 /// Handler for CLI command 'info'.
 /// Prints out information about specified scene.
-fn print_info(args: cli::InfoArgs) {
+fn print_stats(args: StatsArgs) {
     match Scene::from_file(&args.path) {
         Ok(scene) => {
             let problems = scene.check();
@@ -53,7 +91,7 @@ fn print_info(args: cli::InfoArgs) {
 
 /// Handler for CLI command 'check'.
 /// Loads and checks provided scene, prints out potential problems.
-fn check_scene(args: cli::CheckArgs) {
+fn print_check(args: CheckArgs) {
     match Scene::from_file(&args.path) {
         Ok(scene) => {
             let problems = scene.check();

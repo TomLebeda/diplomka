@@ -72,6 +72,28 @@ impl ToString for Triplet {
 }
 
 impl SceneObject {
+    /// Returns a list of all attribute names that are in this object.
+    pub fn get_attribute_names(&self) -> Vec<String> {
+        return self
+            .attributes
+            .iter()
+            .map(|(attr_name, _attr_val)| return attr_name.clone())
+            .collect_vec();
+    }
+    /// Returns a list of all attribute names that are in this object.
+    pub fn get_attribute_values(&self) -> Vec<String> {
+        return self
+            .attributes
+            .iter()
+            .map(|(_attr_name, attr_val)| return attr_val.clone())
+            .collect_vec();
+    }
+
+    /// Returns all unique attributes (key, value) withing this object (cloned)
+    pub fn get_attributes(&self) -> Vec<(String, String)> {
+        return self.attributes.clone();
+    }
+
     /// Returns the name of the object, which serves as its ID.
     /// Names must be unique in their scenes.
     pub fn get_name(&self) -> &str {
@@ -149,6 +171,71 @@ impl Scene {
         }
         triplets.append(&mut self.triplets.clone());
         return triplets;
+    }
+
+    /// Returns all unique attributes (key, value) present in all objects of the scene.
+    pub fn get_attributes(&self) -> Vec<(String, String)> {
+        return self
+            .objects
+            .iter()
+            .flat_map(|obj| return obj.get_attributes())
+            .unique()
+            .collect_vec();
+    }
+
+    /// Returns a list of all unique predicates, sorted alphabetically in ascending order.
+    pub fn get_predicates(&self) -> Vec<String> {
+        return self
+            .triplets
+            .iter()
+            .map(|triplet| return triplet.predicate.clone())
+            .unique()
+            .sorted()
+            .collect_vec();
+    }
+
+    /// Returns a list of all unique attribute names in all objects in the scene,
+    /// sorted alphabetically in ascending order.
+    pub fn get_attribute_names(&self) -> Vec<String> {
+        return self
+            .objects
+            .iter()
+            .flat_map(|obj| return obj.get_attribute_names())
+            .unique()
+            .sorted()
+            .collect_vec();
+    }
+
+    /// Returns a list of all unique attribute values in all objects in the scene,
+    /// sorted alphabetically in ascending order.
+    pub fn get_attribute_values(&self) -> Vec<String> {
+        return self
+            .objects
+            .iter()
+            .flat_map(|obj| return obj.get_attribute_values())
+            .unique()
+            .sorted()
+            .collect_vec();
+    }
+
+    /// Returns a list of names of all objects in the scene, sorted alphabetically in ascending order.
+    pub fn get_object_names(&self) -> Vec<String> {
+        return self
+            .objects
+            .iter()
+            .map(|obj| return obj.name.clone())
+            .sorted()
+            .collect_vec();
+    }
+
+    /// Returns a reference to vector of all SceneObjects in the scene
+    pub fn get_all_objects(&self) -> &Vec<SceneObject> {
+        return &self.objects;
+    }
+
+    /// Returns a reference to vector of all Triplets in the scene (without crumbling)
+    pub fn get_all_triplets(&self) -> &Vec<Triplet> {
+        return &self.triplets;
     }
 
     /// Opens the image of the scene
