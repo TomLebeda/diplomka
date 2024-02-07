@@ -5,6 +5,7 @@ use clap::{Args, Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(author = "Tomáš Lebeda <tom.lebeda@gmail.com>")]
+/// basic structure that represents the CLI input
 pub struct Cli {
     /// command to execute
     #[command(subcommand)]
@@ -16,11 +17,17 @@ pub struct Cli {
 }
 
 #[derive(Subcommand, Debug)]
+/// Basic commands available via the CLI
 pub enum Commands {
+    /// Check a scene JSON if everything is OK.
     Check(CheckArgs),
+
+    /// Print out summary about provided scene.
+    Info(InfoArgs),
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
+#[allow(clippy::missing_docs_in_private_items)]
 pub enum LogLevel {
     Warn,
     Info,
@@ -30,7 +37,22 @@ pub enum LogLevel {
     Off,
 }
 
+#[derive(Args, Debug)]
+/// Arguments for the "check" CLI command
+pub struct CheckArgs {
+    /// JSON file with scene description to check
+    pub path: PathBuf,
+}
+
+#[derive(Args, Debug)]
+/// Arguments for the "info" CLI command
+pub struct InfoArgs {
+    /// JSON file with scene description
+    pub path: PathBuf,
+}
+
 impl LogLevel {
+    /// converts LogLevel into log::LevelFilter for env_logger initialization
     pub fn to_log_filter(self) -> log::LevelFilter {
         match self {
             LogLevel::Trace => return log::LevelFilter::Trace,
@@ -41,10 +63,4 @@ impl LogLevel {
             LogLevel::Off => return log::LevelFilter::Off,
         }
     }
-}
-
-#[derive(Args, Debug)]
-pub struct CheckArgs {
-    /// JSON file with scene description to check
-    pub path: PathBuf,
 }
