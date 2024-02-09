@@ -5,6 +5,7 @@ use clap::{Args, Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(author = "Tomáš Lebeda <tom.lebeda@gmail.com>")]
+#[command(about = "Software for working with scenes")]
 /// basic structure that represents the CLI input
 pub struct Cli {
     /// command to execute

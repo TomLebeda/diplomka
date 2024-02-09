@@ -1,0 +1,57 @@
+#ABNF 1.0 UTF-8;
+
+language cs
+
+$object = ($sun | $bird | $branch | $clouds | $dog | $ground | $leash | $plane | $sky | $squirrel | $sun | $tree) {object};
+$attribute = $color {attribute};
+
+$color = 
+
+$sun = ($slunce | $slunko | $sluníčko) {sun};
+$slunce = slunc(e|í|i|em);
+$slunko = slunk(o|a|u|em);
+$sluníčko = sluníčk(o|a|u|em);
+
+$bird = ($pták | $ptáček) {bird};
+$pták = pták[a|u|ovi|em];
+$ptáček = ptáček | ptáčk(a|u|ovi|em);
+
+$branch = ($větev | $větvička) {branch};
+$větev = větev | větv(i|e|í);
+$větvička = větvič(ka|ky|ce|ku|ko|kou);
+
+$clouds = ($mrak | $mračno | $mráček | $oblak | $obláček) {clouds};
+$mrak = mrak[u|em|y|ama|ů|ům] | mracích;
+$mračno = mračn(o|a|u|y|ům);
+$mráček = mráček | mráčk(u|em|y|ům) | mráčcích;
+$oblak = oblak[u|em|a|y|ů|ům] | oblacích;
+$obláček = obláček | obláčk(u|em|ů|ům) | obláčcích;
+
+$dog = ($pes | $pejsek | $čokl | $psík ) {dog};
+$pes = pes | psovi | ps(a|u|ovi|em|e|y|i|sech);
+$pejsek = pejsek | pejsk(a|ovi|u|em);
+$čokl = čokl[a|u|e];
+$psík = psík[a|u|ovi|em];
+
+$ground = ($zem | $tráva) {ground};
+$zem = zem[ě|i];
+$tráva = tráv(a|ě|u|o|ou|y);
+
+$leash= $vodítko {leash};
+$vodítko = vodítk(o|a|u|em);
+
+$plane = $letadlo {plane};
+$letadlo = letadl(o|a|em|u|e);
+
+$sky = ($nebe | $obloha) {sky};
+$nebe = neb(e|i|em);
+$obloha = obloh[a|y|u|o|ou] | obloze;
+
+$squirrel = $veverka {squirrel};
+$veverka = veverk(a|y|o|u|ou) | veverce;
+
+$tree = ($strom | $stromek | $stromeček) {tree};
+$strom = strom[u|e|em|ě|y|ů|ům|ech];
+$stromek = strom(ek|ku|ky|kem|ků|kům|kách) | stromcích;
+$stromeček = stromeček | stromečk(u|em|y|ů|ům|ách) | stromečcích;
+

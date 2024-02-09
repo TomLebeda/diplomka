@@ -5,16 +5,29 @@
 	- [wiki: formats](https://en.wikipedia.org/wiki/Resource_Description_Framework#Serialization_formats)
 	- [RDF primer W3](https://www.w3.org/TR/rdf11-primer/)
 	- [RDF xml W3](https://www.w3.org/TR/rdf-syntax-grammar/)
+- Research: 
+	[Scene understanding using natural language description based on 3D semantic graph map](https://link.springer.com/article/10.1007/s11370-018-0257-x)
 
 # MAIN POINTS: 
-1. jak reprezentovat popis scény?
-2. jak převést řeč do zvoleného popisu scény?
-3. jak porovnat referenční popis s generovaným?
-4. jak vyhodnotit rozdíly?
+1. DONE: jak reprezentovat popis scény?
+2. SKIP: jak převést řeč do zvoleného popisu scény?
+3. WIP : jak porovnat referenční popis s generovaným?
+4. TODO: jak vyhodnotit rozdíly?
 
 # TODO: 
-jak řešit nejednodznačné hodnoty?
-např: pes má barvu, která je mezi hnědou a černou -> přidat logické operátory do atributů?
+1. problém: jak řešit nejednoznačné hodnoty?
+	- např: pes má barvu, která je mezi hnědou a černou 
+		1. možnost: přidat logické operátory (AND, OR) do atributů => barva = hnědá OR černá (obě správně, nulová ztráta)
+		2. možnost: udělat variabilní hodnocení (když je barva = černá a uživatel řekne hnědá, tak bude chyba minimální, na rozdíl od např červené)
+
+2. problém: když mám text (rozpoznanou přirozenou řeč) a referenční popis (triplety), jak z té řeči určit, které triplety byly určené? 
+	1. možnost: ručně sepsat gramatiky pro podchycení objektů, atributů a predikátů (=složky tripletů)
+		- nevýhoda: závisí na ručně psaných gramatikách + pracné
+	2. možnost: sestavit gramatiky pro podchycení tripletů automaticky
+		- nevýhoda: potřeba anotovaná trénovací data
+	3. možnost: využít strojové učení pro dynamické určení vzdálenosti promluvy od každého tripletu (a podle hranice určit zda byl triplet řečen, případně jak dobře)
+		- nevýhoda: potřeba neuronové sítě schopné porovnat přirozenou řeč a triplet => custom architektura (= potřeba trénovacích dat)
+			-> experimentálně vyzkoušeno, že lze generovat syntetická trénovací anotovaná data (ChatGPT), ale riziko degenerace sítě?
 
 # ASPEKTY POPISU:
 1. objekty
