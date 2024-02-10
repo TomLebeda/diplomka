@@ -3,9 +3,13 @@
 language cs
 
 $object = ($sun | $bird | $branch | $clouds | $dog | $ground | $leash | $plane | $sky | $squirrel | $sun | $tree) {object};
-$attribute = $color {attribute};
+$attribute = $has_color {attribute};
 
-$color = 
+$has_color = (
+	$object je $<./color_value> |
+	$object má [barvu] $color_value [barvu] |
+	$color_value $object
+) {has color};
 
 $sun = ($slunce | $slunko | $sluníčko) {sun};
 $slunce = slunc(e|í|i|em);
