@@ -3,3 +3,5 @@ thesis/.vimproject
 thesis/indent.log
 thesis/main.auxlock
 thesis/main.log
+thesis/data
+thesis/tikz
