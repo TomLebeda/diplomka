@@ -4,47 +4,17 @@ language cs;
 
 root $triplet;
 
-$triplet = (
-	$sun_has_color_yellow |
-	$clouds_has_color_white |
-	$dog_has_color_brown |
-	$dog_has_child_object_leash |
-	$squirrel_has_color_orange |
-	$tree_has_color_green |
-	$bird_has_color_white |
-	$branch_is_part_of_tree |
-	$tree_has_child_object_branch |
-	$plane_has_color_white |
-	$sky_has_color_white |
-	$ground_has_color_white |
-	$leash_has_color_white |
-	$leash_is_part_of_dog |
-	$dog_chasing_squirrel |
-	$squirrel_running_away_from_dog |
-	$bird_sitting_on_branch |
-	$sun_is_hidden_behind_clouds |
-	$squirrel_climbing_tree
-) {triplet};
+$triplet = $has_color | $has_child_object | $has_parent_object | $chasing | $running_away_from | $sitting_on | $climbing;
 
-$sun_has_color_yellow = ( $sun (je | má barvu) $yellow | $sun má $yellow barvu | $yellow $sun) {sun has_color yellow};
-$clouds_has_color_white = ( $clouds (je | má barvu) $white | $clouds má $white barvu | $white $clouds) {clouds has_color white};
-$dog_has_color_brown = ( $dog (je | má barvu) $brown | $dog má $brown barvu | $brown $dog) {dog has_color brown};
-$dog_has_child_object_leash = $dog má $leash {dog has_child_object leash};
-$squirrel_has_color_orange = ( $squirrel (je | má barvu) $orange | $squirrel má $orange barvu | $orange $squirrel) {squirrel has_color orange};
-$tree_has_color_green = ( $tree (je | má barvu) $green | $tree má $green barvu | $green $tree) {tree has_color green};
-$bird_has_color_white = ( $bird (je | má barvu) $white | $bird má $white barvu | $white $bird) {bird has_color white};
-$branch_is_part_of_tree = branch (je [sou]částí | patří [pod|k] | tvoří | náleží) tree {branch is_part_of tree};
-$tree_has_child_object_branch = $tree má $branch {tree has_child_object branch};
-$plane_has_color_white = ( $plane (je | má barvu) $white | $plane má $white barvu | $white $plane) {plane has_color white};
-$sky_has_color_white = ( $sky (je | má barvu) $white | $sky má $white barvu | $white $sky) {sky has_color white};
-$ground_has_color_white = ( $ground (je | má barvu) $white | $ground má $white barvu | $white $ground) {ground has_color white};
-$leash_has_color_white = ( $leash (je | má barvu) $white | $leash má $white barvu | $white $leash) {leash has_color white};
-$leash_is_part_of_dog = $leash (je [sou]částí | patří [pod|k] | tvoří | náleží) $dog {leash is_part_of dog};
-$dog_chasing_squirrel = $dog (honí | prosnásleduje | běží za | prohání) $squirrel {dog chasing squirrel};
-$squirrel_running_away_from_dog = $squirrel (utíká | běží | zdrhá) (od | před) $dog {squirrel running_away_from dog};
-$bird_sitting_on_branch = $bird sedí na branch {bird sitting_on branch};
-$sun_is_hidden_behind_clouds = $sun [je] [schovan(ý|á|é) | skryt(ý|á|é)] (za | zpoza) $clouds {sun is_hidden_behind clouds};
-$squirrel_climbing_tree = $squirrel (šplhá | leze) [na] $tree {squirrel climbing tree};
+$has_color = {obj_start} $object {obj_end} (je | má barvu) {subj_start} $color_value {subj_end} {predicate=has_color};
+$has_child_object = {obj_start} $object {obj_end} má {subj_start} $object {subj_end} {predicate=has_child_object};
+$has_parent_object = {obj_start} $object {obj_end} (je [sou]částí | (patří|náleží) [pod|k] | tvoří) {subj_start} $object {subj_end} {predicate=has_child_object};
+$running_away_from = {obj_start} $object {obj_end} (utík(á|ají) | běží | zdrh(á|ají)) (před|od) {subj_start} $object {subj_end} {predicate=running_away_from};
+$sitting_on = {obj_start} $object {obj_end} sedí na {subj_start} $object {subj_end} {predicate=sitting_on};
+$climbing = {obj_start} $object {obj_end} (leze | šplhá) na {subj_start} $object {subj_end} {predicate=climbing};
+$chasing = {obj_start} $object {obj_end} ((honí | pronásleduj(í|ou|e)) | (běží | utík(á|ají) za | prohán(í|ějí))) {subj_start} $object {subj_end} {predicate=chasing};
+
+$object = $sun | $bird | $branch | $clouds | $dog | $ground | $leash | $plane | $sky | $squirrel | $tree;
 
 $sun = (slunce | slunci | sluncí | sluncem | slunko | slunka | slunku | slunkem | sluníčko | sluníčka | sluníčku | sluníčkem) {sun};
 $bird = (pták | ptáka | ptáku | ptákovi | ptákem | ptáček | ptáčka | ptáčkovi | ptáčkem) {bird};
@@ -55,7 +25,7 @@ $ground = (zem | země | zemi | tráva | trávě | trávu | trávo | trávou | t
 $leash= (vodítko | vodítka | vodítku | vodítkem) {leash};
 $plane = (letadlo | letadla | letadlem | letadlu | letadle) {plane};
 $sky = (nebe | nebi | nebem | obloha | oblohy | obloze | oblohu | oblohou) {sky};
-$squirrel = (veverka | veverky | veverkou | veverko | veverce ) {squirrel};
+$squirrel = (veverka | veverky | veverkou | veverko | veverce | veverku ) {squirrel};
 $tree = (strom | stromu | stromem | stromě | stromů | stromy | stromech | stromům | stromek | stromky | stromku | stromkem | stromků | stromkům | stromkách | stromcích | stromeček | stromečku | stromečkem | stromečkům | stromečků | stromečcích | stromečkách ) {tree};
 
 $color_value = (

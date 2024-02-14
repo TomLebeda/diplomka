@@ -147,7 +147,7 @@ impl SceneObject {
         if let Some(parent_name) = &self.parent {
             triplets.push(Triplet {
                 from: self.name.clone(),
-                predicate: String::from("is part of"),
+                predicate: String::from("has parent object"),
                 to: parent_name.clone(),
             })
         }
@@ -237,38 +237,6 @@ impl Scene {
     /// Returns a reference to vector of all Triplets in the scene (without crumbling)
     pub fn get_all_triplets(&self) -> &Vec<Triplet> {
         return &self.triplets;
-    }
-
-    /// Opens the image of the scene
-    pub fn show_image(&self, labeled: bool) {
-        let red = Rgb([255u8, 0u8, 0u8]);
-        let font = Vec::from(include_bytes!("../data/Iosevka-Regular.ttf") as &[u8]);
-        let font = Font::try_from_vec(font).expect("Font loading failed");
-        let height = 13.0;
-        let scale = Scale {
-            x: height * 1.5,
-            y: height,
-        };
-        let mut img = image::open(&self.image_path).unwrap().to_rgb8();
-        if !labeled {
-            imageproc::window::display_image(&self.image_path, &img, 1920, 1080)
-        } else {
-            for obj in &self.objects {
-                let rect = Rect::at(obj.top_left_corner.0 as i32, obj.top_left_corner.1 as i32)
-                    .of_size(obj.size.0, obj.size.1);
-                draw_hollow_rect_mut(&mut img, rect, red);
-                draw_text_mut(
-                    &mut img,
-                    red,
-                    obj.top_left_corner.0 as i32,
-                    obj.top_left_corner.1 as i32,
-                    scale,
-                    &font,
-                    &obj.name,
-                )
-            }
-            imageproc::window::display_image(&self.image_path, &img, 1920, 1080)
-        }
     }
 
     /// Searches for object by name and returns it.
