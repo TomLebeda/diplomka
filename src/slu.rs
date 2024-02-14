@@ -1,6 +1,6 @@
 use gasp::Grammar;
 use itertools::Itertools;
-use log::debug;
+use log::{debug, warn};
 use regex::Regex;
 
 use crate::dataloader::Triplet;
@@ -52,6 +52,18 @@ pub fn get_triplets(text: &str, grammar: Grammar) -> Vec<Triplet> {
             }) else {
                 return None;
             };
+            if obj.len() > 1 {
+                warn!(
+                    "found multiple tags \"{:?}\" as an OBJECT when extracting triplet",
+                    obj
+                );
+            }
+            if subj.len() > 1 {
+                warn!(
+                    "found multiple tags \"{:?}\" as an SUBJECT when extracting triplet",
+                    subj
+                );
+            }
             return Some(Triplet {
                 from: obj.join(" "),
                 to: subj.join(" "),

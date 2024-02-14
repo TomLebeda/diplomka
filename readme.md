@@ -8,7 +8,9 @@
 	- [ ] binární hodnocení tripletů (počet)
 	- [ ] ztrátové funkce pro barvy
 	- [ ] ztrátové funkce pro objekty
-- [x] extrakce tripletů z textu
+- [-] extrakce tripletů z textu
+	- [x] základní extrakce
+	- [x] validace počtu tagů
 - [ ] vizualizace popisu scény
 	- [ ] online (web ui)
 	- [ ] lokální (png/svg export)
