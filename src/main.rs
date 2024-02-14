@@ -7,6 +7,8 @@ mod cli;
 mod dataloader;
 /// error types and associated functions
 mod errors;
+/// spoken language understanding module for handling the natural language (text) processing
+mod slu;
 
 use std::path::PathBuf;
 
@@ -14,6 +16,7 @@ use clap::Parser;
 use cli::*;
 use dataloader::Scene;
 use log::*;
+use slu::get_triplets;
 
 fn main() {
     let cli = Cli::parse();
@@ -27,7 +30,26 @@ fn main() {
         Commands::Stats(args) => print_stats(args),
         Commands::List(args) => print_list(args),
         Commands::Crumble(args) => print_crumbles(args),
+        Commands::Triplets(args) => print_triplets(args),
     };
+}
+
+/// Print all the triplets found in the text using the provided grammar.
+/// Triplet is detected as a [gasp::ParseResult] that contains all of the following patterns inside it's tags:
+///     1. object: {obj_start} {object-label} {obj_end}
+///     2. predicate: {predicate=predicate-label}
+///     3. subject: {subj_start} {subj-label} {subj_end}
+fn print_triplets(args: TripletsArgs) {
+    match gasp::Grammar::from_file(&args.grammar, false) {
+        Ok(grammar) => {
+            get_triplets(&args.text, grammar)
+                .iter()
+                .for_each(|t| println!("{}", t));
+        }
+        Err(e) => {
+            error!("Can't obtain grammar: {}", e);
+        }
+    }
 }
 
 /// Crumbles the scene and prints out the generates triplets.
@@ -36,7 +58,7 @@ fn print_crumbles(args: CrumbleArgs) {
         Ok(scene) => scene
             .crumble()
             .iter()
-            .for_each(|crumb| println!("{}", crumb.to_string())),
+            .for_each(|crumb| println!("{}", crumb)),
         Err(e) => {
             error!("{}", e)
         }
@@ -54,7 +76,7 @@ fn print_list(args: ListArgs) {
             ListItems::Triplets => scene
                 .get_all_triplets()
                 .iter()
-                .for_each(|triplet| println!("{}", triplet.to_string())),
+                .for_each(|triplet| println!("{}", triplet)),
             ListItems::AttributeNames => scene
                 .get_attribute_names()
                 .iter()

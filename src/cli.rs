@@ -28,6 +28,17 @@ pub enum Commands {
     List(ListArgs),
     /// Crumbles the scene into triplets (including object attributes) and prints them.
     Crumble(CrumbleArgs),
+    /// Extracts triplets from provided text using provided grammar
+    Triplets(TripletsArgs),
+}
+
+#[derive(Args, Debug)]
+/// Arguments for the "crumble" CLI command
+pub struct TripletsArgs {
+    /// path to the abnf file that should be used for parsing
+    pub grammar: PathBuf,
+    /// string that will be parsed with the grammar
+    pub text: String,
 }
 
 #[derive(Args, Debug)]

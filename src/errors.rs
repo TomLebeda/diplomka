@@ -127,12 +127,8 @@ impl SceneError {
             ),
             SceneError::SelfReference { name } => format!("object '{}' references itself (as a child or parent)", name),
             SceneError::ImageNotFound { path } => format!("scene referes to image file '{}' which is not found or is not readable", path),
-            SceneError::TripletFromNotFound { triplet } => format!("object '{}' in triplet '{}' does not exist", 
-                triplet.from, triplet.to_string()
-            ),
-            SceneError::TripletToNotFound { triplet } => format!("object '{}' in triplet '{}' does not exist", 
-                triplet.to, triplet.to_string()
-            ),
+            SceneError::TripletFromNotFound { triplet } => format!("object '{}' in triplet '{}' does not exist", triplet.from, triplet), 
+            SceneError::TripletToNotFound { triplet } => format!("object '{}' in triplet '{}' does not exist", triplet.to, triplet),
         };
     }
 }

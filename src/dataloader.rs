@@ -1,5 +1,6 @@
 use std::{
     collections::HashMap,
+    fmt::Display,
     path::{Path, PathBuf},
     usize,
 };
@@ -61,9 +62,10 @@ pub struct Triplet {
     pub to: String,
 }
 
-impl ToString for Triplet {
-    fn to_string(&self) -> String {
-        return format!(
+impl Display for Triplet {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        return write!(
+            f,
             "{} {} {}",
             self.from.replace(' ', "_"),
             self.predicate.replace(' ', "_"),
