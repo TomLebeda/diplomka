@@ -8,13 +8,13 @@
 	- [ ] binární hodnocení tripletů (počet)
 	- [ ] ztrátové funkce pro barvy
 	- [ ] ztrátové funkce pro objekty
-- [-] extrakce tripletů z textu
+- [x] extrakce tripletů z textu
 	- [x] základní extrakce
 	- [x] validace počtu tagů
 - [ ] vizualizace popisu scény
 	- [ ] online (web ui)
 	- [ ] lokální (png/svg export)
-- [ ] multi-layer hierarchie objektů
+- [x] multi-layer hierarchie objektů
 - [x] crumbling systém
 - [x] tooling pro práci s reprezentací scény
 	- [x] parsing

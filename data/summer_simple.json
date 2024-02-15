@@ -13,7 +13,7 @@
         245,
         145
       ],
-      "parent": null,
+      "parents": [],
       "children": [],
       "attributes": [
         [
@@ -32,7 +32,7 @@
         564,
         87
       ],
-      "parent": null,
+      "parents": [],
       "children": [],
       "attributes": [
         [
@@ -51,7 +51,7 @@
         288,
         135
       ],
-      "parent": null,
+      "parents": [],
       "children": [
         "leash"
       ],
@@ -72,7 +72,7 @@
         145,
         93
       ],
-      "parent": null,
+      "parents": [],
       "children": [],
       "attributes": [
         [
@@ -91,7 +91,7 @@
         489,
         517
       ],
-      "parent": null,
+      "parents": [],
       "children": [],
       "attributes": [
         [
@@ -110,7 +110,7 @@
         112,
         59
       ],
-      "parent": null,
+      "parents": [],
       "children": [],
       "attributes": [
         [
@@ -129,7 +129,9 @@
         138,
         32
       ],
-      "parent": "tree #1",
+      "parents": [
+        "tree #1"
+      ],
       "children": [],
       "attributes": []
     },
@@ -143,7 +145,7 @@
         319,
         266
       ],
-      "parent": null,
+      "parents": [],
       "children": [
         "branch"
       ],
@@ -164,7 +166,7 @@
         147,
         47
       ],
-      "parent": null,
+      "parents": [],
       "children": [],
       "attributes": [
         [
@@ -183,7 +185,7 @@
         1413,
         419
       ],
-      "parent": null,
+      "parents": [],
       "children": [],
       "attributes": [
         [
@@ -202,7 +204,7 @@
         1413,
         113
       ],
-      "parent": null,
+      "parents": [],
       "children": [],
       "attributes": [
         [
@@ -221,7 +223,9 @@
         233,
         61
       ],
-      "parent": "dog",
+      "parents": [
+        "dog"
+      ],
       "children": [],
       "attributes": [
         [

@@ -43,8 +43,8 @@ pub struct SceneObject {
     top_left_corner: (u32, u32),
     /// size (width, height) of the bounding box in pixels
     size: (u32, u32),
-    /// name of parent object, None if this object isn't part of some other object
-    parent: Option<String>,
+    /// names of parent objects, empty if this object doesn't have any parent objects
+    parents: Vec<String>,
     /// names of child objects, empty vec if this object doesn't consist of other objects.
     children: Vec<String>,
     /// list of attributes (key, value) of this object
@@ -146,13 +146,13 @@ impl SceneObject {
                 to: v.clone(),
             })
         });
-        if let Some(parent_name) = &self.parent {
+        self.parents.iter().for_each(|parent| {
             triplets.push(Triplet {
                 from: self.name.clone(),
                 predicate: String::from("has parent object"),
-                to: parent_name.clone(),
+                to: parent.clone(),
             })
-        }
+        });
         self.children.iter().for_each(|c| {
             triplets.push(Triplet {
                 from: self.name.clone(),
@@ -374,8 +374,8 @@ impl Scene {
             .map(|obj| return &obj.name)
             .collect_vec();
         self.objects.iter().for_each(|obj| {
-            // object has reference to some parent:
-            if let Some(parent_name) = &obj.parent {
+            // check the parent objects
+            obj.parents.iter().for_each(|parent_name| {
                 // 1. check if it is self-reference
                 if &obj.name == parent_name {
                     errs.push(SceneError::SelfReference {
@@ -401,9 +401,9 @@ impl Scene {
                             })
                         }
                     });
-            }
+            });
 
-            // for all children:
+            // and now the reverse for children:
             for child_name in &obj.children {
                 // 1. check if it is self-reference
                 if &obj.name == child_name {
@@ -418,25 +418,18 @@ impl Scene {
                         parent: obj.name.clone(),
                     })
                 }
-                // 3. check if the children have this object listed as parent
+                // 3. check if child objects have this object listed as a parent
                 self.objects
                     .iter()
                     .filter(|o| return &o.name == child_name)
-                    .for_each(|child| match &child.parent {
-                        None => errs.push(SceneError::MissingParent {
-                            child: child.name.clone(),
-                            parent: obj.name.clone(),
-                        }),
-                        Some(parent_name) => {
-                            if parent_name != &obj.name {
-                                errs.push(SceneError::ParentMismatch {
-                                    child: child.name.clone(),
-                                    current: parent_name.clone(),
-                                    target: obj.name.clone(),
-                                })
-                            }
+                    .for_each(|child| {
+                        if !child.parents.contains(&obj.name) {
+                            errs.push(SceneError::MissingParent {
+                                parent: obj.name.clone(),
+                                child: child_name.clone(),
+                            })
                         }
-                    })
+                    });
             }
         });
         match errs.len() {
