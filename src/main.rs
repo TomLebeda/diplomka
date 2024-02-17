@@ -17,11 +17,11 @@ use std::path::PathBuf;
 use clap::Parser;
 use cli::*;
 use dataloader::Scene;
-use fetch::fetch_word_forms;
+use fetch::fetch_forms;
 use log::*;
 use slu::get_triplets;
 
-use crate::fetch::fetch_word_synonyms;
+use crate::fetch::{fetch_related, fetch_synonyms};
 
 fn main() {
     let cli = Cli::parse();
@@ -43,10 +43,12 @@ fn main() {
 /// Print the result of 'fetch' CLI command
 fn print_fetch(args: FetchArgs) {
     trace!("executing 'fetch' command");
-    let forms = fetch_word_forms(&args.word);
+    let forms = fetch_forms(&args.word);
     println!("{} - forms: {}", &args.word, forms.join(", "));
-    let synonyms = fetch_word_synonyms(&args.word);
+    let synonyms = fetch_synonyms(&args.word);
     println!("{} - synonyms: {}", &args.word, synonyms.join(", "));
+    let related = fetch_related(&args.word);
+    println!("{} - related: {}", &args.word, related.join(", "));
 }
 
 /// Print all the triplets found in the text using the provided grammar.

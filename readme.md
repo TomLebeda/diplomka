@@ -2,6 +2,7 @@
 - [ ] polo-automatize tvoření gramatik
 	- [x] automatizace hledání tvarů
 	- [x] automatizace hledání synonym
+	- [x] automatizace hledání souvisejících slov
 	- [ ] automatizace generování pravidel ze slovníku forem
 	- [ ] automatizace kontroly, zda gramatika postihuje celou scénu
 - [ ] systém hodnocení
