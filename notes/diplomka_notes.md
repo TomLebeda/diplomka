@@ -42,7 +42,7 @@ vícevrstvá hierarchie
 	- co by mohlo nastat dále, co mohlo předcházet
 	- co by mohlo být příčinou nějakých dějů/stavů
 
-# NÁPADY NA OBRAZKY: 
+# NÁPADY NA OBRÁZKY:
 - les (různá roční období), farma, domácnost (kuchyně, dílna, ...), zoo, město, hřiště (dětské, různé sporty), pláž
 
 

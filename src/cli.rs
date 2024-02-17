@@ -13,7 +13,7 @@ pub struct Cli {
     pub command: Commands,
 
     /// level of logging details (into stderr)
-    #[arg(short, long, value_enum, default_value_t = LogLevel::Info)]
+    #[arg(short, long, value_enum, default_value_t = LogLevel::Trace)]
     pub log_level: LogLevel,
 }
 
@@ -30,6 +30,8 @@ pub enum Commands {
     Crumble(CrumbleArgs),
     /// Extracts triplets from provided text using provided grammar
     Triplets(TripletsArgs),
+    /// Fetch forms or synonyms of given word from the internet or other data sources
+    Fetch(FetchArgs),
 }
 
 #[derive(Args, Debug)]
@@ -56,6 +58,13 @@ pub struct ListArgs {
     pub items: ListItems,
     /// path of the JSON file containing scene description
     pub path: PathBuf,
+}
+
+#[derive(Args, Debug)]
+/// Arguments for the "fetch" CLI command
+pub struct FetchArgs {
+    /// for what word to fetch the data
+    pub word: String,
 }
 
 /// What to actually list from the scene

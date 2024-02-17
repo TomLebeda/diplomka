@@ -1,0 +1,152 @@
+{
+  "parse": {
+    "title": "kluk",
+    "pageid": 5381,
+    "sections": [
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "\\u010de\\u0161tina",
+        "number": "1",
+        "index": "1",
+        "fromtitle": "kluk",
+        "byteoffset": 14,
+        "anchor": "\\u010de\\u0161tina",
+        "linkAnchor": "\\u010de\\u0161tina"
+      },
+      {
+        "toclevel": 2,
+        "level": "3",
+        "line": "v\\u00fdslovnost",
+        "number": "1.1",
+        "index": "2",
+        "fromtitle": "kluk",
+        "byteoffset": 29,
+        "anchor": "v\\u00fdslovnost",
+        "linkAnchor": "v\\u00fdslovnost"
+      },
+      {
+        "toclevel": 2,
+        "level": "3",
+        "line": "d\\u011blen\\u00ed",
+        "number": "1.2",
+        "index": "3",
+        "fromtitle": "kluk",
+        "byteoffset": 93,
+        "anchor": "d\\u011blen\\u00ed",
+        "linkAnchor": "d\\u011blen\\u00ed"
+      },
+      {
+        "toclevel": 2,
+        "level": "3",
+        "line": "podstatn\\u00e9 jm\\u00e9no",
+        "number": "1.3",
+        "index": "4",
+        "fromtitle": "kluk",
+        "byteoffset": 116,
+        "anchor": "podstatn\\u00e9_jm\\u00e9no",
+        "linkAnchor": "podstatn\\u00e9_jm\\u00e9no"
+      },
+      {
+        "toclevel": 3,
+        "level": "4",
+        "line": "sklo\\u0148ov\\u00e1n\\u00ed",
+        "number": "1.3.1",
+        "index": "5",
+        "fromtitle": "kluk",
+        "byteoffset": 166,
+        "anchor": "sklo\\u0148ov\\u00e1n\\u00ed",
+        "linkAnchor": "sklo\\u0148ov\\u00e1n\\u00ed"
+      },
+      {
+        "toclevel": 3,
+        "level": "4",
+        "line": "v\\u00fdznam",
+        "number": "1.3.2",
+        "index": "6",
+        "fromtitle": "kluk",
+        "byteoffset": 472,
+        "anchor": "v\\u00fdznam",
+        "linkAnchor": "v\\u00fdznam"
+      },
+      {
+        "toclevel": 3,
+        "level": "4",
+        "line": "p\\u0159eklady",
+        "number": "1.3.3",
+        "index": "7",
+        "fromtitle": "kluk",
+        "byteoffset": 1189,
+        "anchor": "p\\u0159eklady",
+        "linkAnchor": "p\\u0159eklady"
+      },
+      {
+        "toclevel": 3,
+        "level": "4",
+        "line": "synonyma",
+        "number": "1.3.4",
+        "index": "8",
+        "fromtitle": "kluk",
+        "byteoffset": 2156,
+        "anchor": "synonyma",
+        "linkAnchor": "synonyma"
+      },
+      {
+        "toclevel": 3,
+        "level": "4",
+        "line": "antonyma",
+        "number": "1.3.5",
+        "index": "9",
+        "fromtitle": "kluk",
+        "byteoffset": 2565,
+        "anchor": "antonyma",
+        "linkAnchor": "antonyma"
+      },
+      {
+        "toclevel": 3,
+        "level": "4",
+        "line": "souvisej\\u00edc\\u00ed",
+        "number": "1.3.6",
+        "index": "10",
+        "fromtitle": "kluk",
+        "byteoffset": 2609,
+        "anchor": "souvisej\\u00edc\\u00ed",
+        "linkAnchor": "souvisej\\u00edc\\u00ed"
+      },
+      {
+        "toclevel": 3,
+        "level": "4",
+        "line": "slovn\\u00ed spojen\\u00ed",
+        "number": "1.3.7",
+        "index": "11",
+        "fromtitle": "kluk",
+        "byteoffset": 2716,
+        "anchor": "slovn\\u00ed_spojen\\u00ed",
+        "linkAnchor": "slovn\\u00ed_spojen\\u00ed"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "pozn\\u00e1mky",
+        "number": "2",
+        "index": "12",
+        "fromtitle": "kluk",
+        "byteoffset": 2797,
+        "anchor": "pozn\\u00e1mky",
+        "linkAnchor": "pozn\\u00e1mky"
+      },
+      {
+        "toclevel": 1,
+        "level": "2",
+        "line": "extern\\u00ed odkazy",
+        "number": "3",
+        "index": "13",
+        "fromtitle": "kluk",
+        "byteoffset": 2892,
+        "anchor": "extern\\u00ed_odkazy",
+        "linkAnchor": "extern\\u00ed_odkazy"
+      }
+    ],
+    "showtoc": ""
+  }
+}

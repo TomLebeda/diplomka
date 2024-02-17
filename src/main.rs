@@ -7,6 +7,8 @@ mod cli;
 mod dataloader;
 /// error types and associated functions
 mod errors;
+/// contains fetching of word forms and synonyms from the internet
+mod fetch;
 /// spoken language understanding module for handling the natural language (text) processing
 mod slu;
 
@@ -15,6 +17,7 @@ use std::path::PathBuf;
 use clap::Parser;
 use cli::*;
 use dataloader::Scene;
+use fetch::fetch_word_forms;
 use log::*;
 use slu::get_triplets;
 
@@ -22,7 +25,7 @@ fn main() {
     let cli = Cli::parse();
 
     env_logger::Builder::new()
-        .filter_level(cli.log_level.to_log_filter())
+        .filter_module("diplomka", cli.log_level.to_log_filter())
         .init();
 
     match cli.command {
@@ -31,6 +34,22 @@ fn main() {
         Commands::List(args) => print_list(args),
         Commands::Crumble(args) => print_crumbles(args),
         Commands::Triplets(args) => print_triplets(args),
+        Commands::Fetch(args) => print_fetch(args),
+    };
+}
+
+/// Print the result of 'fetch' CLI command
+fn print_fetch(args: FetchArgs) {
+    trace!("executing 'fetch' command");
+    match fetch_word_forms(&args.word) {
+        Ok(forms) => {
+            for form in forms {
+                println!("{}", form)
+            }
+        }
+        Err(e) => {
+            error!("fetching failed: {e}")
+        }
     };
 }
 
@@ -40,6 +59,7 @@ fn main() {
 ///     2. predicate: {predicate=predicate-label}
 ///     3. subject: {subj_start} {subj-label} {subj_end}
 fn print_triplets(args: TripletsArgs) {
+    trace!("executing 'triplets' command");
     match gasp::Grammar::from_file(&args.grammar, false) {
         Ok(grammar) => {
             get_triplets(&args.text, grammar)
@@ -54,6 +74,7 @@ fn print_triplets(args: TripletsArgs) {
 
 /// Crumbles the scene and prints out the generates triplets.
 fn print_crumbles(args: CrumbleArgs) {
+    trace!("executing 'crumble' command");
     match Scene::from_file(&args.path) {
         Ok(scene) => scene
             .crumble()
@@ -67,6 +88,7 @@ fn print_crumbles(args: CrumbleArgs) {
 
 /// Lists selected information about the provided scene.
 fn print_list(args: ListArgs) {
+    trace!("executing 'list' command");
     match Scene::from_file(&args.path) {
         Ok(scene) => match args.items {
             ListItems::Objects => scene
@@ -107,6 +129,7 @@ fn print_list(args: ListArgs) {
 /// Handler for CLI command 'info'.
 /// Prints out information about specified scene.
 fn print_stats(args: StatsArgs) {
+    trace!("executing 'stats' command");
     match Scene::from_file(&args.path) {
         Ok(scene) => {
             let problems = scene.check();
@@ -132,6 +155,7 @@ fn print_stats(args: StatsArgs) {
 /// Handler for CLI command 'check'.
 /// Loads and checks provided scene, prints out potential problems.
 fn print_check(args: CheckArgs) {
+    trace!("executing 'check' command");
     match Scene::from_file(&args.path) {
         Ok(scene) => {
             let problems = scene.check();
