@@ -33,31 +33,126 @@ struct WikiSection {
     idx: usize,
 }
 
-impl Display for FetchErr {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        return match self {
-            FetchErr::NoResponse => write!(f, "no response"),
-            FetchErr::Status(code) => write!(f, "status {}", code),
-            FetchErr::ParsingFailed => write!(f, "parsing failed"),
-            FetchErr::KeyNotFound => write!(f, "key not found"),
-            FetchErr::StructureMismatch => write!(f, "structure mismatch"),
-            FetchErr::MissingSection(sec) => write!(f, "missing section \"{}\"", sec),
-        };
-    }
-}
-
-/// Fetches word forms from all available data sources and
+/// Fetches word synonyms and other related words from all available data sources and
 /// returns them as a vector of strings.
-/// Results will be unique and sorted.
-pub fn fetch_word_forms(word: &str) -> Result<Vec<String>, FetchErr> {
-    trace!("fetching word forms for \"{}\"", word);
-    let sections = fetch_wiki_sections(word)?;
+/// Values will be unique and sorted.
+/// Returns empty vector if some error is encountered.
+pub fn fetch_word_synonyms(word: &str) -> Vec<String> {
+    trace!("fetching synonyms and derivates for \"{}\"", word);
+    let Ok(sections) = fetch_wiki_sections(word) else {
+        return vec![];
+    };
     let Some(czech_prefix) = sections
         .iter()
         .find(|sec| return sec.line == "čeština")
         .map(|sec| return &sec.number)
     else {
-        return Err(FetchErr::MissingSection(String::from("čeština")));
+        return vec![];
+        // return Err(FetchErr::MissingSection(String::from("čeština")));
+    };
+    if let Some(sec_synonyms) = sections
+        .iter()
+        .filter(|sec| return sec.number.starts_with(czech_prefix))
+        .filter(|sec| return sec.line == "synonyma")
+        .collect_vec()
+        .first()
+    {
+        trace!("found section \"synonyma\" for \"{}\"", word);
+        return fetch_wiki_synonyms(sec_synonyms, word);
+    } else {
+        trace!("didn't find section \"synonyma\" for \"{}\"", word);
+        return vec![];
+    };
+}
+
+/// fetches all synonyms for given word from given section
+fn fetch_wiki_synonyms(sec: &WikiSection, word: &str) -> Vec<String> {
+    trace!(
+        "fetching wiki section \"{}\" [{}] for word \"{}\"",
+        sec.line,
+        sec.number,
+        word
+    );
+    match ureq::get(
+        format!(
+            "https://cs.wiktionary.org/w/api.php?action={}&format={}&page={}&section={}&prop={}",
+            "parse", "json", word, sec.idx, "parsetree"
+        )
+        .as_str(),
+    )
+    .call()
+    {
+        Ok(resp) => match resp.status() {
+            200 => {
+                let value_regex =
+                    Regex::new(r"\[\[(.*?)\]\]").expect("regex for value extraction is invalid");
+                trace!("recevied response with code OK-200, processing further");
+                let Ok(json) = resp.into_json::<Value>() else {
+                    error!("received response can't be parsed into JSON");
+                    return vec![];
+                };
+                let Some(parse) = json.get("parse") else {
+                    error!("received response doesn't have \"parse\" key");
+                    return vec![];
+                };
+                let Some(parsetree) = parse.get("parsetree").and_then(|v| return v.get("*")) else {
+                    error!("received response doesn't have \"parse.parsetree.*\" key");
+                    return vec![];
+                };
+                let Some(haystack) = parsetree.as_str() else {
+                    error!("value at key \"parse.parsetree.*\" isn't string");
+                    return vec![];
+                };
+                let haystack = haystack.replace('\n', " ");
+                trace!("obtained hasystack, extracting forms",);
+                let synonyms = value_regex
+                    .find_iter(&haystack)
+                    .map(|v| return v.as_str())
+                    .map(|s| return s.trim_start_matches("[["))
+                    .map(|s| return s.trim_end_matches("]]"))
+                    // .map(|s| return s.replace(['[', ']'], ""))
+                    .flat_map(|s| {
+                        return s
+                            .split([',', ';', '/'])
+                            // .map(|v| return v.to_owned())
+                            .collect_vec();
+                    })
+                    .map(|val: &str| return val.trim())
+                    .sorted_unstable()
+                    .unique()
+                    .map(|s| return s.to_owned())
+                    .collect_vec();
+                trace!("obtained {} synonyms for word \"{}\"", synonyms.len(), word);
+                return synonyms;
+            }
+            code => {
+                error!("received response with code {}", code);
+                return vec![];
+            }
+        },
+        Err(e) => {
+            error!("didn't receive any valid response");
+            return vec![];
+        }
+    }
+}
+
+/// Fetches word forms from all available data sources and
+/// returns them as a vector of strings.
+/// Values will be unique and sorted.
+/// Returns empty vector if some error is encountered.
+pub fn fetch_word_forms(word: &str) -> Vec<String> {
+    trace!("fetching word forms for \"{}\"", word);
+    let Ok(sections) = fetch_wiki_sections(word) else {
+        return vec![];
+    };
+    let Some(czech_prefix) = sections
+        .iter()
+        .find(|sec| return sec.line == "čeština")
+        .map(|sec| return &sec.number)
+    else {
+        return vec![];
+        // return Err(FetchErr::MissingSection(String::from("čeština")));
     };
     let sections_of_interest = sections
         .iter()
@@ -73,7 +168,7 @@ pub fn fetch_word_forms(word: &str) -> Result<Vec<String>, FetchErr> {
         .iter()
         .flat_map(|soi| return fetch_wiki_forms(word, soi))
         .collect_vec();
-    return Ok(forms);
+    return forms;
 }
 
 /// Fetches and parses word forms from wiktionary from provided section.
@@ -100,15 +195,19 @@ fn fetch_wiki_forms(word: &str, sec: &WikiSection) -> Vec<String> {
                     .expect("regex for value extraction is invalid");
                 trace!("recevied response with code OK-200, processing further");
                 let Ok(json) = resp.into_json::<Value>() else {
+                    error!("received response can't be parsed into JSON");
                     return vec![];
                 };
                 let Some(parse) = json.get("parse") else {
+                    error!("received response doesn't have \"parse\" key");
                     return vec![];
                 };
                 let Some(parsetree) = parse.get("parsetree").and_then(|v| return v.get("*")) else {
+                    error!("received response doesn't have \"parse.parsetree.*\" key");
                     return vec![];
                 };
                 let Some(haystack) = parsetree.as_str() else {
+                    error!("value at key \"parse.parsetree.*\" isn't string");
                     return vec![];
                 };
                 let haystack = haystack.replace('\n', " ");

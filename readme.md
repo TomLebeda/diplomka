@@ -1,7 +1,7 @@
 # TODOS:
 - [ ] polo-automatize tvoření gramatik
-	- [ ] automatizace hledání tvarů
-	- [ ] automatizace hledání synonym
+	- [x] automatizace hledání tvarů
+	- [x] automatizace hledání synonym
 	- [ ] automatizace generování pravidel ze slovníku forem
 	- [ ] automatizace kontroly, zda gramatika postihuje celou scénu
 - [ ] systém hodnocení

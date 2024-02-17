@@ -21,6 +21,8 @@ use fetch::fetch_word_forms;
 use log::*;
 use slu::get_triplets;
 
+use crate::fetch::fetch_word_synonyms;
+
 fn main() {
     let cli = Cli::parse();
 
@@ -41,16 +43,10 @@ fn main() {
 /// Print the result of 'fetch' CLI command
 fn print_fetch(args: FetchArgs) {
     trace!("executing 'fetch' command");
-    match fetch_word_forms(&args.word) {
-        Ok(forms) => {
-            for form in forms {
-                println!("{}", form)
-            }
-        }
-        Err(e) => {
-            error!("fetching failed: {e}")
-        }
-    };
+    let forms = fetch_word_forms(&args.word);
+    println!("{} - forms: {}", &args.word, forms.join(", "));
+    let synonyms = fetch_word_synonyms(&args.word);
+    println!("{} - synonyms: {}", &args.word, synonyms.join(", "));
 }
 
 /// Print all the triplets found in the text using the provided grammar.
