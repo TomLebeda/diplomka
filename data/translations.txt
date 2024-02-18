@@ -1,0 +1,17 @@
+bird: pták
+branch: větev
+brown: hnědá
+clouds: mraky, oblaka
+dog: pes
+green: zelená
+ground: země, podlaha
+has color: má barvu
+leash: vodítko, obojek
+orange: oranžová, pomeranč
+plane: letadlo, plocha, rovina
+sky: obloha, nebe
+squirrel: veverka
+sun: slunce
+tree: strom
+white: bílá
+yellow: žlutá

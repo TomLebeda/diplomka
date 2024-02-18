@@ -7,27 +7,32 @@ mod cli;
 mod dataloader;
 /// error types and associated functions
 mod errors;
-/// contains fetching of word forms and synonyms from the internet
+/// contains fetching of word forms and synonyms from the internet and local sources
 mod fetch;
+/// contains functions and types for generating grammars (including the "prepare" step)
+mod generator;
 /// spoken language understanding module for handling the natural language (text) processing
 mod slu;
+/// utilities that don't fit into other categories
+mod utils;
 
 use std::path::PathBuf;
 
 use clap::Parser;
 use cli::*;
 use dataloader::Scene;
-use fetch::fetch_forms;
+use fetch::*;
 use log::*;
 use slu::get_triplets;
 
-use crate::fetch::{fetch_related, fetch_synonyms};
+use crate::generator::prepare_files;
 
 fn main() {
     let cli = Cli::parse();
 
     env_logger::Builder::new()
         .filter_module("diplomka", cli.log_level.to_log_filter())
+        .format_timestamp_micros()
         .init();
 
     match cli.command {
@@ -37,17 +42,30 @@ fn main() {
         Commands::Crumble(args) => print_crumbles(args),
         Commands::Triplets(args) => print_triplets(args),
         Commands::Fetch(args) => print_fetch(args),
+        Commands::Prepare(args) => print_prepare(args),
+        Commands::Generate(args) => print_generate(args),
     };
 }
 
-/// Print the result of 'fetch' CLI command
+/// Print the process and result of 'generate' CLI command
+fn print_generate(args: GenerateArgs) {
+    todo!()
+}
+
+/// Print the process and result of 'prepare' CLI command
+fn print_prepare(args: PrepareArgs) {
+    trace!("executing 'prepare' command");
+    prepare_files(args.scene_file, args.out_file);
+}
+
+/// Print the process result of 'fetch' CLI command
 fn print_fetch(args: FetchArgs) {
     trace!("executing 'fetch' command");
-    let forms = fetch_forms(&args.word);
+    let forms = get_forms(&args.word);
     println!("{} - forms: {}", &args.word, forms.join(", "));
-    let synonyms = fetch_synonyms(&args.word);
+    let synonyms = get_synonyms(&args.word);
     println!("{} - synonyms: {}", &args.word, synonyms.join(", "));
-    let related = fetch_related(&args.word);
+    let related = get_related(&args.word);
     println!("{} - related: {}", &args.word, related.join(", "));
 }
 
@@ -73,7 +91,7 @@ fn print_triplets(args: TripletsArgs) {
 /// Crumbles the scene and prints out the generates triplets.
 fn print_crumbles(args: CrumbleArgs) {
     trace!("executing 'crumble' command");
-    match Scene::from_file(&args.path) {
+    match Scene::from_file(&args.scene) {
         Ok(scene) => scene
             .crumble()
             .iter()
@@ -87,7 +105,7 @@ fn print_crumbles(args: CrumbleArgs) {
 /// Lists selected information about the provided scene.
 fn print_list(args: ListArgs) {
     trace!("executing 'list' command");
-    match Scene::from_file(&args.path) {
+    match Scene::from_file(&args.scene) {
         Ok(scene) => match args.items {
             ListItems::Objects => scene
                 .get_object_names()
@@ -128,11 +146,11 @@ fn print_list(args: ListArgs) {
 /// Prints out information about specified scene.
 fn print_stats(args: StatsArgs) {
     trace!("executing 'stats' command");
-    match Scene::from_file(&args.path) {
+    match Scene::from_file(&args.scene) {
         Ok(scene) => {
             let problems = scene.check();
             if problems.is_empty() {
-                println!("scene file:    {}", args.path.display());
+                println!("scene file:    {}", args.scene.display());
                 println!("image file:    {}", scene.get_image_path().display());
                 println!("image size:    {:?}", scene.get_image_size());
                 println!("# of objects:  {}", scene.get_object_count());
@@ -154,7 +172,7 @@ fn print_stats(args: StatsArgs) {
 /// Loads and checks provided scene, prints out potential problems.
 fn print_check(args: CheckArgs) {
     trace!("executing 'check' command");
-    match Scene::from_file(&args.path) {
+    match Scene::from_file(&args.scene) {
         Ok(scene) => {
             let problems = scene.check();
             if problems.is_empty() {

@@ -32,10 +32,31 @@ pub enum Commands {
     Triplets(TripletsArgs),
     /// Fetch forms or synonyms of given word from the internet or other data sources
     Fetch(FetchArgs),
+    /// Prepare files with words for provided scene description.
+    /// This provides checkpoint for expert to verify the data before ABNF grammar is generated.
+    Prepare(PrepareArgs),
+    /// Generate ABNF grammar files from the output of 'prepare' command.
+    Generate(GenerateArgs),
 }
 
 #[derive(Args, Debug)]
-/// Arguments for the "crumble" CLI command
+/// Arguments for the "generate" CLI command
+pub struct GenerateArgs {
+    /// Path to the output file from 'prepare' command
+    pub path: PathBuf,
+}
+
+#[derive(Args, Debug)]
+/// Arguments for the "prepare" CLI command
+pub struct PrepareArgs {
+    /// Path to the scene file (JSON)
+    pub scene_file: PathBuf,
+    /// Path to the output file (will be created if doesn't exist and replaced if does)
+    pub out_file: PathBuf,
+}
+
+#[derive(Args, Debug)]
+/// Arguments for the "triplets" CLI command
 pub struct TripletsArgs {
     /// path to the abnf file that should be used for parsing
     pub grammar: PathBuf,
@@ -46,8 +67,8 @@ pub struct TripletsArgs {
 #[derive(Args, Debug)]
 /// Arguments for the "crumble" CLI command
 pub struct CrumbleArgs {
-    /// path of the JSON file containing scene description
-    pub path: PathBuf,
+    /// path to the JSON file with scene description
+    pub scene: PathBuf,
 }
 
 #[derive(Args, Debug)]
@@ -56,8 +77,8 @@ pub struct ListArgs {
     /// what to list from the scene, items are always sorted alphabetically
     #[arg(value_enum)]
     pub items: ListItems,
-    /// path of the JSON file containing scene description
-    pub path: PathBuf,
+    /// path to the JSON file with scene description
+    pub scene: PathBuf,
 }
 
 #[derive(Args, Debug)]
@@ -100,15 +121,15 @@ pub enum LogLevel {
 #[derive(Args, Debug)]
 /// Arguments for the "check" CLI command
 pub struct CheckArgs {
-    /// JSON file with scene description to check
-    pub path: PathBuf,
+    /// path to the JSON file with scene description
+    pub scene: PathBuf,
 }
 
 #[derive(Args, Debug)]
 /// Arguments for the "info" CLI command
 pub struct StatsArgs {
-    /// JSON file with scene description
-    pub path: PathBuf,
+    /// path to the JSON file with scene description
+    pub scene: PathBuf,
 }
 
 impl LogLevel {

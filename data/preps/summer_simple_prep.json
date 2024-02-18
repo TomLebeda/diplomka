@@ -1,0 +1,96 @@
+{
+  "objects": {
+    "plane": [
+      "aeroplán",
+      "letadlo",
+      "letadlový",
+      "letadélko",
+      "letka",
+      "letoun",
+      "plocha",
+      "pláň",
+      "povětroň",
+      "rovina"
+    ],
+    "branch": [
+      "větev",
+      "větvička",
+      "větvoví"
+    ],
+    "ground": [
+      "země",
+      "podlaha",
+      "podlahový",
+      "podlaží",
+      "přízemí",
+      "uzemnění",
+      "zemina",
+      "zeměkoule",
+      "zázemí"
+    ],
+    "sun": [
+      "slunce",
+      "sluneční",
+      "slunko",
+      "sluníčko"
+    ],
+    "clouds": [
+      "mraky",
+      "oblaka"
+    ],
+    "leash": [
+      "obojek",
+      "vodítko"
+    ],
+    "dog": [
+      "hafan",
+      "hafík",
+      "pejsek",
+      "pes",
+      "pesan",
+      "psisko",
+      "psík",
+      "psíček",
+      "rafan",
+      "vořech",
+      "voříšek",
+      "čokl"
+    ],
+    "bird": [
+      "opeřenec",
+      "ptactvo",
+      "pták",
+      "ptáče",
+      "ptáček"
+    ],
+    "sky": [
+      "nebe",
+      "nebesa",
+      "obloha"
+    ],
+    "squirrel": [
+      "veverka",
+      "veveruška",
+      "veverčák",
+      "veveřice"
+    ]
+  },
+  "attributes": {
+    "has_color_VALS": [
+      "yellow",
+      "white",
+      "brown",
+      "orange",
+      "green"
+    ]
+  },
+  "predicates": [
+    "chasing",
+    "climbing",
+    "has color",
+    "is hidden behind",
+    "running away from",
+    "sitting on"
+  ]
+}
+

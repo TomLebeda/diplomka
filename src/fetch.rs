@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::Display};
+use std::{collections::HashMap, fmt::Display, path::PathBuf};
 
 use itertools::Itertools;
 use log::*;
@@ -33,10 +33,38 @@ struct WikiSection {
     idx: usize,
 }
 
+/// Returns a map of translations for words in scenes.
+/// Returns empty vector if some error is encountered.
+pub fn get_translations() -> HashMap<String, Vec<String>> {
+    let src = "./data/translations.txt";
+    trace!("loading translations from \"{}\"", src);
+    let Ok(raw_str) = std::fs::read_to_string(src) else {
+        error!("can't find or read file \"{}\"", src);
+        return HashMap::new();
+    };
+    let mut map = HashMap::<String, Vec<String>>::new();
+    for (line_idx, line) in raw_str.lines().enumerate() {
+        let Some((en_word, rest)) = line.split_once(':') else {
+            error!(
+                "Parsing error: line {} in {} is missing \":\", skipipng",
+                line_idx, src
+            );
+            continue;
+        };
+        let cz_words = rest
+            .split(',')
+            .map(|s| return s.trim().to_owned())
+            .collect_vec();
+        map.insert(en_word.to_owned(), cz_words);
+    }
+    trace!("loaded {} translations", map.len());
+    return map;
+}
+
 /// Fetches words related to given word and returns them as a vector of strings.
 /// Values will be unique and sorted.
 /// Returns empty vector if some error is encountered.
-pub fn fetch_related(word: &str) -> Vec<String> {
+pub fn get_related(word: &str) -> Vec<String> {
     trace!("fetching related words for \"{}\"", word);
     let Ok(sections) = fetch_wiki_sections(word) else {
         return vec![];
@@ -67,7 +95,7 @@ pub fn fetch_related(word: &str) -> Vec<String> {
 /// returns them as a vector of strings.
 /// Values will be unique and sorted.
 /// Returns empty vector if some error is encountered.
-pub fn fetch_synonyms(word: &str) -> Vec<String> {
+pub fn get_synonyms(word: &str) -> Vec<String> {
     trace!("fetching synonyms for \"{}\"", word);
     let Ok(sections) = fetch_wiki_sections(word) else {
         return vec![];
@@ -78,7 +106,6 @@ pub fn fetch_synonyms(word: &str) -> Vec<String> {
         .map(|sec| return &sec.number)
     else {
         return vec![];
-        // return Err(FetchErr::MissingSection(String::from("čeština")));
     };
     if let Some(sec_synonyms) = sections
         .iter()
@@ -93,6 +120,40 @@ pub fn fetch_synonyms(word: &str) -> Vec<String> {
         trace!("didn't find section \"synonyma\" for \"{}\"", word);
         return vec![];
     };
+}
+
+/// Fetches word forms from all available data sources and
+/// returns them as a vector of strings.
+/// Values will be unique and sorted.
+/// Returns empty vector if some error is encountered.
+pub fn get_forms(word: &str) -> Vec<String> {
+    trace!("fetching word forms for \"{}\"", word);
+    let Ok(sections) = fetch_wiki_sections(word) else {
+        return vec![];
+    };
+    let Some(czech_prefix) = sections
+        .iter()
+        .find(|sec| return sec.line == "čeština")
+        .map(|sec| return &sec.number)
+    else {
+        return vec![];
+        // return Err(FetchErr::MissingSection(String::from("čeština")));
+    };
+    let sections_of_interest = sections
+        .iter()
+        .filter(|sec| return sec.number.starts_with(czech_prefix))
+        .filter(|sec| return sec.line == "skloňování" || sec.line == "časování")
+        .collect_vec();
+    trace!(
+        "found {} sections of interest for \"{}\"",
+        sections_of_interest.len(),
+        word
+    );
+    let forms = sections_of_interest
+        .iter()
+        .flat_map(|soi| return fetch_wiki_forms(word, soi))
+        .collect_vec();
+    return forms;
 }
 
 /// fetches all synonyms for given word from given section
@@ -143,7 +204,7 @@ fn fetch_wiki_synonyms(sec: &WikiSection, word: &str) -> Vec<String> {
                     // .map(|s| return s.replace(['[', ']'], ""))
                     .flat_map(|s| {
                         return s
-                            .split([',', ';', '/'])
+                            .split([',', ';', '/', '|'])
                             // .map(|v| return v.to_owned())
                             .collect_vec();
                     })
@@ -215,7 +276,7 @@ fn fetch_wiki_related(sec: &WikiSection, word: &str) -> Vec<String> {
                     // .map(|s| return s.replace(['[', ']'], ""))
                     .flat_map(|s| {
                         return s
-                            .split([',', ';', '/'])
+                            .split([',', ';', '/', '|'])
                             // .map(|v| return v.to_owned())
                             .collect_vec();
                     })
@@ -237,40 +298,6 @@ fn fetch_wiki_related(sec: &WikiSection, word: &str) -> Vec<String> {
             return vec![];
         }
     }
-}
-
-/// Fetches word forms from all available data sources and
-/// returns them as a vector of strings.
-/// Values will be unique and sorted.
-/// Returns empty vector if some error is encountered.
-pub fn fetch_forms(word: &str) -> Vec<String> {
-    trace!("fetching word forms for \"{}\"", word);
-    let Ok(sections) = fetch_wiki_sections(word) else {
-        return vec![];
-    };
-    let Some(czech_prefix) = sections
-        .iter()
-        .find(|sec| return sec.line == "čeština")
-        .map(|sec| return &sec.number)
-    else {
-        return vec![];
-        // return Err(FetchErr::MissingSection(String::from("čeština")));
-    };
-    let sections_of_interest = sections
-        .iter()
-        .filter(|sec| return sec.number.starts_with(czech_prefix))
-        .filter(|sec| return sec.line == "skloňování" || sec.line == "časování")
-        .collect_vec();
-    trace!(
-        "found {} sections of interest for \"{}\"",
-        sections_of_interest.len(),
-        word
-    );
-    let forms = sections_of_interest
-        .iter()
-        .flat_map(|soi| return fetch_wiki_forms(word, soi))
-        .collect_vec();
-    return forms;
 }
 
 /// Fetches and parses word forms from wiktionary from provided section.
@@ -322,7 +349,7 @@ fn fetch_wiki_forms(word: &str, sec: &WikiSection) -> Vec<String> {
                     .map(|s| return s.replace(['[', ']'], ""))
                     .flat_map(|s| {
                         return s
-                            .split([',', ';', '/'])
+                            .split([',', ';', '/', '|'])
                             .map(|v| return v.to_owned())
                             .collect_vec();
                     })

@@ -17,6 +17,21 @@ use serde::{Deserialize, Serialize};
 
 use crate::errors::SceneError;
 
+/// Represents the output of 'prepare' CLI command
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Checkpoint {
+    /// mapping of words that are considered objects in a scene
+    /// the mapping is [single en-word] -> [many cz-words]
+    pub objects: HashMap<String, Vec<String>>,
+    /// mapping of words that are static attributes in a scene
+    /// the mapping is [single en-word] -> [many cz-words]
+    /// for attribute of name "foo" the keys will have "foo_VALS" format
+    pub attributes: HashMap<String, Vec<String>>,
+    /// list of words that are predicates and require hand-crafted patterns
+    /// predicates include dynamic relations as well as static attributes
+    pub predicates: Vec<String>,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 /// Representation of the scene that is shown in some image.
 /// It consists of objects with attributes and their connections (triplets)
@@ -271,22 +286,25 @@ impl Scene {
     /// Returns error when the file is not found or is unreadable
     pub fn from_file(path: &Path) -> Result<Scene, String> {
         let Ok(raw_str) = std::fs::read_to_string(path) else {
-            return Err(format!("can't read file '{}'", path.to_string_lossy()));
+            return Err(format!(
+                "can't find or read file \"{}\"",
+                path.to_string_lossy()
+            ));
         };
-        trace!("file '{}' succesfully loaded.", path.to_string_lossy());
+        trace!("file \"{}\" succesfully loaded.", path.to_string_lossy());
 
         let scene: Scene = match serde_json::from_str(&raw_str) {
             Ok(scene) => scene,
             Err(e) => {
                 return Err(format!(
-                    "can't parse file '{}': {}",
+                    "can't parse file \"{}\": {}",
                     path.to_string_lossy(),
                     e
                 ));
             }
         };
         trace!(
-            "file '{}' succesfully parsed into Scene",
+            "file \"{}\" succesfully parsed into Scene",
             path.to_string_lossy()
         );
 
