@@ -3,7 +3,10 @@ use std::{collections::HashMap, fmt::Display, path::PathBuf};
 use itertools::Itertools;
 use log::*;
 use regex::Regex;
+use scraper::{Html, Selector};
 use serde_json::Value;
+
+use crate::fetch;
 
 /// Simplified error type for when fetching fails
 pub enum FetchErr {
@@ -86,7 +89,7 @@ pub fn get_related(word: &str) -> Vec<String> {
         trace!("found section \"související\" for \"{}\"", word);
         return fetch_wiki_related(sec_related, word);
     } else {
-        trace!("didn't find section \"související\" for \"{}\"", word);
+        error!("didn't find section \"související\" for \"{}\"", word);
         return vec![];
     };
 }
@@ -117,7 +120,7 @@ pub fn get_synonyms(word: &str) -> Vec<String> {
         trace!("found section \"synonyma\" for \"{}\"", word);
         return fetch_wiki_synonyms(sec_synonyms, word);
     } else {
-        trace!("didn't find section \"synonyma\" for \"{}\"", word);
+        error!("didn't find section \"synonyma\" for \"{}\"", word);
         return vec![];
     };
 }
@@ -137,7 +140,6 @@ pub fn get_forms(word: &str) -> Vec<String> {
         .map(|sec| return &sec.number)
     else {
         return vec![];
-        // return Err(FetchErr::MissingSection(String::from("čeština")));
     };
     let sections_of_interest = sections
         .iter()
@@ -149,10 +151,21 @@ pub fn get_forms(word: &str) -> Vec<String> {
         sections_of_interest.len(),
         word
     );
-    let forms = sections_of_interest
+    let mut forms = sections_of_interest
         .iter()
         .flat_map(|soi| return fetch_wiki_forms(word, soi))
         .collect_vec();
+    // fetching from IJP sometimes freezes due to server overload (or temporary block?)
+    forms.append(&mut fetch_ijp_forms(word));
+
+    // this is last attempt at filtering out potential pieces of html that could slip by previous filters
+    let mut forms = forms
+        .iter()
+        .filter(|s| return !s.contains(['<', '>']))
+        .cloned()
+        .collect_vec();
+    forms.sort_unstable();
+    forms.dedup();
     return forms;
 }
 
@@ -215,6 +228,57 @@ fn fetch_wiki_synonyms(sec: &WikiSection, word: &str) -> Vec<String> {
                     .collect_vec();
                 trace!("obtained {} synonyms for word \"{}\"", synonyms.len(), word);
                 return synonyms;
+            }
+            code => {
+                error!("received response with code {}", code);
+                return vec![];
+            }
+        },
+        Err(e) => {
+            error!("didn't receive any valid response");
+            return vec![];
+        }
+    }
+}
+
+/// fetches forms of given word from IJP (Internetová Jazyková Příručka)
+// TODO: remove the pub
+fn fetch_ijp_forms(word: &str) -> Vec<String> {
+    trace!("fetching forms from IJP for \"{}\"", word);
+    match ureq::get(format!("https://prirucka.ujc.cas.cz/?slovo={}", word).as_str()).call() {
+        Ok(resp) => match resp.status() {
+            200 => {
+                trace!("recevied response with code OK-200, processing further");
+                let Ok(html_raw) = resp.into_string() else {
+                    error!("couldn't transform response into string (size > 10MB?)");
+                    return vec![];
+                };
+                let html = Html::parse_fragment(&html_raw);
+                let cell_selector =
+                    Selector::parse("td.centrovane").expect("invalid cell selector");
+                let sup_regex = Regex::new(r"<sup>.*?</sup>").expect("invalid sup regex");
+                let values = html
+                    .select(&cell_selector)
+                    .map(|cell| return cell.inner_html())
+                    .map(|s| return sup_regex.replace_all(&s, "").into_owned())
+                    .filter(|s| return s != "jednotné číslo")
+                    .filter(|s| return s != "množné číslo")
+                    .flat_map(|s| {
+                        return s
+                            .split([',', '/', '|', ';'])
+                            .map(|s| return s.to_owned())
+                            .collect_vec();
+                    })
+                    .map(|s| return s.trim().to_owned())
+                    .sorted_unstable()
+                    .unique()
+                    .collect_vec();
+                trace!(
+                    "obtained {} unique forms of \"{}\" from IJP",
+                    values.len(),
+                    word
+                );
+                return values;
             }
             code => {
                 error!("received response with code {}", code);

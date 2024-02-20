@@ -25,7 +25,7 @@ use fetch::*;
 use log::*;
 use slu::get_triplets;
 
-use crate::generator::prepare_files;
+use crate::generator::{generate_grammar, prepare_files};
 
 fn main() {
     let cli = Cli::parse();
@@ -49,7 +49,8 @@ fn main() {
 
 /// Print the process and result of 'generate' CLI command
 fn print_generate(args: GenerateArgs) {
-    todo!()
+    trace!("executing 'generate' command");
+    generate_grammar(args.path);
 }
 
 /// Print the process and result of 'prepare' CLI command

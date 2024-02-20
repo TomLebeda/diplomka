@@ -6,7 +6,10 @@
 	- [RDF primer W3](https://www.w3.org/TR/rdf11-primer/)
 	- [RDF xml W3](https://www.w3.org/TR/rdf-syntax-grammar/)
 - Other research:
-	[Scene understanding using natural language description based on 3D semantic graph map](https://link.springer.com/article/10.1007/s11370-018-0257-x)
+	- [Scene understanding using natural language description based on 3D semantic graph map](https://link.springer.com/article/10.1007/s11370-018-0257-x)
+- other useful urls: 
+	- [český národní korpus](https://wiki.korpus.cz/doku.php/cnk:syn)
+    - [internetová jazyková příručka](https://prirucka.ujc.cas.cz)
 
 # TODO:
 1. problém: jak řešit nejednoznačné hodnoty?

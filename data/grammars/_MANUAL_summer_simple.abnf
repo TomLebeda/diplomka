@@ -1,0 +1,109 @@
+#ABNF 1.0 UTF-8;
+
+language cs;
+
+root $triplet;
+
+$triplet = $has_color | $has_child_object | $has_parent_object | $chasing | $running_away_from | $sitting_on | $climbing;
+
+$has_color = {obj_start} $object {obj_end} (je | má barvu) {subj_start} $color_value {subj_end} {predicate=has_color};
+$has_child_object = {obj_start} $object {obj_end} má {subj_start} $object {subj_end} {predicate=has_child_object};
+$has_parent_object = {obj_start} $object {obj_end} (je [sou]částí | (patří|náleží) [pod|k] | tvoří) {subj_start} $object {subj_end} {predicate=has_child_object};
+$running_away_from = {obj_start} $object {obj_end} (utík(á|ají) | běží | zdrh(á|ají)) (před|od) {subj_start} $object {subj_end} {predicate=running_away_from};
+$sitting_on = {obj_start} $object {obj_end} sedí na {subj_start} $object {subj_end} {predicate=sitting_on};
+$climbing = {obj_start} $object {obj_end} (leze | šplhá) na {subj_start} $object {subj_end} {predicate=climbing};
+$chasing = {obj_start} $object {obj_end} ((honí | pronásleduj(í|ou|e)) | (běží | utík(á|ají) za | prohán(í|ějí))) {subj_start} $object {subj_end} {predicate=chasing};
+
+$object = $sun | $bird | $branch | $clouds | $dog | $ground | $leash | $plane | $sky | $squirrel | $tree;
+
+$sun = (slunce | slunci | sluncí | sluncem | slunko | slunka | slunku | slunkem | sluníčko | sluníčka | sluníčku | sluníčkem) {sun};
+$bird = (pták | ptáka | ptáku | ptákovi | ptákem | ptáček | ptáčka | ptáčkovi | ptáčkem) {bird};
+$branch = (větev | větvi | větve | větví | větvička | větvičce | větvičky | větvičku | větvičko | větvičkou ) {branch};
+$clouds = (mrak | mraku | mrakem | mraky | mrakama | mraků | mrakům | mračno | mračna | mračnu | mračny | mračnům | mráček | mráčku | mráčky | mráčkem | mráčkům | oblak | oblaku | oblakem | oblaky | oblaka | oblaků | oblakům| obláček | obláčku | obláčkem | obláčkům | obláčků) {clouds};
+$dog = (pes | psovi | psa | psu | psem | psy | psi | psech | pse | pejsek | pejska | pejskovi | pejsku | pejskem | čokl | čokla | čoklu | čokle | čoklem | psík | psíka | psíku | psíkovi | psíkem) {dog};
+$ground = (zem | země | zemi | tráva | trávě | trávu | trávo | trávou | trávy) {ground};
+$leash= (vodítko | vodítka | vodítku | vodítkem) {leash};
+$plane = (letadlo | letadla | letadlem | letadlu | letadle) {plane};
+$sky = (nebe | nebi | nebem | obloha | oblohy | obloze | oblohu | oblohou) {sky};
+$squirrel = (veverka | veverky | veverkou | veverko | veverce | veverku ) {squirrel};
+$tree = (strom | stromu | stromem | stromě | stromů | stromy | stromech | stromům | stromek | stromky | stromku | stromkem | stromků | stromkům | stromkách | stromcích | stromeček | stromečku | stromečkem | stromečkům | stromečků | stromečcích | stromečkách ) {tree};
+
+$color_value = (
+	$red
+	| $salmon
+	| $dark_red
+	| $pink
+	| $magenta
+	| $violet
+	| $orange
+	| $tan
+	| $dark_orange
+	| $gold
+	| $yellow
+	| $light_yellow
+	| $khaki
+	| $peach
+	| $purple
+	| $dark_purple
+	| $light_purple
+	| $green
+	| $light_green
+	| $dark_green
+	| $yellow_green
+	| $lime
+	| $olive
+	| $blue_green
+	| $azure
+	| $blue
+	| $light_blue
+	| $dark_blue
+	| $brown
+	| $dark_brown
+	| $light_brown
+	| $white
+	| $gray
+	| $light_gray
+	| $dark_gray
+	| $black
+	);
+
+$dark = ($temný | $tmavý) {dark};
+$temný = temn(ě|ou|á|é|ého|ém|ému|í|ý|ých|ým|ými) | temnější | nejtemnější;
+$tmavý = tmav(ě|ou|á|é|ého|ém|ému|í|ý|ých|ým|ými) | tmavší | nejtmavší;
+$light = světl(e|ou|á|é|ého|ém|ému|í|ý|ých|ým|ými) {light};
+$dark_orange = ($dark $orange) {dark_orange} ; //{#df6c00}
+$dark_red = ($dark $red) {dark_red} ; //{#8b0000}
+$gold = (zlat(á|é|ého|ém|ému|ý|ých|ým|ými)) {gold} ; //{#ffd700}
+$magenta = (purpurov(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {magenta} ; //{#ff00ff}
+$orange = (oranžov(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {orange} ; //{#ffa500}
+$pink = (růžov(á|é|ě|ou|ý|ými|ých|ým)) {pink} ; //{#ffc0cb}
+$red = (červen(á|é|ou|ý|ých|ým|ými)) {red} ; //{#ff0000}
+$salmon = (lososov(á|é|ý|ou|ých|ými|ým)) {salmon} ; //{#fa8072}
+$tan = (pleťov(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {tan} ; //{#d2b48c}
+$violet = (fialov(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {violet} ; //{#ee82ee}
+$yellow = (žlut(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {yellow} ; //{#ffff00}
+$light_yellow = ($light $yellow) {light_yellow} ; //{#ffffe0}
+$khaki = (khaki) {khaki} ; //{#bdb76b}
+$peach = (broskvov(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {peach} ; //{#ffdab8}
+$purple = (nachov(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {purple} ; //{#800080}
+$dark_purple = ($dark $purple) {dark_purple} ; //{#500050}
+$light_purple = ($light $purple) {light_purple} ; //{#b000b0}
+$green = (zelen(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {green} ; //{#009000}
+$light_green = ($light $green) {light_green} ; //{#a0eea0}
+$dark_green = ($dark $green) {dark_green} ; //{#005000}
+$yellow_green = (žluto $green) {yellow_green} ; //{#adff2f}
+$lime = (limetkov(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {lime} ; //{#00ff00}
+$olive = (olivov(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {olive} ; //{#808000}
+$blue_green = (modro $green) {blue_green} ; //{#66cdaa}
+$azure = (azurov(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {azure} ; //{#f0ffff}
+$blue = (modr(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {blue} ; //{#0000ff}
+$light_blue = ($light $blue) {light_blue} ; //{#87cefa}
+$dark_blue = ($dark $blue) {dark_blue} ; //{#00008b}
+$brown = (hněd(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {brown} ; //{#8b4513}
+$dark_brown = ($dark $brown) {dark_brown} ; //{#5b1500}
+$light_brown = ($light $brown) {light_brown} ; //{#f4a460}
+$white = (bíl(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {white} ; //{#ffffff}
+$gray = (šediv(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými) | šed(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {gray} ; //{#808080}
+$light_gray = ($light $gray) {light_gray} ; //{#d3d3d3}
+$dark_gray = ($dark $gray) {dark_gray} ; //{#303030}
+$black = (čern(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {black} ; //{#000000}

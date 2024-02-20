@@ -35,7 +35,9 @@
       "sluníčko"
     ],
     "clouds": [
+      "mrak",
       "mraky",
+      "oblak",
       "oblaka"
     ],
     "leash": [
@@ -76,21 +78,32 @@
     ]
   },
   "attributes": {
-    "has_color_VALS": [
-      "yellow",
-      "white",
-      "brown",
-      "orange",
-      "green"
-    ]
+    "has_color_VALS": {
+      "yellow": [
+        "žlutý"
+      ],
+      "white": [
+        "bílý"
+      ],
+      "brown": [
+        "hnědý"
+      ],
+      "orange": [
+        "oranžový",
+        "pomeranč"
+      ],
+      "green": [
+        "zelený"
+      ]
+    }
   },
-  "predicates": [
-    "chasing",
-    "climbing",
-    "has color",
-    "is hidden behind",
-    "running away from",
-    "sitting on"
-  ]
+  "predicates": {
+    "chasing": "{OBJ=object} ((honí | pronásleduj(í|ou|e)) | (běží | utík(á|ají) za | prohán(í|ějí))) {SUBJ=object}",
+    "climbing": "{OBJ=object} (lez(e|ou) | šplh(á|ají)) na {SUBJ=object}",
+    "has color": "{OBJ=object} (je | má barvu) {SUBJ=has_color_VALS} | {SUBJ=has_color_VALS} {OBJ=object}",
+    "is hidden behind": "{OBJ=object} [se] [schovává] za {SUBJ=object}",
+    "running away from": "{OBJ=object} (utík(á|ají) | běží | prch(á|ají) | zdrh(á|ají)) (před|od) {SUBJ=object}",
+    "sitting on": "{OBJ=object} sedí na {SUBJ=object}"
+  }
 }
 

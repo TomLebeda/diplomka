@@ -26,10 +26,14 @@ pub struct Checkpoint {
     /// mapping of words that are static attributes in a scene
     /// the mapping is [single en-word] -> [many cz-words]
     /// for attribute of name "foo" the keys will have "foo_VALS" format
-    pub attributes: HashMap<String, Vec<String>>,
-    /// list of words that are predicates and require hand-crafted patterns
+    pub attributes: HashMap<String, HashMap<String, Vec<String>>>,
+    /// map of words that are predicates and require hand-crafted patterns
     /// predicates include dynamic relations as well as static attributes
-    pub predicates: Vec<String>,
+    /// keys are names of the predicates, while the values are templates that will be used for
+    /// generation of the triplet, replacing:
+    ///     1. {OBJ=object} with {obj_start} $objects {obj_end}
+    ///     2. {SUBJ=attr_name_VALS} with {subj_start} $attr_name_VALS {subj_end}
+    pub predicates: HashMap<String, String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
