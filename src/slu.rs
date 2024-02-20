@@ -1,6 +1,6 @@
 use gasp::Grammar;
 use itertools::Itertools;
-use log::{debug, warn};
+use log::{debug, trace, warn};
 use regex::Regex;
 
 use crate::dataloader::Triplet;
@@ -10,6 +10,7 @@ pub fn get_triplets(text: &str, grammar: Grammar) -> Vec<Triplet> {
     let predicate_regex =
         Regex::new(r"^predicate=(.*)$").expect("invalid regex for predicate matching");
     let parsed_results = grammar.find_all(text);
+    trace!("obtained {} parsed results", parsed_results.len());
     return parsed_results
         .iter()
         .filter_map(|pr| {

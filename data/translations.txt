@@ -1,7 +1,7 @@
 bird: pták
 branch: větev
 brown: hnědý
-clouds: mraky, oblaka
+cloud: mrak, oblak
 dog: pes
 green: zelený
 ground: země, podlaha

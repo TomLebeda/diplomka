@@ -472,7 +472,10 @@ fn fetch_wiki_sections(word: &str) -> Result<Vec<WikiSection>, FetchErr> {
                         .get("parse")
                         .and_then(|parse| return parse.get("sections"))
                     else {
-                        error!("can't find keys \"parse\" followed by \"sections\" in response");
+                        error!(
+                            "can't find key \"parse.sections\" when fetching sections for \"{}\"",
+                            word
+                        );
                         return Err(FetchErr::KeyNotFound);
                     };
                     let Some(objects) = raw_sections.as_array() else {

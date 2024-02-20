@@ -1,0 +1,126 @@
+{
+  "objects": {
+    "dog": [
+      "hafan",
+      "hafík",
+      "pejsek",
+      "pes",
+      "pesan",
+      "psisko",
+      "psík",
+      "psíček",
+      "rafan",
+      "vořech",
+      "voříšek",
+      "čokl"
+    ],
+    "squirrel": [
+      "veverka",
+      "veveruška",
+      "veverčák",
+      "veveřice"
+    ],
+    "sky": [
+      "nebe",
+      "nebesa",
+      "obloha",
+      "podnebí"
+    ],
+    "bird": [
+      "opeřenec",
+      "pták",
+      "ptáče",
+      "ptáček"
+    ],
+    "leash": [
+      "obojek",
+      "vodítko"
+    ],
+    "ground": [
+      "podlaha",
+      "podlahový",
+      "podlaží",
+      "přízemí",
+      "uzemnit",
+      "uzemnění",
+      "zemina",
+      "zemský",
+      "země"
+    ],
+    "sun": [
+      "parhelium",
+      "parhélium",
+      "slunce",
+      "slunko",
+      "sluníčko"
+    ],
+    "branch": [
+      "větev",
+      "větvička",
+      "větvoví"
+    ],
+    "cloud": [
+      "mrak",
+      "mračno",
+      "mráček",
+      "oblak",
+      "oblačno",
+      "oblačnost",
+      "obláček"
+    ],
+    "plane": [
+      "aeroplán",
+      "letadlo",
+      "letadélko",
+      "letka",
+      "letoun",
+      "nadrovina",
+      "planina",
+      "plocha",
+      "plochý",
+      "ploše",
+      "plošina",
+      "plošinka",
+      "ploška",
+      "pláň",
+      "rovina",
+      "rovinka",
+      "rovinný",
+      "rovinně"
+    ],
+    "tree": [
+      "strom",
+      "stromek",
+      "stromeček",
+      "stromoví"
+    ]
+  },
+  "attributes": {
+    "has_color_VALS": {
+      "white": [
+        "bílý"
+      ],
+      "yellow": [
+        "žlutý"
+      ],
+      "green": [
+        "zelený"
+      ],
+      "brown": [
+        "hnědý"
+      ],
+      "orange": [
+        "oranžový",
+        "pomeranč"
+      ]
+    }
+  },
+  "predicates": {
+    "chasing": "{OBJ=object} ((honí | pronásleduj(í|ou|e)) | (běží | utík(á|ají) za | prohán(í|ějí))) {SUBJ=object}",
+    "climbing": "{OBJ=object} (lez(e|ou) | šplh(á|ají)) na {SUBJ=object}",
+    "has color": "{OBJ=object} (je | má barvu) {SUBJ=has_color_VALS} | {SUBJ=has_color_VALS} {OBJ=object}",
+    "is hidden behind": "{OBJ=object} [se] [schovává] za {SUBJ=object}",
+    "running away from": "{OBJ=object} (utík(á|ají) | běží | prch(á|ají) | zdrh(á|ají)) (před|od) {SUBJ=object}",
+    "sitting on": "{OBJ=object} sedí na {SUBJ=object}"
+  }
+}

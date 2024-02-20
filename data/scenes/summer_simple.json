@@ -1,7 +1,7 @@
 {
   "width": 1413,
   "height": 531,
-  "image_path": "imgs/summer_simple.png",
+  "image_path": "data/imgs/summer_simple.png",
   "objects": [
     {
       "name": "sun",
@@ -23,7 +23,7 @@
       ]
     },
     {
-      "name": "clouds",
+      "name": "cloud",
       "top_left_corner": [
         36,
         90
@@ -254,7 +254,7 @@
     {
       "from": "sun",
       "predicate": "is hidden behind",
-      "to": "clouds"
+      "to": "cloud"
     },
     {
       "from": "squirrel",

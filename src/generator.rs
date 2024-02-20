@@ -13,21 +13,34 @@ use crate::{
 };
 
 /// Generates ABNF file from the checkpoint file that is produced by 'prepare' command
-pub fn generate_grammar(path: PathBuf) {
-    let Ok(raw_str) = std::fs::read_to_string(&path) else {
-        error!("can't find or read file \"{}\"", path.to_string_lossy());
+pub fn generate_grammar(prep_path: PathBuf, out_path: PathBuf) {
+    let Ok(raw_str) = std::fs::read_to_string(&prep_path) else {
+        error!(
+            "can't find or read file \"{}\"",
+            prep_path.to_string_lossy()
+        );
         return;
     };
-    trace!("file \"{}\" succesfully loaded.", path.to_string_lossy());
+    trace!(
+        "file \"{}\" succesfully loaded.",
+        prep_path.to_string_lossy()
+    );
 
     let checkpoint: Checkpoint = match serde_json::from_str(&raw_str) {
         Ok(checkpoint) => checkpoint,
         Err(e) => {
-            error!("can't parse file \"{}\": {}", path.to_string_lossy(), e);
+            error!(
+                "can't parse file \"{}\": {}",
+                prep_path.to_string_lossy(),
+                e
+            );
             return;
         }
     };
-    trace!("file \"{}\" parsed into Checkpoint", path.to_string_lossy());
+    trace!(
+        "file \"{}\" parsed into Checkpoint",
+        prep_path.to_string_lossy()
+    );
 
     // create the string buffer with valid ABNF header
     let mut str_buf = String::from("#ABNF 1.0 UTF-8;\n");
@@ -180,7 +193,17 @@ pub fn generate_grammar(path: PathBuf) {
         }
     }
     str_buf += "\n";
-    println!("{}", str_buf);
+    match std::fs::write(&out_path, &str_buf) {
+        Ok(_) => info!(
+            "{} bytes of data written into \"{}\"",
+            str_buf.len(),
+            out_path.to_string_lossy()
+        ),
+        Err(e) => error!(
+            "failed to write output into file \"{}\" (check if directory exists?)",
+            out_path.to_string_lossy()
+        ),
+    }
 }
 
 /// Generates grammar file for provided scenes.
@@ -222,8 +245,8 @@ pub fn prepare_files(scene_path: PathBuf, out_path: PathBuf) {
         let mut expanded_words = cz_words.clone();
         for czw in cz_words {
             expanded_words.append(&mut get_synonyms(czw));
-            // NOTE: related words are very vague and require a lot of cleanup
-            // expanded_words.append(&mut get_related(czw));
+            // NOTE: related words require a lot of cleanup
+            expanded_words.append(&mut get_related(czw));
         }
         expanded_words.sort_unstable();
         expanded_words.dedup();
@@ -231,7 +254,11 @@ pub fn prepare_files(scene_path: PathBuf, out_path: PathBuf) {
     }
 
     // 5: construct the checkpoint
-    let object_names = scene.get_object_names();
+    let object_names = scene
+        .get_object_names()
+        .iter()
+        .map(|o| return remove_number_from_obj(o))
+        .collect_vec();
     let attr_groups = scene.get_attributes_grouped();
     let mut object_map = word_map_expanded.clone();
     object_map.retain(|key, val| return object_names.contains(key));

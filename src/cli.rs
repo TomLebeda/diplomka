@@ -13,7 +13,7 @@ pub struct Cli {
     pub command: Commands,
 
     /// level of logging details (into stderr)
-    #[arg(short, long, value_enum, default_value_t = LogLevel::Trace)]
+    #[arg(short, long, value_enum, default_value_t = LogLevel::Info)]
     pub log_level: LogLevel,
 }
 
@@ -43,7 +43,9 @@ pub enum Commands {
 /// Arguments for the "generate" CLI command
 pub struct GenerateArgs {
     /// Path to the output file from 'prepare' command
-    pub path: PathBuf,
+    pub prep_file: PathBuf,
+    /// Path to the output file (will be created if doesn't exist and replaced if does)
+    pub out_file: PathBuf,
 }
 
 #[derive(Args, Debug)]

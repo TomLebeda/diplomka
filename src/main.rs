@@ -50,7 +50,7 @@ fn main() {
 /// Print the process and result of 'generate' CLI command
 fn print_generate(args: GenerateArgs) {
     trace!("executing 'generate' command");
-    generate_grammar(args.path);
+    generate_grammar(args.prep_file, args.out_file);
 }
 
 /// Print the process and result of 'prepare' CLI command
@@ -79,6 +79,7 @@ fn print_triplets(args: TripletsArgs) {
     trace!("executing 'triplets' command");
     match gasp::Grammar::from_file(&args.grammar, false) {
         Ok(grammar) => {
+            trace!("grammar loaded");
             get_triplets(&args.text, grammar)
                 .iter()
                 .for_each(|t| println!("{}", t));

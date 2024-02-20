@@ -3,11 +3,14 @@
 	- [x] automatizace hledání tvarů
 	- [x] automatizace hledání synonym
 	- [x] automatizace hledání souvisejících slov
-	- [ ] automatizace generování pravidel ze slovníku forem
+	- [x] automatizace generování pravidel ze slovníku forem
 	- [ ] automatizace kontroly, zda gramatika postihuje celou scénu
 - [ ] systém hodnocení
+	- [ ] systém pro hodnocení relativní pozice
+	- [ ] systém pro hodnocení absolutní pozice
+	- [ ] systém pro hodnocení barev
+	- [ ] systém pro hodnocení velikostí objektů
 	- [ ] binární hodnocení tripletů (počet)
-	- [ ] ztrátové funkce pro barvy
 	- [ ] ztrátové funkce pro objekty
 - [x] extrakce tripletů z textu
 	- [x] základní extrakce
