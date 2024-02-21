@@ -1,4 +1,5 @@
 # TODOS:
+- [ ] implementace GARBAGE do GASP
 - [ ] polo-automatize tvoření gramatik
 	- [x] automatizace hledání tvarů
 	- [x] automatizace hledání synonym

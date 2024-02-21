@@ -106,7 +106,7 @@ pub fn generate_grammar(prep_path: PathBuf, out_path: PathBuf) {
     }
     // add the generic hierarchy predicates
     str_buf += "$has_child_object = {obj_start} $object {obj_end} má {subj_start} $object {subj_end} {predicate=has_child_object};\n";
-    str_buf += "$has_parent_object = {obj_start} $object {obj_end} (je [sou]částí | (patří|náleží) [pod|k] | tvoří) {subj_start} $object {subj_end} {predicate=has_child_object};\n";
+    str_buf += "$has_parent_object = {obj_start} $object {obj_end} (je [sou]částí | (patří|náleží) [pod|k] | tvoří) {subj_start} $object {subj_end} {predicate=has_parent_object};\n";
     str_buf += "\n";
 
     // add the general object rule
@@ -170,6 +170,7 @@ pub fn generate_grammar(prep_path: PathBuf, out_path: PathBuf) {
             let rule_exp = cz_variants
                 .iter()
                 .map(|s| return s.trim().replace(' ', "_"))
+                .map(|s| return format!("${s}"))
                 .sorted_unstable()
                 .unique()
                 .join(" | ");

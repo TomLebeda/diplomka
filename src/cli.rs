@@ -13,7 +13,7 @@ pub struct Cli {
     pub command: Commands,
 
     /// level of logging details (into stderr)
-    #[arg(short, long, value_enum, default_value_t = LogLevel::Info)]
+    #[arg(short, long, value_enum, default_value_t = LogLevel::Trace)]
     pub log_level: LogLevel,
 }
 

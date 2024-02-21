@@ -15,6 +15,7 @@ pub fn get_triplets(text: &str, grammar: Grammar) -> Vec<Triplet> {
         .iter()
         .filter_map(|pr| {
             let tokens = pr.root.tags_dfpo();
+            trace!("obtained tokens (dfpo): [{}]", tokens.join(", "));
             let Some((obj_start_idx, _)) = tokens
                 .iter()
                 .find_position(|s| return s.as_str() == "obj_start")
