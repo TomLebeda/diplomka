@@ -1,7 +1,6 @@
 #ABNF 1.0 UTF-8;
-root $triplet;
 
-$triplet = $chasing | $climbing | $has_child_object | $has_color | $has_parent_object | $is_hidden_behind | $running_away_from | $sitting_on;
+public $triplet = $chasing | $climbing | $has_child_object | $has_color | $has_parent_object | $is_hidden_behind | $running_away_from | $sitting_on;
 
 $chasing = (
 	{obj_start} $object {obj_end}

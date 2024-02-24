@@ -369,6 +369,8 @@ dependencies = [
  "imageproc",
  "itertools 0.12.1",
  "log",
+ "nom",
+ "nom-unicode",
  "regex",
  "reqwest",
  "rusttype",

@@ -116,11 +116,11 @@
     }
   },
   "predicates": {
-    "chasing": "{OBJ=object} ((honí | pronásleduj(í|ou|e)) | (běží | utík(á|ají)) za | prohán(í|ějí)) {SUBJ=object}",
-    "climbing": "{OBJ=object} (lez(e|ou) | šplh(á|ají)) na {SUBJ=object}",
-    "has color": "{OBJ=object} (je | má barvu) {SUBJ=has_color_VALS} | {SUBJ=has_color_VALS} {OBJ=object}",
-    "is hidden behind": "{OBJ=object} [se|je] [schovává] za {SUBJ=object}",
-    "running away from": "{OBJ=object} (utík(á|ají) | běží | prch(á|ají) | zdrh(á|ají)) (před|od) {SUBJ=object}",
-    "sitting on": "{OBJ=object} sedí na {SUBJ=object}"
+    "chasing": "{OBJ=object} ( (honí | pronásleduj(í|ou|e)) | (běží | utík(á|ají)) za | prohán(í|ějí)) $GARBAGE {SUBJ=object}",
+    "climbing": "{OBJ=object} (lez(e|ou) | šplh(á|ají)) na $GARBAGE {SUBJ=object}",
+    "has color": "({OBJ=object} (je | má barvu) $GARBAGE {SUBJ=has_color_VALS}) | ({SUBJ=has_color_VALS} $GARBAGE {OBJ=object})",
+    "is hidden behind": "({OBJ=object} [se|je|jsou] [schovává] za $GARBAGE {SUBJ=object}) | ( za $GARBAGE {SUBJ=object} [se|je|jsou] [schováv(á|ají)] $GARBAGE {OBJ=object})",
+    "running away from": "{OBJ=object} (utík(á|ají) | běží | prch(á|ají) | zdrh(á|ají)) (před|od) $GARBAGE {SUBJ=object}",
+    "sitting on": "{OBJ=object} sedí na $GARBAGE {SUBJ=object}"
   }
 }

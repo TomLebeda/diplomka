@@ -11,6 +11,8 @@ mod errors;
 mod fetch;
 /// contains functions and types for generating grammars (including the "prepare" step)
 mod generator;
+/// contains functions and types for grammar parsing
+mod parser;
 /// spoken language understanding module for handling the natural language (text) processing
 mod slu;
 /// utilities that don't fit into other categories
@@ -25,7 +27,10 @@ use fetch::*;
 use log::*;
 use slu::get_triplets;
 
-use crate::generator::{generate_grammar, prepare_files};
+use crate::{
+    generator::{generate_grammar, prepare_files},
+    parser::parse_grammar,
+};
 
 fn main() {
     let cli = Cli::parse();
@@ -35,6 +40,11 @@ fn main() {
         .format_timestamp_micros()
         .init();
 
+    let raw_str = std::fs::read_to_string("./data/grammars/summer_simple.sgram").unwrap();
+    let s = raw_str.replace('\n', " ");
+    let parsed = parse_grammar(&s);
+
+    return;
     match cli.command {
         Commands::Check(args) => print_check(args),
         Commands::Stats(args) => print_stats(args),
