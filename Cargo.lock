@@ -103,12 +103,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ascii_tree"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ca6c635b3aa665c649ad1415f1573c85957dfa47690ec27aebe7ec17efe3c643"
-
-[[package]]
 name = "autocfg"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -364,13 +358,14 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "env_logger",
- "gasp",
+ "exitcode",
  "image",
  "imageproc",
  "itertools 0.12.1",
  "log",
  "nom",
  "nom-unicode",
+ "rayon",
  "regex",
  "reqwest",
  "rusttype",
@@ -454,6 +449,12 @@ dependencies = [
  "libc",
  "windows-sys 0.52.0",
 ]
+
+[[package]]
+name = "exitcode"
+version = "1.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "de853764b47027c2e862a995c34978ffa63c1501f2e15f987ba11bd4f9bba193"
 
 [[package]]
 name = "exr"
@@ -600,21 +601,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c31b6d751ae2c7f11320402d34e41349dd1016f8d5d45e48c4312bc8625af50c"
 dependencies = [
  "byteorder",
-]
-
-[[package]]
-name = "gasp"
-version = "0.1.0"
-dependencies = [
- "ascii_tree",
- "log",
- "nom",
- "nom-unicode",
- "rand 0.8.5",
- "rayon",
- "regex",
- "serde",
- "serde_json",
 ]
 
 [[package]]

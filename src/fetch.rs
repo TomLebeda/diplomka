@@ -242,7 +242,6 @@ fn fetch_wiki_synonyms(sec: &WikiSection, word: &str) -> Vec<String> {
 }
 
 /// fetches forms of given word from IJP (Internetová Jazyková Příručka)
-// TODO: remove the pub
 fn fetch_ijp_forms(word: &str) -> Vec<String> {
     trace!("fetching forms from IJP for \"{}\"", word);
     match ureq::get(format!("https://prirucka.ujc.cas.cz/?slovo={}", word).as_str()).call() {

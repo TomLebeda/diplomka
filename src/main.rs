@@ -29,7 +29,7 @@ use slu::get_triplets;
 
 use crate::{
     generator::{generate_grammar, prepare_files},
-    parser::parse_grammar,
+    parser::{parse_grammar, Grammar},
 };
 
 fn main() {
@@ -40,11 +40,12 @@ fn main() {
         .format_timestamp_micros()
         .init();
 
-    let raw_str = std::fs::read_to_string("./data/grammars/summer_simple.sgram").unwrap();
-    let s = raw_str.replace('\n', " ");
-    let parsed = parse_grammar(&s);
+    // let raw_str = std::fs::read_to_string("./data/grammars/summer_simple.sgram").unwrap();
+    // info!("parsing");
+    // let parsed = parse_grammar(&raw_str);
+    // info!("finished");
+    // return;
 
-    return;
     match cli.command {
         Commands::Check(args) => print_check(args),
         Commands::Stats(args) => print_stats(args),
@@ -87,15 +88,18 @@ fn print_fetch(args: FetchArgs) {
 ///     3. subject: {subj_start} {subj-label} {subj_end}
 fn print_triplets(args: TripletsArgs) {
     trace!("executing 'triplets' command");
-    match gasp::Grammar::from_file(&args.grammar, false) {
+    match Grammar::from_file(&args.grammar) {
         Ok(grammar) => {
             trace!("grammar loaded");
             get_triplets(&args.text, grammar)
                 .iter()
                 .for_each(|t| println!("{}", t));
         }
-        Err(e) => {
-            error!("Can't obtain grammar: {}", e);
+        Err(errs) => {
+            error!("can't parse grammar:");
+            for (i, e) in errs.iter().enumerate() {
+                error!("parsing err #{i}: {e}");
+            }
         }
     }
 }

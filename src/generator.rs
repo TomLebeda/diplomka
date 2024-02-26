@@ -1,6 +1,5 @@
 use std::{collections::HashMap, fmt::format, path::PathBuf};
 
-use gasp::RuleAlternative;
 use itertools::Itertools;
 use log::*;
 use regex::Regex;
