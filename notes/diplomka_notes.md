@@ -83,3 +83,12 @@ vícevrstvá hierarchie
 	-> tohle by se možná hodilo prodiskutovat s někým, kdo má vhled do té medicínské stránky, aby řekl jestli to má vůbec cenu?
 
 - Kolik by tak mělo být rešerše ve finální práci? 
+
+# PROBLÉMY:
+- když mám větu "hnědý pes honí oranžovou rychlou veverku" a chci zachytit barvy objektů, tak: 
+	- když dám mezi barvu a objekt možnost GARBAGE, tak se chytne správně "oranžová veverka", ale zároveň také "hnědá veverka", protože parsování je greedy a GARBAGE požere všechno mezi
+sémantické pravidlo pro určení barvy objektu:
+```
+$has_color = ( $NULL {subj_start} $has_color_VALS {subj_end} {obj_start} $object {obj_end}) {predicate=has_color};
+```
+

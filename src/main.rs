@@ -40,12 +40,6 @@ fn main() {
         .format_timestamp_micros()
         .init();
 
-    // let raw_str = std::fs::read_to_string("./data/grammars/summer_simple.sgram").unwrap();
-    // info!("parsing");
-    // let parsed = parse_grammar(&raw_str);
-    // info!("finished");
-    // return;
-
     match cli.command {
         Commands::Check(args) => print_check(args),
         Commands::Stats(args) => print_stats(args),
@@ -88,7 +82,7 @@ fn print_fetch(args: FetchArgs) {
 ///     3. subject: {subj_start} {subj-label} {subj_end}
 fn print_triplets(args: TripletsArgs) {
     trace!("executing 'triplets' command");
-    match Grammar::from_file(&args.grammar) {
+    match Grammar::from_file(args.grammar) {
         Ok(grammar) => {
             trace!("grammar loaded");
             get_triplets(&args.text, grammar)

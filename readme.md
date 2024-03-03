@@ -1,5 +1,11 @@
 # TODOS:
-- [ ] implementace GARBAGE do GASP
+- [x] implementace SRGS-like jazyka
+	- [ ] formální definice
+	- [x] systém komentářů
+	- [x] základní parsování a struktura
+	- [x] test, zda je gramatika validní (reference na pravidla)
+	- [x] test, zda se pravidla neopakují
+	- [x] test parsování textů
 - [ ] polo-automatize tvoření gramatik
 	- [x] automatizace hledání tvarů
 	- [x] automatizace hledání synonym
@@ -14,6 +20,7 @@
 	- [ ] binární hodnocení tripletů (počet)
 	- [ ] ztrátové funkce pro objekty
 - [x] extrakce tripletů z textu
+	- [ ] re-implementace pomocí vlastního SRGS-like jazyka
 	- [x] základní extrakce
 	- [x] validace počtu tagů
 - [ ] vizualizace popisu scény
@@ -24,6 +31,7 @@
 - [x] tooling pro práci s reprezentací scény
 	- [x] parsing
 	- [x] validation
+		- [ ] kontrola, zda mají stejné atributy stejné datové typy
 	- [x] listing/queries
 	- [x] overview (printing statistics)
 - [x] vymyslet reprezentaci scény

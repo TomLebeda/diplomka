@@ -1,0 +1,17 @@
+R: a b<0-2> b' c 
+S: abbc
+
+init:
+t0: elem: a, count: 1, ops: [->], rest: "abbc"
+
+a -> ok (rest: "bbc") => next (b):
+t1: elem: b, count: 1, ops: [++, ->], rest: "bbc"
+
+b -> ok (rest: "bc") => repeat (b):
+t2: elem: b, count: 2, ops: [->], rest: "bc"
+
+b -> ok (rest: "c") => next (b'):
+t3: elem: b', count: 1, ops: [->], rest: "c"
+
+b' -> ERR => step back, remove last layer and the operator that caused it
+
