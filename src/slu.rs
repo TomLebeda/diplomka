@@ -2,13 +2,17 @@ use itertools::Itertools;
 use log::{debug, trace, warn};
 use regex::Regex;
 
-use crate::{dataloader::Triplet, parser::Grammar};
+use crate::{
+    dataloader::Triplet,
+    parser::{Grammar, ParsingStyle},
+};
 
 /// extracts triplets from provided text using the provided grammar
 pub fn get_triplets(text: &str, grammar: Grammar) -> Vec<Triplet> {
+    trace!("extracting triplets from text {:?}", text);
     let predicate_regex =
         Regex::new(r"^predicate=(.*)$").expect("invalid regex for predicate matching");
-    let parsed_results = grammar.find_all(text);
+    let parsed_results = grammar.find_all(text, &ParsingStyle::Greedy);
     trace!("obtained {} parse trees", parsed_results.len());
     return parsed_results
         .iter()

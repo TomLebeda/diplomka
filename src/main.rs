@@ -13,12 +13,14 @@ mod fetch;
 mod generator;
 /// contains functions and types for grammar parsing
 mod parser;
+/// contains functions and types related to visualization and rendering
+mod renderer;
 /// spoken language understanding module for handling the natural language (text) processing
 mod slu;
 /// utilities that don't fit into other categories
 mod utils;
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use clap::Parser;
 use cli::*;
@@ -33,23 +35,27 @@ use crate::{
 };
 
 fn main() {
-    let cli = Cli::parse();
+    let path = Path::new("./data/scenes/summer_simple.json");
+    let scene = Scene::from_file(path).unwrap();
+    scene.render_graph();
 
-    env_logger::Builder::new()
-        .filter_module("diplomka", cli.log_level.to_log_filter())
-        .format_timestamp_micros()
-        .init();
+    // let cli = Cli::parse();
+    //
+    // env_logger::Builder::new()
+    //     .filter_module("diplomka", cli.log_level.to_log_filter())
+    //     .format_timestamp_micros()
+    //     .init();
 
-    match cli.command {
-        Commands::Check(args) => print_check(args),
-        Commands::Stats(args) => print_stats(args),
-        Commands::List(args) => print_list(args),
-        Commands::Crumble(args) => print_crumbles(args),
-        Commands::Triplets(args) => print_triplets(args),
-        Commands::Fetch(args) => print_fetch(args),
-        Commands::Prepare(args) => print_prepare(args),
-        Commands::Generate(args) => print_generate(args),
-    };
+    // match cli.command {
+    //     Commands::Check(args) => print_check(args),
+    //     Commands::Stats(args) => print_stats(args),
+    //     Commands::List(args) => print_list(args),
+    //     Commands::Crumble(args) => print_crumbles(args),
+    //     Commands::Triplets(args) => print_triplets(args),
+    //     Commands::Fetch(args) => print_fetch(args),
+    //     Commands::Prepare(args) => print_prepare(args),
+    //     Commands::Generate(args) => print_generate(args),
+    // };
 }
 
 /// Print the process and result of 'generate' CLI command

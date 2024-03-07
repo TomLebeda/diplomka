@@ -2,6 +2,8 @@ use std::borrow::Cow;
 use std::fmt::Display;
 use std::path::PathBuf;
 
+use clap::ValueEnum;
+use imageproc::geometric_transformations::warp;
 use itertools::Itertools;
 use log::*;
 use nom::branch::alt;
@@ -22,6 +24,7 @@ use ptree::print_config::StyleWhen;
 use ptree::{print_tree, write_tree, write_tree_with, PrintConfig, Style, TreeItem};
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use rayon::str::ParallelString;
+use regex::Regex;
 use reqwest::blocking::get;
 
 /// if repeat is <m->, then this value will be used as the max
@@ -44,6 +47,19 @@ pub struct ParseResult {
     pub node: ParseNode,
     /// the original raw parsed string
     pub text: String,
+    /// what was the style used to obtain this result
+    pub style: ParsingStyle,
+}
+
+/// Describes the behavior of parsing when multiple matches are possible
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
+pub enum ParsingStyle {
+    /// match as few tokens as possible
+    Lazy,
+    /// match as many tokens as possible
+    Greedy,
+    // /// if there is multiple ways to match, return all of them
+    // All,
 }
 
 #[derive(Debug, PartialEq, serde::Serialize, serde::Deserialize, Clone)]
@@ -225,20 +241,25 @@ impl Grammar {
     /// This implementation starts the parsing process for each public rule in the grammar
     /// at the beginning of the provided string and continues as far as possible.
     /// Returns empty vector if the all public rules fails right at the beginning.
-    pub fn parse_text_from_start<'a>(&'a self, text: &'a str) -> Vec<ParseResult> {
+    pub fn parse_text_from_start<'a>(
+        &'a self,
+        text: &'a str,
+        style: &ParsingStyle,
+    ) -> Vec<ParseResult> {
         let rule_heap = &self.rules;
         let results = self
             .rules
             .iter()
             .filter(|r| return r.public)
             .filter_map(|rule| {
-                let Ok((rest, root_node)) = rule.parse_text(text, rule_heap) else {
+                let Ok((rest, root_node)) = rule.parse_text(text, rule_heap, style) else {
                     return None;
                 };
                 return Some(ParseResult {
                     rule: rule.name.clone(),
                     node: root_node,
                     text: text.to_string(),
+                    style: *style,
                 });
             })
             .collect_vec();
@@ -251,12 +272,12 @@ impl Grammar {
     /// After the parsing fails (or reaches the end), the starting point is shifted one word over
     /// (to the next whitespace) and tries to parse again.
     /// All the successful parsing results are collected and returned.
-    pub fn find_all(&self, text: &str) -> Vec<ParseResult> {
-        let mut results = self.parse_text_from_start(text);
+    pub fn find_all(&self, text: &str, style: &ParsingStyle) -> Vec<ParseResult> {
+        let mut results = self.parse_text_from_start(text, style);
         text.match_indices(|c: char| return c.is_whitespace())
             .for_each(|(idx, _)| {
                 let (lead, to_parse) = text.split_at(idx);
-                results.append(&mut self.parse_text_from_start(to_parse));
+                results.append(&mut self.parse_text_from_start(to_parse, style));
             });
         return results;
     }
@@ -283,9 +304,10 @@ impl Rule {
         &'a self,
         text: &'a str,
         rule_heap: &'a [Rule],
+        style: &ParsingStyle,
     ) -> IResult<&str, ParseNode> {
         for alternative in &self.expansion {
-            if let Ok((rest, matched)) = alternative.parse_text(text, rule_heap) {
+            if let Ok((rest, matched)) = alternative.parse_text(text, rule_heap, style) {
                 let node = ParseNode::Rule {
                     rule_name: self.name.clone(),
                     expansion: matched,
@@ -322,9 +344,10 @@ impl Alternative {
         &'a self,
         text: &'a str,
         rule_heap: &'a [Rule],
+        style: &ParsingStyle,
     ) -> IResult<&str, Vec<ParseNode>> {
         let elements = &self.0;
-        return parse_list_of_elems_recursive(text, 0, elements, rule_heap);
+        return parse_list_of_elems_recursive(text, 0, elements, rule_heap, style);
     }
 
     /// Returns
@@ -349,6 +372,7 @@ fn parse_list_of_elems_recursive<'a>(
     idx: usize,
     elements: &'a [Element],
     rule_heap: &'a [Rule],
+    style: &ParsingStyle,
 ) -> IResult<&'a str, Vec<ParseNode>> {
     let Some(current_elem) = &elements.get(idx) else {
         return Err(nom::Err::Error(error_position!(
@@ -364,7 +388,7 @@ fn parse_list_of_elems_recursive<'a>(
     let mut counter = 0;
     let mut rest = text;
     loop {
-        let Ok((r, _matched)) = current_elem.parse_text(rest, rule_heap) else {
+        let Ok((r, _matched)) = current_elem.parse_text(rest, rule_heap, style) else {
             // if we can't parse anymore, we stop the counter
             break;
         };
@@ -377,16 +401,19 @@ fn parse_list_of_elems_recursive<'a>(
     }
     // as the actual max number of repeats use the smaller out of counter or theoretical max
     let max = current_elem.get_max().min(counter);
-    // we want lazy matching => start with max and decrease if necessary
-    // for greedy matching, we would need to add `.rev()` after the interval (min..=max)
-    'outer: for reps in (min..=max) {
+    // for greedy matching, we need to reverse the range
+    let repetition_range = match style {
+        ParsingStyle::Greedy => (min..=max).rev().collect_vec(),
+        ParsingStyle::Lazy => (min..=max).collect_vec(),
+    };
+    'outer: for reps in repetition_range {
         // remainder to parse resets at the start each loop, we want to parse from the original text
         let mut rest = text;
         // accumulator for the results
         let mut nodes: Vec<ParseNode> = vec![];
         for i in 0..reps {
-            let Ok((r, mut m)) = current_elem.parse_text(rest, rule_heap) else {
-                // we couldn't match the element enough times => try next loop with decreased goal
+            let Ok((r, mut m)) = current_elem.parse_text(rest, rule_heap, style) else {
+                // we couldn't match the element enough times => try next loop
                 continue 'outer;
             };
             rest = r; // the new remainder is the leftover for next loop
@@ -395,7 +422,8 @@ fn parse_list_of_elems_recursive<'a>(
         // now we used the element `reps` times, so try to shift the element
         if elements.get(idx + 1).is_some() {
             // there is some next element, so continue
-            let Ok((r, mut m)) = parse_list_of_elems_recursive(rest, idx + 1, elements, rule_heap)
+            let Ok((r, mut m)) =
+                parse_list_of_elems_recursive(rest, idx + 1, elements, rule_heap, style)
             else {
                 // the shifted sequence didn't succeed, so try to parse one-less and try again
                 continue 'outer;
@@ -501,6 +529,7 @@ impl Element {
         &'a self,
         text: &'a str,
         rule_heap: &'a [Rule],
+        style: &ParsingStyle,
     ) -> IResult<&str, Vec<ParseNode>> {
         let text = text.trim_start();
         match self {
@@ -521,7 +550,7 @@ impl Element {
                     .get(target_rule_idx)
                     .expect("target_rule_idx should be a valid index");
                 assert_eq!(&target_rule.name, name);
-                let (rest, matched) = target_rule.parse_text(text, rule_heap)?;
+                let (rest, matched) = target_rule.parse_text(text, rule_heap, style)?;
                 let mut nodes = vec![matched];
                 nodes.extend(tags.iter().map(|t| return t.to_node()));
                 return Ok((rest, nodes));
@@ -542,7 +571,7 @@ impl Element {
                 tags,
             } => {
                 for alternative in alternatives {
-                    if let Ok((rest, mut nodes)) = alternative.parse_text(text, rule_heap) {
+                    if let Ok((rest, mut nodes)) = alternative.parse_text(text, rule_heap, style) {
                         nodes.extend(tags.iter().map(|t| return t.to_node()));
                         return Ok((rest, nodes));
                     }
@@ -1307,6 +1336,28 @@ fn whitespace(input: &str) -> IResult<&str, ()> {
     return Ok((remaining, ()));
 }
 
+/// Removes all comments from input text.
+///
+/// The comments can be C/Java style, which means:
+/// 1. single-line comments starting by `//` and continuing for the rest of the line (because of URLs, `://` is skipped)
+/// 2. multi-line comments surrounded by `/*` and `*/`
+/// 3. documentation (multi-line) comments surrounded by `/**` and `*/`
+pub fn remove_comments(input: String) -> String {
+    // black magic that should find "//" but ignore "://" because of URLs
+    let single_line_comments_regex = Regex::new(r"(?m:(^|[^:])//.*$)").unwrap();
+
+    // documentation comments are included in the multi-line regex
+    let multi_line_comments_regex = Regex::new(r"(?ms:/\*.*?\*/)").unwrap();
+
+    // multi-line comments need to be removed first, because they can contain single-line comments
+    // removing single-line comments first might cause issues
+    let input = multi_line_comments_regex.replace_all(&input, "");
+    // put back the single consumed letter before // (due to URL checking)
+    let input = single_line_comments_regex.replace_all(&input, "$1");
+
+    return input.to_string();
+}
+
 /// unit tests for the 'parser.rs'
 #[cfg(test)]
 mod tests {
@@ -1680,10 +1731,11 @@ mod tests {
         fn single_token() {
             let gr = parse_grammar("public $root = foo;").unwrap();
             let text = "foo";
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
                 rule: "root".to_string(),
                 text: text.to_string(),
+                style: ParsingStyle::Greedy,
                 node: ParseNode::Rule {
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Token("foo".to_string())],
@@ -1696,8 +1748,9 @@ mod tests {
         fn token_with_tags() {
             let gr = parse_grammar("public $root = foo {tag1} {tag2};").unwrap();
             let text = "foo";
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 node: ParseNode::Rule {
                     rule_name: "root".to_string(),
                     expansion: vec![
@@ -1716,8 +1769,9 @@ mod tests {
         fn simple_sequence() {
             let gr = parse_grammar("public $root = t1 $NULL {tag1} t2 {tag2} t3 {tag3};").unwrap();
             let text = "t1 t2 t3";
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 node: ParseNode::Rule {
                     rule_name: "root".to_string(),
                     expansion: vec![
@@ -1739,8 +1793,9 @@ mod tests {
         fn simple_sequence_with_brackets() {
             let gr = parse_grammar("public $root = ((t1) $NULL) {tag1} (t2 {tag2} t3);").unwrap();
             let text = "t1 t2 t3";
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 node: ParseNode::Rule {
                     rule_name: "root".to_string(),
                     expansion: vec![
@@ -1762,6 +1817,7 @@ mod tests {
             let gr = parse_grammar("public $root = t1 | t2 | t3 ;").unwrap();
             let text = "t2";
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -1769,7 +1825,7 @@ mod tests {
                     expansion: vec![ParseNode::Token("t2".to_string())],
                 },
             }];
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             assert_eq!(expected, parsed);
         }
 
@@ -1778,6 +1834,7 @@ mod tests {
             let gr = parse_grammar("public $root = t1 | t2 | $NULL;").unwrap();
             let text = "";
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -1785,7 +1842,7 @@ mod tests {
                     expansion: vec![],
                 },
             }];
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             assert_eq!(expected, parsed);
         }
 
@@ -1794,6 +1851,7 @@ mod tests {
             let gr = parse_grammar("public $root = t1 {tag1} | t1 {tag2} | t2;").unwrap();
             let text = "t1";
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -1804,7 +1862,7 @@ mod tests {
                     ],
                 },
             }];
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             assert_eq!(expected, parsed);
         }
 
@@ -1812,8 +1870,9 @@ mod tests {
         fn special_garbage() {
             let gr = parse_grammar("public $root = $GARBAGE;").unwrap();
             let text = "foo";
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -1828,8 +1887,9 @@ mod tests {
         fn repeat_simple() {
             let gr = parse_grammar("public $root = t1 <0-2>;").unwrap();
             let text = "";
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -1840,8 +1900,9 @@ mod tests {
             assert_eq!(parsed, expected);
 
             let text2 = "t1";
-            let parsed2 = gr.parse_text_from_start(text2);
+            let parsed2 = gr.parse_text_from_start(text2, &ParsingStyle::Greedy);
             let expected2 = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text2.to_string(),
                 node: ParseNode::Rule {
@@ -1852,8 +1913,9 @@ mod tests {
             assert_eq!(parsed2, expected2);
 
             let text3 = "t1 t1";
-            let parsed3 = gr.parse_text_from_start(text3);
+            let parsed3 = gr.parse_text_from_start(text3, &ParsingStyle::Greedy);
             let expected3 = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text3.to_string(),
                 node: ParseNode::Rule {
@@ -1870,8 +1932,9 @@ mod tests {
         #[test]
         fn repeat_sequence() {
             let gr = parse_grammar("public $root = (t1 {tag}) <0-3>;").unwrap();
-            let parsed = gr.parse_text_from_start("");
+            let parsed = gr.parse_text_from_start("", &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: "".to_string(),
                 node: ParseNode::Rule {
@@ -1881,8 +1944,9 @@ mod tests {
             }];
             assert_eq!(parsed, expected);
 
-            let parsed = gr.parse_text_from_start("t1");
+            let parsed = gr.parse_text_from_start("t1", &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: "t1".to_string(),
                 node: ParseNode::Rule {
@@ -1895,8 +1959,9 @@ mod tests {
             }];
             assert_eq!(parsed, expected);
 
-            let parsed = gr.parse_text_from_start("t1 t1 t1");
+            let parsed = gr.parse_text_from_start("t1 t1 t1", &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: "t1 t1 t1".to_string(),
                 node: ParseNode::Rule {
@@ -1919,13 +1984,14 @@ mod tests {
             let gr = parse_grammar("public $root = (t1 {tag}) <0->;").unwrap();
             for n in [0, 1, 2, 10, 100, 1000, 10_000] {
                 let text = "t1".repeat(n);
-                let parsed = gr.parse_text_from_start(&text);
+                let parsed = gr.parse_text_from_start(&text, &ParsingStyle::Greedy);
                 let mut expansion = vec![];
                 for _ in 0..n {
                     expansion.push(ParseNode::Token("t1".to_string()));
                     expansion.push(ParseNode::Tag("tag".to_string()));
                 }
                 let expected = vec![ParseResult {
+                    style: ParsingStyle::Greedy,
                     rule: "root".to_string(),
                     text: text.to_string(),
                     node: ParseNode::Rule {
@@ -1941,8 +2007,9 @@ mod tests {
         fn special_garbage_with_tags() {
             let gr = parse_grammar("public $root = $GARBAGE {tag1} {tag2};").unwrap();
             let text = "foo";
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -1960,8 +2027,9 @@ mod tests {
         fn special_garbage_with_tags_and_repeat() {
             let gr = parse_grammar("public $root = $GARBAGE <3> {tag};").unwrap();
             let text = "foo bar baz";
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -1980,8 +2048,9 @@ mod tests {
         fn special_null() {
             let gr = parse_grammar("public $root = $NULL {tag};").unwrap();
             let text = "";
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -2020,8 +2089,9 @@ mod tests {
             let s = "#ABNF 1.0 UTF-8; public $root = token {tag};";
             let g = parse_grammar(s).unwrap();
             let text = "token";
-            let p = g.parse_text_from_start(text);
+            let p = g.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -2040,8 +2110,9 @@ mod tests {
             let s = "#ABNF 1.0 UTF-8; public $root = $other; $other = token {tag} {second tag};";
             let g = parse_grammar(s).unwrap();
             let text = "token";
-            let p = g.parse_text_from_start(text);
+            let p = g.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -2064,6 +2135,7 @@ mod tests {
             let gr = parse_grammar("public $rule = (t1 {tag1}) <0-2> (t1 {tag2}) <0-2>;").unwrap();
             let text = "t1 t1 t1";
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "rule".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
@@ -2078,15 +2150,16 @@ mod tests {
                     ],
                 },
             }];
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             assert_eq!(expected, parsed);
         }
 
         #[test]
         fn simple_rule_ref() {
             let gr = parse_grammar("public $root = foo $other; $other = bar;").unwrap();
-            let parsed = gr.parse_text_from_start("foo bar");
+            let parsed = gr.parse_text_from_start("foo bar", &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: "foo bar".to_string(),
                 node: ParseNode::Rule {
@@ -2107,8 +2180,9 @@ mod tests {
         fn simple_rule_ref_with_tags() {
             let src = "public $root = foo {tag foo} $other {tag ref}; $other = bar {tag bar};";
             let gr = parse_grammar(src).unwrap();
-            let parsed = gr.parse_text_from_start("foo bar");
+            let parsed = gr.parse_text_from_start("foo bar", &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: "foo bar".to_string(),
                 node: ParseNode::Rule {
@@ -2133,8 +2207,9 @@ mod tests {
         #[test]
         fn optional_sequence() {
             let gr = parse_grammar("public $root = t1 [t2 {tag}] t2;").unwrap();
-            let parsed = gr.parse_text_from_start("t1 t2 t2");
+            let parsed = gr.parse_text_from_start("t1 t2 t2", &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: "t1 t2 t2".to_string(),
                 node: ParseNode::Rule {
@@ -2149,8 +2224,9 @@ mod tests {
             }];
             assert_eq!(expected, parsed);
 
-            let parsed2 = gr.parse_text_from_start("t1 t2");
+            let parsed2 = gr.parse_text_from_start("t1 t2", &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: "t1 t2".to_string(),
                 node: ParseNode::Rule {
@@ -2167,8 +2243,10 @@ mod tests {
         #[test]
         fn optional_rule_ref() {
             let gr = parse_grammar("public $rule = t1 [$other] t2; $other = t2;").unwrap();
-            let parsed = gr.parse_text_from_start("t1 t2 t2");
+            let parsed = gr.parse_text_from_start("t1 t2 t2", &ParsingStyle::Greedy);
+            dbg!(&parsed);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "rule".to_string(),
                 text: "t1 t2 t2".to_string(),
                 node: ParseNode::Rule {
@@ -2184,9 +2262,14 @@ mod tests {
                 },
             }];
             assert_eq!(expected, parsed);
+        }
 
-            let parsed2 = gr.parse_text_from_start("t1 t2");
+        #[test]
+        fn optional_rule_ref_missing() {
+            let gr = parse_grammar("public $rule = t1 [$other] t2; $other = t2;").unwrap();
+            let parsed2 = gr.parse_text_from_start("t1 t2", &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "rule".to_string(),
                 text: "t1 t2".to_string(),
                 node: ParseNode::Rule {
@@ -2203,8 +2286,9 @@ mod tests {
         #[test]
         fn rule_ref_multiple_same() {
             let gr = parse_grammar("public $root = $other $other; $other = foo;").unwrap();
-            let parsed = gr.parse_text_from_start("foo foo");
+            let parsed = gr.parse_text_from_start("foo foo", &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: "foo foo".to_string(),
                 node: ParseNode::Rule {
@@ -2230,7 +2314,7 @@ mod tests {
                 parse_grammar("public $root = $other <0-> {baz}; $other = foo {bar};").unwrap();
             for n in [0, 1, 2, 5, 10, 100] {
                 let text = "foo".repeat(n);
-                let parsed = gr.parse_text_from_start(&text);
+                let parsed = gr.parse_text_from_start(&text, &ParsingStyle::Greedy);
                 let mut expansion = vec![];
                 for i in 0..n {
                     expansion.push(ParseNode::Rule {
@@ -2243,6 +2327,7 @@ mod tests {
                     expansion.push(ParseNode::Tag("baz".to_string()));
                 }
                 let expected = vec![ParseResult {
+                    style: ParsingStyle::Greedy,
                     rule: "root".to_string(),
                     text: text.to_string(),
                     node: ParseNode::Rule {
@@ -2261,8 +2346,9 @@ mod tests {
             // otherwise the recursion will not be actually applied
             let s = "public $root = $other; $other = t1 $other | t1 {last} ;";
             let grammar = parse_grammar(s).unwrap();
-            let parsed = grammar.parse_text_from_start("t1 t1 t1");
+            let parsed = grammar.parse_text_from_start("t1 t1 t1", &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: "t1 t1 t1".to_string(),
                 node: ParseNode::Rule {
@@ -2296,8 +2382,9 @@ mod tests {
             let gr = parse_grammar("public $root = $other; $other = (t1 $other t2) | $NULL {end};")
                 .unwrap();
             let text = "t1 t1 t2 t2";
-            let parsed = gr.parse_text_from_start(text);
+            let parsed = gr.parse_text_from_start(text, &ParsingStyle::Greedy);
             let expected = vec![ParseResult {
+                style: ParsingStyle::Greedy,
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {

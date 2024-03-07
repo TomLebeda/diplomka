@@ -3,6 +3,8 @@ use std::path::PathBuf;
 
 use clap::{Args, Parser, Subcommand};
 
+use crate::parser::ParsingStyle;
+
 #[derive(Parser)]
 #[command(author = "Tomáš Lebeda <tom.lebeda@gmail.com>")]
 #[command(about = "Software for working with scenes")]
@@ -64,6 +66,9 @@ pub struct TripletsArgs {
     pub grammar: PathBuf,
     /// string that will be parsed with the grammar
     pub text: String,
+    #[arg(short, long, value_enum, default_value_t = ParsingStyle::Lazy)]
+    /// what type of parsing should be used
+    pub style: ParsingStyle,
 }
 
 #[derive(Args, Debug)]

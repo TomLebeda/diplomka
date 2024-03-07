@@ -94,6 +94,26 @@ impl Display for Triplet {
 }
 
 impl SceneObject {
+    /// Returns a string that represents the object as a Node in DOT language.
+    pub fn dot_node_str(&self) -> String {
+        let name = self.get_name();
+        let top_row = format!("<tr><td colspan=\"2\">{name}</td></tr>");
+        let other_rows = self
+            .attributes
+            .iter()
+            .sorted_unstable_by_key(|(attr, val)| return attr)
+            .map(|(attr, val)| {
+                return format!(
+                    // keep the extra spaces around as a padding
+                    "<tr><td align=\"LEFT\"> {attr} </td><td align=\"LEFT\"> {val} </td></tr>"
+                );
+            })
+            .join("");
+        let table_content = format!("{top_row}{other_rows}");
+        let label = format!("<<table cellspacing=\"0\">{table_content}</table>>");
+        let content = format!("shape=plain,label={label}");
+        return format!("\"{name}\"[{content}]");
+    }
     /// Returns a list of all attribute names that are in this object.
     pub fn get_attribute_names(&self) -> Vec<String> {
         return self
@@ -203,6 +223,20 @@ impl Scene {
             .flat_map(|obj| return obj.get_attributes())
             .unique()
             .collect_vec();
+    }
+
+    /// Returns the name of the image that is assigned to the scene.
+    /// Splits the attached file path at "/" and returns the last part or full name if there is nothing to split
+    pub fn get_image_name(&self) -> String {
+        let file_name = match self.image_path.rsplit_once('/') {
+            Some((prefix, suffix)) => suffix,
+            None => self.image_path.as_str(),
+        };
+        // remove the .jpg or whatever from the name
+        match file_name.split_once('.') {
+            Some((prefix, suffix)) => return prefix.to_string(),
+            None => return file_name.to_string(),
+        }
     }
 
     /// Returns a list of all unique predicates, sorted alphabetically in ascending order.

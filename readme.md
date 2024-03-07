@@ -20,12 +20,15 @@
 	- [ ] binární hodnocení tripletů (počet)
 	- [ ] ztrátové funkce pro objekty
 - [x] extrakce tripletů z textu
-	- [ ] re-implementace pomocí vlastního SRGS-like jazyka
+	- [x] re-implementace pomocí vlastního SRGS-like jazyka
 	- [x] základní extrakce
 	- [x] validace počtu tagů
 - [ ] vizualizace popisu scény
-	- [ ] online (web ui)
-	- [ ] lokální (png/svg export)
+	- [ ] vizualizace hierarchie -> les, objekty bez atributů
+	- [ ] vizualizace vazeb -> orientovaný graf, atributy volitelně zobrazené
+	- [ ] vizualizace atributů -> json? 
+	- [ ] implementace: lokální (png/svg export)
+	- [ ] implementace: online (web ui)
 - [x] multi-layer hierarchie objektů
 - [x] crumbling systém
 - [x] tooling pro práci s reprezentací scény

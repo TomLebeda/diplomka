@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg width="135" height="1895.0109999999997" viewBox="0 0 135 1895.0109999999997" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="startarrow" markerWidth="10" markerHeight="7"
+refX="0" refY="3.5" orient="auto">
+<polygon points="10 0, 10 7, 0 3.5" />
+</marker>
+<marker id="endarrow" markerWidth="10" markerHeight="7"
+refX="10" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" />
+</marker>
+
+</defs><style>
+.a15 { font-size: 15px; font-family: Times, serif; }
+</style>
+<rect x="30" y="30" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="65" class="a15"><tspan x = "80" dy="1.0em">sun</tspan></text><rect x="30" y="190.001" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="225.001" class="a15"><tspan x = "80" dy="1.0em">cloud</tspan></text><rect x="30" y="350.00199999999995" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="385.00199999999995" class="a15"><tspan x = "80" dy="1.0em">dog</tspan></text><rect x="30" y="510.00299999999993" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="545.0029999999999" class="a15"><tspan x = "80" dy="1.0em">squirrel</tspan></text><rect x="30" y="670.0039999999999" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="705.0039999999999" class="a15"><tspan x = "80" dy="1.0em">tree #2</tspan></text><rect x="30" y="830.0049999999999" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="865.0049999999999" class="a15"><tspan x = "80" dy="1.0em">bird</tspan></text><rect x="30" y="990.0059999999999" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="1025.0059999999999" class="a15"><tspan x = "80" dy="1.0em">branch</tspan></text><rect x="30" y="1150.0069999999998" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="1185.0069999999998" class="a15"><tspan x = "80" dy="1.0em">tree #1</tspan></text><rect x="30" y="1310.0079999999998" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="1345.0079999999998" class="a15"><tspan x = "80" dy="1.0em">plane</tspan></text><rect x="30" y="1470.0089999999998" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="1505.0089999999998" class="a15"><tspan x = "80" dy="1.0em">sky</tspan></text><rect x="30" y="1630.0099999999998" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="1665.0099999999998" class="a15"><tspan x = "80" dy="1.0em">ground</tspan></text><rect x="30" y="1790.0109999999997" width="100" height="100" fill="#ffffffff" 
+            stroke-width="2" stroke="#000000ff" rx="0"  />
+<text dominant-baseline="middle" text-anchor="middle" 
+            x="80" y="1825.0109999999997" class="a15"><tspan x = "80" dy="1.0em">leash</tspan></text></svg>

@@ -10,9 +10,16 @@
 - other useful urls: 
 	- [český národní korpus](https://wiki.korpus.cz/doku.php/cnk:syn)
     - [internetová jazyková příručka](https://prirucka.ujc.cas.cz)
+	- [record shape for DOT nodes](https://graphviz.org/doc/info/shapes.html#epsf)
 
-# TODO:
-1. problém: jak řešit nejednoznačné hodnoty?
+# VIZUALIZACE:
+- tři úrovně vizualizace: 
+	1. hierarchie => stromové struktury (les), atributy objektů skryté
+	2. vazby (bez hierarchie) => orientovaný graf s popisky (sémantická síť), atributy volitelně skryté
+	3. objekty a atributy => json-like struktura objektů a jejich atributy 
+
+# PROBLÉMY:
+1. problém: jak řešit nejednoznačné hodnoty? [použít 2. možnost]
 	- např: pes má barvu, která je mezi hnědou a černou 
 		1. možnost: přidat logické operátory (AND, OR) do atributů => barva = hnědá OR černá (obě správně, nulová ztráta)
 		2. možnost: udělat variabilní hodnocení (když je barva = černá a uživatel řekne hnědá, tak bude chyba minimální, na rozdíl od např červené)
@@ -26,7 +33,13 @@
 		- nevýhoda: potřeba neuronové sítě schopné porovnat přirozenou řeč a triplet => custom architektura (= potřeba trénovacích dat)
 			-> experimentálně vyzkoušeno, že lze generovat syntetická trénovací anotovaná data (ChatGPT), ale riziko degenerace sítě?
 
-vícevrstvá hierarchie
+
+# ZMÍNIT V REFERÁTU:
+- bylo potřeba udělat lazy matching (vs greedy), jinak by $GARBAGE sežral moc 
+	- -> např: z věty "hnědý pes honí malou oranžovou veverku" by našel "hnědá veverka"
+- pak jsem ale zjistil, že zase lazy taky není ideální, protože má tendenci vynechávat úplně volitelné části pravidla
+	-> přidal jsem tedy možnost přepínat mezy Lazy a Greedy stylem parsování
+	-> problém je, jak poznat kdy který použít? 
 
 # ASPEKTY POPISU:
 1. objekty
@@ -47,7 +60,6 @@ vícevrstvá hierarchie
 
 # NÁPADY NA OBRÁZKY:
 - les (různá roční období), farma, domácnost (kuchyně, dílna, ...), zoo, město, hřiště (dětské, různé sporty), pláž
-
 
 # Poznámky ke schůzce:
 - Data-flow diagram - je to takhle ok?
@@ -83,12 +95,4 @@ vícevrstvá hierarchie
 	-> tohle by se možná hodilo prodiskutovat s někým, kdo má vhled do té medicínské stránky, aby řekl jestli to má vůbec cenu?
 
 - Kolik by tak mělo být rešerše ve finální práci? 
-
-# PROBLÉMY:
-- když mám větu "hnědý pes honí oranžovou rychlou veverku" a chci zachytit barvy objektů, tak: 
-	- když dám mezi barvu a objekt možnost GARBAGE, tak se chytne správně "oranžová veverka", ale zároveň také "hnědá veverka", protože parsování je greedy a GARBAGE požere všechno mezi
-sémantické pravidlo pro určení barvy objektu:
-```
-$has_color = ( $NULL {subj_start} $has_color_VALS {subj_end} {obj_start} $object {obj_end}) {predicate=has_color};
-```
 

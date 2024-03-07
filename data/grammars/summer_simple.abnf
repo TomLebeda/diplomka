@@ -3,33 +3,31 @@
 public $triplet = $chasing | $climbing | $has_child_object | $has_color | $has_parent_object | $is_hidden_behind | $running_away_from | $sitting_on;
 
 $chasing = (
-	$NULL {obj_start} $object {obj_end}
-	(
-		(honí | pronásleduj(í|ou|e)) |
-		(běží | utík(á|ají)) za |
-		prohán(í|ějí)
-	)
+	$NULL {obj_start} $object {obj_end} $GARBAGE<0->
+	( (honí | pronásleduj(í|ou|e)) | (běží | utík(á|ají)) za | prohán(í|ějí))
 	$GARBAGE<0-> $NULL {subj_start} $object {subj_end}
 ) {predicate=chasing};
+
 $climbing = (
-	$NULL {obj_start} $object {obj_end}
+	$NULL {obj_start} $object {obj_end} $GARBAGE<0-> 
 	(lez(e|ou) | šplh(á|ají)) na
 	$GARBAGE<0-> $NULL {subj_start} $object {subj_end}
 ) {predicate=climbing};
+
 $is_hidden_behind = (
 	(
-		$NULL {obj_start} $object {obj_end}
+		$NULL {obj_start} $object {obj_end} $GARBAGE<0-> 
 		[se|je|jsou] [schovává] za
 		$GARBAGE<0-> $NULL {subj_start} $object {subj_end}
 	) | (
-		za $GARBAGE {subj_start} $object {subj_end}
+		za $GARBAGE {subj_start} $object {subj_end} $GARBAGE<0-> 
 		[se|je|jsou] [schováv(á|ají)]
 		$GARBAGE<0-> $NULL {obj_start} $object {obj_end}
 	)
 ) {predicate=is_hidden_behind};
 $has_color = (
 	(
-	  	$NULL {obj_start} $object {obj_end}
+	  	$NULL {obj_start} $object {obj_end} $GARBAGE<0->
 		(je | má barvu | (který | která | které) (je | byla | jsou | byl | bylo | byly) )
 		$GARBAGE<0-> $NULL {subj_start} $has_color_VALS {subj_end}
 	) | (
