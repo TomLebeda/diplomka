@@ -39,6 +39,17 @@ pub enum Commands {
     Prepare(PrepareArgs),
     /// Generate ABNF grammar files from the output of 'prepare' command.
     Generate(GenerateArgs),
+    /// Render graph from scene
+    Render(RenderArgs),
+}
+
+#[derive(Args, Debug)]
+/// Arguments for the "generate" CLI command
+pub struct RenderArgs {
+    /// Path to the scene file (JSON)
+    pub scene_file: PathBuf,
+    /// Path to the output file (will be created if doesn't exist and replaced if does)
+    pub out_file: PathBuf,
 }
 
 #[derive(Args, Debug)]

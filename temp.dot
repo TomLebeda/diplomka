@@ -1,0 +1,226 @@
+digraph summer_simple {
+node[fontname="Iosevka Slab"]
+edge[fontname="Iosevka Slab",arrowhead=open]
+graph[fontname="Iosevka Slab",label="scene from image: summer_simple",labelloc=t, rankdir=LR]
+"sun"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">sun</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">yellow</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[290, 95]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">245</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">145</FONT></td>
+            </tr></table>>]
+"cloud"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">cloud</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">white</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[318, 133]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">564</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">87</FONT></td>
+            </tr></table>>]
+"dog"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">dog</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">brown</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[855, 446]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">288</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">135</FONT></td>
+            </tr></table>>]
+"squirrel"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">squirrel</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">orange</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[1078, 377]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">145</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">93</FONT></td>
+            </tr></table>>]
+"tree #2"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">tree #2</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">green</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[1149, 263]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">489</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">517</FONT></td>
+            </tr></table>>]
+"bird"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">bird</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">white</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[405, 254]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">112</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">59</FONT></td>
+            </tr></table>>]
+"branch"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">branch</FONT></B></td>
+            </tr><tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[461, 289]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">138</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">32</FONT></td>
+            </tr></table>>]
+"tree #1"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">tree #1</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">green</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[623, 302]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">319</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">266</FONT></td>
+            </tr></table>>]
+"plane"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">plane</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">white</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[791, 92]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">147</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">47</FONT></td>
+            </tr></table>>]
+"sky"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">sky</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">blue</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[706, 209]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">1413</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">419</FONT></td>
+            </tr></table>>]
+"ground"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">ground</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">green</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[706, 474]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">1413</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">113</FONT></td>
+            </tr></table>>]
+"leash"[shape=plain,label=<<table cellspacing="0" cellpadding="4"><tr>
+                <td bgcolor="black" colspan="2" align="LEFT"><B><FONT color="white">leash</FONT></B></td>
+            </tr><tr>
+                        <td align="LEFT"><FONT color="#7638c5">color</FONT></td>
+                        <td align="LEFT"><FONT color="#393552">white</FONT></td>
+                    </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox center</FONT></td>
+                <td align="LEFT"><FONT color="#393552">[828, 407]</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox width</FONT></td>
+                <td align="LEFT"><FONT color="#393552">233</FONT></td>
+            </tr>
+<tr>
+                <td align="LEFT"><FONT color="#7638c5">bbox height</FONT></td>
+                <td align="LEFT"><FONT color="#393552">61</FONT></td>
+            </tr></table>>]
+"dog" -> "squirrel" [label="chasing"]
+"squirrel" -> "dog" [label="running away from"]
+"bird" -> "branch" [label="sitting on"]
+"sun" -> "cloud" [label="is hidden behind"]
+"squirrel" -> "tree #2" [label="climbing"]"dog" -> "leash" [label="contains"]
+"branch" -> "tree #1" [label="is part of"]
+"tree #1" -> "branch" [label="contains"]
+"leash" -> "dog" [label="is part of"]
+}
+

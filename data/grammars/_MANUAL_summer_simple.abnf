@@ -105,7 +105,5 @@ $light_brown = ($light $brown) {light_brown} ; //{#f4a460}
 $white = (bíl(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {white} ; //{#ffffff}
 $gray = (šediv(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými) | šed(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {gray} ; //{#808080}
 $light_gray = ($light $gray) {light_gray} ; //{#d3d3d3}
-//{#303030}
-$dark_gray = ($dark $gray) {dark_gray};
-//{#000000}
-$black = (čern(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {black} ;
+$dark_gray = ($dark $gray) {dark_gray} ; //{#303030}
+$black = (čern(ou|á|é|ého|ém|ému|í|ý|ých|ým|ými)) {black} ; //{#000000}

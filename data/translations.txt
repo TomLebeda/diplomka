@@ -5,7 +5,7 @@ cloud: mrak, oblak
 dog: pes
 green: zelený
 ground: země, podlaha
-has color: má barvu
+color: barva
 leash: vodítko, obojek
 orange: oranžový, pomeranč
 plane: letadlo, plocha, rovina

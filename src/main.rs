@@ -35,27 +35,38 @@ use crate::{
 };
 
 fn main() {
-    let path = Path::new("./data/scenes/summer_simple.json");
-    let scene = Scene::from_file(path).unwrap();
-    scene.render_graph();
+    let cli = Cli::parse();
 
-    // let cli = Cli::parse();
-    //
-    // env_logger::Builder::new()
-    //     .filter_module("diplomka", cli.log_level.to_log_filter())
-    //     .format_timestamp_micros()
-    //     .init();
+    env_logger::Builder::new()
+        .filter_module("diplomka", cli.log_level.to_log_filter())
+        .format_timestamp_micros()
+        .init();
 
-    // match cli.command {
-    //     Commands::Check(args) => print_check(args),
-    //     Commands::Stats(args) => print_stats(args),
-    //     Commands::List(args) => print_list(args),
-    //     Commands::Crumble(args) => print_crumbles(args),
-    //     Commands::Triplets(args) => print_triplets(args),
-    //     Commands::Fetch(args) => print_fetch(args),
-    //     Commands::Prepare(args) => print_prepare(args),
-    //     Commands::Generate(args) => print_generate(args),
-    // };
+    match cli.command {
+        Commands::Check(args) => print_check(args),
+        Commands::Stats(args) => print_stats(args),
+        Commands::List(args) => print_list(args),
+        Commands::Crumble(args) => print_crumbles(args),
+        Commands::Triplets(args) => print_triplets(args),
+        Commands::Fetch(args) => print_fetch(args),
+        Commands::Prepare(args) => print_prepare(args),
+        Commands::Generate(args) => print_generate(args),
+        Commands::Render(args) => print_render(args),
+    };
+}
+
+/// Print the process of 'render' CLI command
+fn print_render(args: RenderArgs) {
+    trace!("executing 'render' command");
+    match Scene::from_file(&args.scene_file) {
+        Ok(scene) => {
+            trace!("scene loaded");
+            scene.render_dot_graph(&args.out_file);
+        }
+        Err(err) => {
+            error!("can't load scene: {}", err);
+        }
+    }
 }
 
 /// Print the process and result of 'generate' CLI command
