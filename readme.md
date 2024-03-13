@@ -1,4 +1,5 @@
 # TODOS:
+- [ ] dědičnost objektů (ptá sedí na větvi + větev je součástí stromu => pták sedí na stromě)
 - [x] implementace SRGS-like jazyka
 	- [ ] formální definice
 	- [x] systém komentářů
@@ -23,12 +24,8 @@
 	- [x] re-implementace pomocí vlastního SRGS-like jazyka
 	- [x] základní extrakce
 	- [x] validace počtu tagů
-- [ ] vizualizace popisu scény
-	- [ ] vizualizace hierarchie -> les, objekty bez atributů
-	- [ ] vizualizace vazeb -> orientovaný graf, atributy volitelně zobrazené
-	- [ ] vizualizace atributů -> json? 
-	- [ ] implementace: lokální (png/svg export)
-	- [ ] implementace: online (web ui)
+- [x] vizualizace popisu scény
+	- [x] lokální (png/svg export)
 - [x] multi-layer hierarchie objektů
 - [x] crumbling systém
 - [x] tooling pro práci s reprezentací scény

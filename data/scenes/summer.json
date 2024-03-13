@@ -1,55 +1,329 @@
 {
-  "width": 1413,
-  "height": 531,
-  "image_path": "data/imgs/summer_simple.png",
+  "width": 2002,
+  "height": 1123,
+  "image_path": "data/imgs/summer.png",
   "objects": [
     {
-      "name": "sun",
+      "name": "fishing net",
+      "tags": [
+        "item"
+      ],
       "top_left_corner": [
-        168,
-        23
+        1372,
+        673
       ],
       "size": [
-        245,
-        145
+        211,
+        74
       ],
       "parents": [],
       "children": [],
       "attributes": [
         [
-          "has color",
-          "yellow"
+          "color",
+          "white"
         ]
       ]
     },
     {
-      "name": "cloud",
+      "name": "fishing rod",
+      "tags": [
+        "item"
+      ],
       "top_left_corner": [
-        36,
-        90
+        1241,
+        566
       ],
       "size": [
-        564,
-        87
+        359,
+        187
       ],
       "parents": [],
       "children": [],
       "attributes": [
         [
-          "has color",
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "chair",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        1649,
+        664
+      ],
+      "size": [
+        110,
+        89
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "tree #3",
+      "tags": [
+        "environment",
+        "background"
+      ],
+      "top_left_corner": [
+        0,
+        0
+      ],
+      "size": [
+        485,
+        363
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "green"
+        ]
+      ]
+    },
+    {
+      "name": "tree #4",
+      "tags": [
+        "environment",
+        "background"
+      ],
+      "top_left_corner": [
+        353,
+        103
+      ],
+      "size": [
+        336,
+        263
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "green"
+        ]
+      ]
+    },
+    {
+      "name": "birds",
+      "tags": [
+        "animal",
+        "background",
+        "group"
+      ],
+      "top_left_corner": [
+        512,
+        18
+      ],
+      "size": [
+        253,
+        99
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "black"
+        ],
+        [
+          "count",
+          "7"
+        ]
+      ]
+    },
+    {
+      "name": "ball",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        927,
+        256
+      ],
+      "size": [
+        61,
+        54
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "red"
+        ],
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "girl",
+      "tags": [
+        "person"
+      ],
+      "top_left_corner": [
+        653,
+        283
+      ],
+      "size": [
+        179,
+        232
+      ],
+      "parents": [],
+      "children": [
+        "swimsuit #1"
+      ],
+      "attributes": [
+        [
+          "hairstyle",
+          "ponytail"
+        ]
+      ]
+    },
+    {
+      "name": "swimsuit #1",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        719,
+        330
+      ],
+      "size": [
+        56,
+        78
+      ],
+      "parents": [
+        "girl"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "red"
+        ]
+      ]
+    },
+    {
+      "name": "boy",
+      "tags": [
+        "person"
+      ],
+      "top_left_corner": [
+        719,
+        330
+      ],
+      "size": [
+        56,
+        78
+      ],
+      "parents": [],
+      "children": [
+        "cap",
+        "tshirt #1",
+        "shorts",
+        "shoes"
+      ],
+      "attributes": []
+    },
+    {
+      "name": "sun",
+      "tags": [
+        "background",
+        "environment"
+      ],
+      "top_left_corner": [
+        950,
+        27
+      ],
+      "size": [
+        195,
+        117
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "yellow"
+        ],
+        [
+          "state",
+          "shining"
+        ]
+      ]
+    },
+    {
+      "name": "cloud #1",
+      "tags": [
+        "background",
+        "environment"
+      ],
+      "top_left_corner": [
+        829,
+        88
+      ],
+      "size": [
+        225,
+        69
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "cloud #2",
+      "tags": [
+        "background",
+        "environment"
+      ],
+      "top_left_corner": [
+        1072,
+        84
+      ],
+      "size": [
+        233,
+        53
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
           "white"
         ]
       ]
     },
     {
       "name": "dog",
+      "tags": [
+        "animal"
+      ],
       "top_left_corner": [
-        711,
-        379
+        1403,
+        335
       ],
       "size": [
-        288,
-        135
+        240,
+        101
       ],
       "parents": [],
       "children": [
@@ -57,93 +331,53 @@
       ],
       "attributes": [
         [
-          "has color",
+          "color",
           "brown"
+        ],
+        [
+          "color",
+          "black"
         ]
       ]
     },
     {
       "name": "squirrel",
+      "tags": [
+        "animal"
+      ],
       "top_left_corner": [
-        1006,
-        331
+        1655,
+        286
       ],
       "size": [
-        145,
-        93
+        116,
+        76
       ],
       "parents": [],
       "children": [],
       "attributes": [
         [
-          "has color",
+          "color",
           "orange"
+        ],
+        [
+          "color",
+          "brown"
         ]
       ]
     },
     {
       "name": "tree #2",
+      "tags": [
+        "environment"
+      ],
       "top_left_corner": [
-        905,
-        5
+        1194,
+        146
       ],
       "size": [
-        489,
-        517
-      ],
-      "parents": [],
-      "children": [],
-      "attributes": [
-        [
-          "has color",
-          "green"
-        ]
-      ]
-    },
-    {
-      "name": "bird",
-      "top_left_corner": [
-        349,
-        225
-      ],
-      "size": [
-        112,
-        59
-      ],
-      "parents": [],
-      "children": [],
-      "attributes": [
-        [
-          "has color",
-          "white"
-        ]
-      ]
-    },
-    {
-      "name": "branch",
-      "top_left_corner": [
-        392,
-        273
-      ],
-      "size": [
-        138,
-        32
-      ],
-      "parents": [
-        "tree #1"
-      ],
-      "children": [],
-      "attributes": []
-    },
-    {
-      "name": "tree #1",
-      "top_left_corner": [
-        464,
-        169
-      ],
-      "size": [
-        319,
-        266
+        264,
+        220
       ],
       "parents": [],
       "children": [
@@ -151,77 +385,159 @@
       ],
       "attributes": [
         [
-          "has color",
+          "color",
           "green"
         ]
       ]
     },
     {
-      "name": "plane",
+      "name": "bird",
+      "tags": [
+        "animal"
+      ],
       "top_left_corner": [
-        718,
-        69
+        1095,
+        193
       ],
       "size": [
-        147,
+        93,
         47
       ],
       "parents": [],
       "children": [],
       "attributes": [
         [
-          "has color",
+          "color",
           "white"
         ]
       ]
     },
     {
-      "name": "sky",
+      "name": "branch",
+      "tags": [
+        "environment",
+        "background"
+      ],
       "top_left_corner": [
-        0,
-        0
+        1130,
+        233
       ],
       "size": [
-        1413,
-        419
+        138,
+        41
+      ],
+      "parents": [
+        "tree #2"
+      ],
+      "children": [],
+      "attributes": []
+    },
+    {
+      "name": "tree #1",
+      "tags": [
+        "environment"
+      ],
+      "top_left_corner": [
+        1564,
+        8
+      ],
+      "size": [
+        416,
+        428
       ],
       "parents": [],
       "children": [],
       "attributes": [
         [
-          "has color",
+          "color",
+          "green"
+        ]
+      ]
+    },
+    {
+      "name": "plane",
+      "tags": [
+        "background"
+      ],
+      "top_left_corner": [
+        1410,
+        68
+      ],
+      "size": [
+        119,
+        27
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ],
+        [
+          "action",
+          "flying"
+        ]
+      ]
+    },
+    {
+      "name": "sky",
+      "tags": [
+        "environment",
+        "background"
+      ],
+      "top_left_corner": [
+        0,
+        0
+      ],
+      "size": [
+        2002,
+        365
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
           "white"
         ]
       ]
     },
     {
       "name": "ground",
+      "tags": [
+        "background",
+        "environment"
+      ],
       "top_left_corner": [
         0,
-        418
+        366
       ],
       "size": [
-        1413,
-        113
+        2002,
+        432
       ],
       "parents": [],
       "children": [],
       "attributes": [
         [
-          "has color",
+          "color",
           "white"
         ]
       ]
     },
     {
       "name": "leash",
+      "tags": [
+        "item"
+      ],
       "top_left_corner": [
-        712,
-        377
+        1401,
+        326
       ],
       "size": [
-        233,
-        61
+        199,
+        48
       ],
       "parents": [
         "dog"
@@ -229,13 +545,1120 @@
       "children": [],
       "attributes": [
         [
-          "has color",
+          "color",
           "white"
+        ]
+      ]
+    },
+    {
+      "name": "cap",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        1088,
+        387
+      ],
+      "size": [
+        49,
+        27
+      ],
+      "parents": [
+        "boy"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "tshirt #1",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        1071,
+        427
+      ],
+      "size": [
+        93,
+        81
+      ],
+      "parents": [
+        "boy"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ],
+        [
+          "pattern",
+          "striped"
+        ]
+      ]
+    },
+    {
+      "name": "shorts",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        1074,
+        506
+      ],
+      "size": [
+        103,
+        47
+      ],
+      "parents": [
+        "boy"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "blue"
+        ]
+      ]
+    },
+    {
+      "name": "shoes",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        1031,
+        599
+      ],
+      "size": [
+        155,
+        26
+      ],
+      "parents": [
+        "boy"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "woman",
+      "tags": [
+        "person"
+      ],
+      "top_left_corner": [
+        60,
+        426
+      ],
+      "size": [
+        458,
+        312
+      ],
+      "parents": [],
+      "children": [
+        "book",
+        "flip flops",
+        "swimsuit #2"
+      ],
+      "attributes": [
+        [
+          "hairstyle",
+          "bun"
+        ]
+      ]
+    },
+    {
+      "name": "swimsuit #2",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        110,
+        563
+      ],
+      "size": [
+        53,
+        88
+      ],
+      "parents": [
+        "woman"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "flip flops",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        404,
+        661
+      ],
+      "size": [
+        115,
+        82
+      ],
+      "parents": [
+        "woman"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "book",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        156,
+        539
+      ],
+      "size": [
+        98,
+        79
+      ],
+      "parents": [
+        "woman"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "red"
+        ]
+      ]
+    },
+    {
+      "name": "lounger",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        39,
+        504
+      ],
+      "size": [
+        282,
+        240
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "basket",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        424,
+        485
+      ],
+      "size": [
+        146,
+        123
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "brown"
+        ]
+      ]
+    },
+    {
+      "name": "bottle",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        438,
+        496
+      ],
+      "size": [
+        36,
+        61
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "cup #1",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        569,
+        527
+      ],
+      "size": [
+        33,
+        45
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "cup #2",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        619,
+        587
+      ],
+      "size": [
+        33,
+        50
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "blue"
+        ]
+      ]
+    },
+    {
+      "name": "bucket",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        645,
+        579
+      ],
+      "size": [
+        43,
+        66
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "yellow"
+        ]
+      ]
+    },
+    {
+      "name": "parasol",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        140,
+        340
+      ],
+      "size": [
+        327,
+        256
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "blanket",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        344,
+        561
+      ],
+      "size": [
+        434,
+        68
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "shovel",
+      "tags": [
+        "item"
+      ],
+      "top_left_corner": [
+        651,
+        665
+      ],
+      "size": [
+        53,
+        54
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "baby",
+      "tags": [
+        "person"
+      ],
+      "top_left_corner": [
+        680,
+        680
+      ],
+      "size": [
+        327,
+        191
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": []
+    },
+    {
+      "name": "duck",
+      "tags": [
+        "animal"
+      ],
+      "top_left_corner": [
+        222,
+        837
+      ],
+      "size": [
+        181,
+        82
+      ],
+      "parents": [
+        "ducks"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "brown"
+        ]
+      ]
+    },
+    {
+      "name": "ducklings",
+      "tags": [
+        "animal",
+        "group"
+      ],
+      "top_left_corner": [
+        29,
+        783
+      ],
+      "size": [
+        298,
+        135
+      ],
+      "parents": [
+        "ducks"
+      ],
+      "children": [
+        "duckling #1",
+        "duckling #2",
+        "duckling #3",
+        "duckling #4",
+        "duckling #5"
+      ],
+      "attributes": [
+        [
+          "color",
+          "brown"
+        ],
+        [
+          "count",
+          "5"
+        ]
+      ]
+    },
+    {
+      "name": "duckling #1",
+      "tags": [
+        "animal"
+      ],
+      "top_left_corner": [
+        29,
+        783
+      ],
+      "size": [
+        88,
+        41
+      ],
+      "parents": [
+        "ducklings"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "brown"
+        ]
+      ]
+    },
+    {
+      "name": "duckling #2",
+      "tags": [
+        "animal"
+      ],
+      "top_left_corner": [
+        108,
+        797
+      ],
+      "size": [
+        88,
+        41
+      ],
+      "parents": [
+        "ducklings"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "brown"
+        ]
+      ]
+    },
+    {
+      "name": "duckling #3",
+      "tags": [
+        "animal"
+      ],
+      "top_left_corner": [
+        200,
+        809
+      ],
+      "size": [
+        88,
+        41
+      ],
+      "parents": [
+        "ducklings"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "brown"
+        ]
+      ]
+    },
+    {
+      "name": "duckling #4",
+      "tags": [
+        "animal"
+      ],
+      "top_left_corner": [
+        228,
+        837
+      ],
+      "size": [
+        88,
+        41
+      ],
+      "parents": [
+        "ducklings"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "brown"
+        ]
+      ]
+    },
+    {
+      "name": "duckling #5",
+      "tags": [
+        "animal"
+      ],
+      "top_left_corner": [
+        110,
+        877
+      ],
+      "size": [
+        88,
+        41
+      ],
+      "parents": [
+        "ducklings"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "brown"
+        ]
+      ]
+    },
+    {
+      "name": "ducks",
+      "tags": [
+        "animal",
+        "group"
+      ],
+      "top_left_corner": [
+        29,
+        783
+      ],
+      "size": [
+        377,
+        135
+      ],
+      "parents": [],
+      "children": [
+        "duck",
+        "ducklings"
+      ],
+      "attributes": [
+        [
+          "count",
+          "6"
+        ]
+      ]
+    },
+    {
+      "name": "fish",
+      "tags": [
+        "animal"
+      ],
+      "top_left_corner": [
+        1000,
+        950
+      ],
+      "size": [
+        109,
+        61
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "green"
+        ]
+      ]
+    },
+    {
+      "name": "man #1",
+      "tags": [
+        "person"
+      ],
+      "top_left_corner": [
+        1344,
+        898
+      ],
+      "size": [
+        354,
+        194
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "action",
+          "swimming"
+        ]
+      ]
+    },
+    {
+      "name": "man #2",
+      "tags": [
+        "person"
+      ],
+      "top_left_corner": [
+        1474,
+        446
+      ],
+      "size": [
+        287,
+        334
+      ],
+      "parents": [],
+      "children": [
+        "hat",
+        "vest",
+        "shirt",
+        "pants",
+        "wellies"
+      ],
+      "attributes": [
+        [
+          "facial expression",
+          "smiling"
+        ],
+        [
+          "action",
+          "fishing"
+        ]
+      ]
+    },
+    {
+      "name": "hat",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        1589,
+        446
+      ],
+      "size": [
+        95,
+        45
+      ],
+      "parents": [
+        "man #2"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "black"
+        ]
+      ]
+    },
+    {
+      "name": "vest",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        1628,
+        511
+      ],
+      "size": [
+        123,
+        178
+      ],
+      "parents": [
+        "man #2"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "green"
+        ]
+      ]
+    },
+    {
+      "name": "shirt",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        1550,
+        535
+      ],
+      "size": [
+        151,
+        129
+      ],
+      "parents": [
+        "man #2"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "pattern",
+          "checkered"
+        ],
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "pants",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        1559,
+        643
+      ],
+      "size": [
+        109,
+        84
+      ],
+      "parents": [
+        "man #2"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "blue"
+        ]
+      ]
+    },
+    {
+      "name": "wellies",
+      "tags": [
+        "clothing"
+      ],
+      "top_left_corner": [
+        1463,
+        690
+      ],
+      "size": [
+        214,
+        88
+      ],
+      "parents": [
+        "man #2"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "black"
+        ]
+      ]
+    },
+    {
+      "name": "frog",
+      "tags": [
+        "animal"
+      ],
+      "top_left_corner": [
+        1667,
+        749
+      ],
+      "size": [
+        179,
+        96
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "green"
+        ]
+      ]
+    },
+    {
+      "name": "rock #1",
+      "tags": [
+        "environment"
+      ],
+      "top_left_corner": [
+        1624,
+        799
+      ],
+      "size": [
+        194,
+        63
+      ],
+      "parents": [
+        "rocks"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "rock #2",
+      "tags": [
+        "environment"
+      ],
+      "top_left_corner": [
+        1534,
+        772
+      ],
+      "size": [
+        103,
+        39
+      ],
+      "parents": [
+        "rocks"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ]
+      ]
+    },
+    {
+      "name": "pebbles #1",
+      "tags": [
+        "environment",
+        "group"
+      ],
+      "top_left_corner": [
+        302,
+        760
+      ],
+      "size": [
+        336,
+        50
+      ],
+      "parents": [
+        "rocks"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ],
+        [
+          "count",
+          "17"
+        ]
+      ]
+    },
+    {
+      "name": "pebbles #2",
+      "tags": [
+        "environment",
+        "group"
+      ],
+      "top_left_corner": [
+        1268,
+        759
+      ],
+      "size": [
+        139,
+        55
+      ],
+      "parents": [
+        "rocks"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ],
+        [
+          "count",
+          "7"
+        ]
+      ]
+    },
+    {
+      "name": "pebbles #3",
+      "tags": [
+        "environment",
+        "group"
+      ],
+      "top_left_corner": [
+        1844,
+        788
+      ],
+      "size": [
+        63,
+        41
+      ],
+      "parents": [
+        "rocks"
+      ],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ],
+        [
+          "count",
+          "2"
+        ]
+      ]
+    },
+    {
+      "name": "rocks",
+      "tags": [
+        "environment",
+        "group"
+      ],
+      "top_left_corner": [
+        304,
+        754
+      ],
+      "size": [
+        1603,
+        111
+      ],
+      "parents": [],
+      "children": [
+        "rock #1",
+        "rock #2",
+        "pebbles #1",
+        "pebbles #2",
+        "pebbles #3"
+      ],
+      "attributes": [
+        [
+          "color",
+          "white"
+        ],
+        [
+          "count",
+          "28"
+        ]
+      ]
+    },
+    {
+      "name": "reeds",
+      "tags": [
+        "environment"
+      ],
+      "top_left_corner": [
+        1685,
+        554
+      ],
+      "size": [
+        231,
+        255
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "black"
+        ]
+      ]
+    },
+    {
+      "name": "water",
+      "tags": [
+        "environment"
+      ],
+      "top_left_corner": [
+        0,
+        803
+      ],
+      "size": [
+        2002,
+        320
+      ],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        [
+          "color",
+          "blue"
         ]
       ]
     }
   ],
   "triplets": [
+    {
+      "from": "baby",
+      "predicate": "falling into",
+      "to": "water"
+    },
+    {
+      "from": "bird",
+      "predicate": "sitting on",
+      "to": "branch"
+    },
+    {
+      "from": "woman",
+      "predicate": "reading",
+      "to": "book"
+    },
+    {
+      "from": "woman",
+      "predicate": "sitting on",
+      "to": "lounger"
+    },
+    {
+      "from": "woman",
+      "predicate": "sitting under",
+      "to": "parasol"
+    },
+    {
+      "from": "boy",
+      "predicate": "throwing",
+      "to": "ball"
+    },
+    {
+      "from": "boy",
+      "predicate": "catching",
+      "to": "ball"
+    },
+    {
+      "from": "boy",
+      "predicate": "playing with",
+      "to": "girl"
+    },
+    {
+      "from": "boy",
+      "predicate": "playing with",
+      "to": "ball"
+    },
+    {
+      "from": "girl",
+      "predicate": "catching",
+      "to": "ball"
+    },
+    {
+      "from": "girl",
+      "predicate": "playing with",
+      "to": "boy"
+    },
     {
       "from": "dog",
       "predicate": "chasing",
@@ -247,19 +1670,59 @@
       "to": "dog"
     },
     {
-      "from": "bird",
-      "predicate": "sitting on",
-      "to": "branch"
-    },
-    {
-      "from": "sun",
-      "predicate": "is hidden behind",
-      "to": "cloud"
-    },
-    {
       "from": "squirrel",
       "predicate": "climbing",
-      "to": "tree #2"
+      "to": "tree #3"
+    },
+    {
+      "from": "man #2",
+      "predicate": "sitting on",
+      "to": "chair"
+    },
+    {
+      "from": "man #2",
+      "predicate": "holding",
+      "to": "fishing rod"
+    },
+    {
+      "from": "fish",
+      "predicate": "watching",
+      "to": "man #2"
+    },
+    {
+      "from": "frog",
+      "predicate": "jumping from",
+      "to": "rock #1"
+    },
+    {
+      "from": "man #2",
+      "predicate": "swimming in",
+      "to": "water"
+    },
+    {
+      "from": "duckling #1",
+      "predicate": "following",
+      "to": "duck"
+    },
+    {
+      "from": "duckling #2",
+      "predicate": "following",
+      "to": "duck"
+    },
+    {
+      "from": "duckling #3",
+      "predicate": "following",
+      "to": "duck"
+    },
+    {
+      "from": "duckling #4",
+      "predicate": "following",
+      "to": "duck"
+    },
+    {
+      "from": "duckling #5",
+      "predicate": "following",
+      "to": "duck"
     }
   ]
 }

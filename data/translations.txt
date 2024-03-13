@@ -15,3 +15,68 @@ sun: slunce
 tree: strom
 white: bílý
 yellow: žlutý
+17: sedmnáct
+2: dva
+28: dvacet osm
+5: pět
+6: šest
+7: sedm
+action: akce
+baby: miminko, dítě
+ball: míč
+basket: košík
+birds: ptáci
+black: černý
+blanket: deka
+blue: modrý
+book: kniha
+bottle: lahev
+boy: kluk
+bucket: kýbl, kyblík
+bun: drdol
+cap: čepice, kšiltovka
+chair: židle
+checkered: kostkovaný, kostičkový
+count: počet
+cup: hrníček, hrnek
+duck: kachna, kačena
+duckling: kachňátko, káčátko
+ducklings: kachňátka, káčátka
+ducks: kachny, kačeny
+facial expression: výraz
+fish: ryba
+fishing: rybaření
+fishing net: síť, síťka
+fishing rod: prut
+flip flops: žabky, pantofle
+flying: letící, létání, let
+frog: žába
+girl: holka
+hairstyle: účes
+hat: klobouk, čepice
+lounger: lehátko
+man: muž
+pants: kalhoty
+parasol: slunečník
+pattern: vzor
+pebbles: kamínky, oblázky
+ponytail: culík
+red: červený
+reeds: rákosí
+rock: kámen
+rocks: kameny, kamení
+shining: svítí
+shirt: košile
+shoes: boty
+shorts: kraťasy, šortky
+shovel: lopata
+smiling: usmívající
+state: stav
+striped: pruhovaný, proužkovaný
+swimming: plavání
+swimsuit: plavky
+tshirt: tričko, triko
+vest: vesta
+water: voda
+wellies: holínky, gumovky
+woman: žena

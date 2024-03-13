@@ -26,6 +26,7 @@ use clap::Parser;
 use cli::*;
 use dataloader::Scene;
 use fetch::*;
+use itertools::Itertools;
 use log::*;
 use slu::get_triplets;
 
@@ -52,6 +53,7 @@ fn main() {
         Commands::Prepare(args) => print_prepare(args),
         Commands::Generate(args) => print_generate(args),
         Commands::Render(args) => print_render(args),
+        Commands::SemanticParse(args) => print_parse(args),
     };
 }
 
@@ -61,7 +63,7 @@ fn print_render(args: RenderArgs) {
     match Scene::from_file(&args.scene_file) {
         Ok(scene) => {
             trace!("scene loaded");
-            scene.render_dot_graph(&args.out_file);
+            scene.render_dot_graph(&args.out_file, args.unflatten, args.dump);
         }
         Err(err) => {
             error!("can't load scene: {}", err);
@@ -115,6 +117,41 @@ fn print_triplets(args: TripletsArgs) {
     }
 }
 
+/// Print the results of semantic parsing
+fn print_parse(args: ParseArgs) {
+    trace!("executing 'parse' command");
+    match Grammar::from_file(args.grammar) {
+        Ok(grammar) => {
+            trace!("grammar loaded");
+            let greedy_results = grammar.find_all(&args.text, &parser::ParsingStyle::Greedy);
+            let lazy_results = grammar.find_all(&args.text, &parser::ParsingStyle::Lazy);
+            println!("{}", "-".repeat(50));
+            greedy_results.iter().for_each(|res| println!("{}", res));
+            println!("{}", "-".repeat(50));
+            lazy_results.iter().for_each(|res| println!("{}", res));
+            println!("{}", "-".repeat(50));
+            let objects = greedy_results
+                .iter()
+                .filter(|res| return res.rule == "object")
+                .flat_map(|res| return res.node.tags_dfpo())
+                .join(", ");
+            println!("OBJECTS (greedy): [{}]", objects);
+            let objects = lazy_results
+                .iter()
+                .filter(|res| return res.rule == "object")
+                .flat_map(|res| return res.node.tags_dfpo())
+                .join(", ");
+            println!("OBJECTS (lazy)  : [{}]", objects);
+        }
+        Err(errs) => {
+            error!("can't parse grammar:");
+            for (i, e) in errs.iter().enumerate() {
+                error!("parsing err #{i}: {e}");
+            }
+        }
+    }
+}
+
 /// Crumbles the scene and prints out the generates triplets.
 fn print_crumbles(args: CrumbleArgs) {
     trace!("executing 'crumble' command");
@@ -134,6 +171,33 @@ fn print_list(args: ListArgs) {
     trace!("executing 'list' command");
     match Scene::from_file(&args.scene) {
         Ok(scene) => match args.items {
+            ListItems::CrumblesGrouped => {
+                let triplets = &scene.crumble();
+                let predicates = triplets
+                    .iter()
+                    .map(|t| return &t.predicate)
+                    .sorted_unstable()
+                    .unique();
+                for pred in predicates {
+                    if ["x max", "y max", "x min", "y min"].contains(&pred.as_str()) {
+                        continue;
+                    }
+                    let mut froms = vec![];
+                    let mut tos = vec![];
+                    for triplet in triplets {
+                        if &triplet.predicate == pred {
+                            froms.push(triplet.from.clone());
+                            tos.push(triplet.to.clone());
+                        }
+                    }
+                    froms.sort_unstable();
+                    tos.sort_unstable();
+                    froms.dedup();
+                    tos.dedup();
+                    println!("{:?} -- {} --> {:?}", froms, pred, tos);
+                }
+            }
+            ListItems::Tags => scene.get_tags().iter().for_each(|tag| println!("{}", tag)),
             ListItems::Objects => scene
                 .get_object_names()
                 .iter()

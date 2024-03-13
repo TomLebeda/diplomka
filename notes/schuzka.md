@@ -36,3 +36,10 @@
 	- opakování (slov, informací)
 	- holé věty
 	- předčasné ukončení
+
+# Poznámky na další schůzku:
+1. vizualizace -> jaká je cílová podoba?
+	- dokáži renderovat DOT + Graphviz => SVG -> problém s layoutem (ani jeden engine neprodukuje hezké výsledky pro větší grafy)
+	- teoretická možnost udělat layout grafu ručně jako SVG/HTML a pak "jen" referovat na objekty/linky/atributy
+2. přidal jsem tagy
+3. gramatiky?

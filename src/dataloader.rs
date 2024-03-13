@@ -57,8 +57,9 @@ pub struct Scene {
 pub struct SceneObject {
     /// name of the object, must be unique (serves as ID)
     name: String,
-    /// coordinates (x, y) of top left corner of bounding box of the object, in pixels counted from
-    /// top-left corner of the image
+    /// list of tags that are associated with the object
+    tags: Vec<String>,
+    /// coordinates (x, y) of top left corner of bounding box of the object, in pixels counted from top-left corner of the image
     top_left_corner: (u32, u32),
     /// size (width, height) of the bounding box in pixels
     size: (u32, u32),
@@ -102,61 +103,9 @@ impl SceneObject {
     pub fn get_parents(&self) -> Vec<String> {
         return self.parents.clone();
     }
-
-    /// Returns a string that represents the object as a Node in DOT language.
-    pub fn dot_node_str(&self) -> String {
-        let key_color = "#7638c5";
-        let value_color = "#393552";
-        let obj_name = self.get_name();
-        let top_row = format!(
-            "<tr>
-                <td bgcolor=\"black\" colspan=\"2\" align=\"LEFT\"><B><FONT color=\"white\">{}</FONT></B></td>
-            </tr>", obj_name
-        );
-        let mut other_rows = self
-            .attributes
-            .iter()
-            .sorted_unstable_by_key(|(attr, val)| return attr)
-            .map(|(attr, val)| {
-                return format!(
-                    "<tr>
-                        <td align=\"LEFT\"><FONT color=\"{}\">{}</FONT></td>
-                        <td align=\"LEFT\"><FONT color=\"{}\">{}</FONT></td>
-                    </tr>",
-                    key_color, attr, value_color, val
-                );
-            })
-            .collect_vec();
-        let center_str = format!("[{}, {}]", self.get_center().0, self.get_center().1);
-        other_rows.push(format!(
-            "<tr>
-                <td align=\"LEFT\"><FONT color=\"{}\">bbox center</FONT></td>
-                <td align=\"LEFT\"><FONT color=\"{}\">{}</FONT></td>
-            </tr>",
-            key_color, value_color, center_str
-        ));
-        other_rows.push(format!(
-            "<tr>
-                <td align=\"LEFT\"><FONT color=\"{}\">bbox width</FONT></td>
-                <td align=\"LEFT\"><FONT color=\"{}\">{}</FONT></td>
-            </tr>",
-            key_color,
-            value_color,
-            self.get_bbox_size().0
-        ));
-        other_rows.push(format!(
-            "<tr>
-                <td align=\"LEFT\"><FONT color=\"{}\">bbox height</FONT></td>
-                <td align=\"LEFT\"><FONT color=\"{}\">{}</FONT></td>
-            </tr>",
-            key_color,
-            value_color,
-            self.get_bbox_size().1
-        ));
-        let table_content = format!("{}{}", top_row, other_rows.join("\n"));
-        let label = format!("<<table cellspacing=\"0\" cellpadding=\"4\">{table_content}</table>>");
-        let content = format!("shape=plain,label={label}");
-        return format!("\"{obj_name}\"[{content}]");
+    /// Returns copy of list of tags
+    pub fn get_tags(&self) -> Vec<String> {
+        return self.tags.clone();
     }
     /// Returns a list of all attribute names that are in this object.
     pub fn get_attribute_names(&self) -> Vec<String> {
@@ -295,6 +244,17 @@ impl Scene {
             .triplets
             .iter()
             .map(|triplet| return triplet.predicate.clone())
+            .unique()
+            .sorted()
+            .collect_vec();
+    }
+    /// Returns a list of all tags that are used in the scene.
+    /// Values are sorted alphabetically and unique.
+    pub fn get_tags(&self) -> Vec<String> {
+        return self
+            .objects
+            .iter()
+            .flat_map(|obj| return obj.get_tags())
             .unique()
             .sorted()
             .collect_vec();

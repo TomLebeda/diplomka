@@ -27,6 +27,8 @@ use rayon::str::ParallelString;
 use regex::Regex;
 use reqwest::blocking::get;
 
+use crate::dataloader::Scene;
+
 /// if repeat is <m->, then this value will be used as the max
 const REPEAT_MAX_DEFAULT: u32 = std::u32::MAX;
 
@@ -51,6 +53,20 @@ pub struct ParseResult {
     pub style: ParsingStyle,
 }
 
+impl Display for ParseResult {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let style = &self.style;
+        let root = format!("${}", &self.rule);
+        let tree = &self.node.construct_spt(true);
+        let tags = self.node.tags_dfpo().join(", ");
+        return write!(
+            f,
+            "Result ({}) {{\n- tags: [{}]\n- tree:\n{}}}",
+            style, tags, tree
+        );
+    }
+}
+
 /// Describes the behavior of parsing when multiple matches are possible
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 pub enum ParsingStyle {
@@ -60,6 +76,15 @@ pub enum ParsingStyle {
     Greedy,
     // /// if there is multiple ways to match, return all of them
     // All,
+}
+
+impl Display for ParsingStyle {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ParsingStyle::Lazy => return write!(f, "Lazy"),
+            ParsingStyle::Greedy => return write!(f, "Greedy"),
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, serde::Serialize, serde::Deserialize, Clone)]

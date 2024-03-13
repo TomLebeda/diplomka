@@ -1,0 +1,420 @@
+{
+  "objects": {
+    "shorts": [
+      "kraťasy",
+      "šortky"
+    ],
+    "shirt": [
+      "košile",
+      "košilice",
+      "košilka",
+      "polokošile"
+    ],
+    "girl": [
+      "borka",
+      "cérka",
+      "dívka",
+      "děvče",
+      "holka",
+      "holčina",
+      "holčička"
+    ],
+    "reeds": [
+      "rákosí",
+      "rákos"
+    ],
+    "duckling": [
+      "kachňátko",
+      "káče",
+      "káčátko"
+    ],
+    "swimsuit": [
+      "plavky"
+    ],
+    "leash": [
+      "obojek",
+      "vodítko"
+    ],
+    "chair": [
+      "stolička",
+      "židle",
+      "židlička"
+    ],
+    "baby": [
+      "dítko",
+      "dítě",
+      "děcko",
+      "děťátko",
+      "harant",
+      "miminko",
+      "mimino",
+      "mimčo",
+      "mrně",
+      "nemluvně",
+      "prcek"
+    ],
+    "parasol": [
+      "deštník",
+      "paraple",
+      "parazol",
+      "slunečník",
+      "slunečníček"
+    ],
+    "shovel": [
+      "lopata",
+      "lopatička",
+      "lopatka"
+    ],
+    "cloud": [
+      "mrak",
+      "mračno",
+      "mráček",
+      "oblak",
+      "oblačno",
+      "oblačnost",
+      "obláček"
+    ],
+    "fishing rod": [
+      "proutek",
+      "prut"
+    ],
+    "ducks": [
+      "kachny",
+      "kačeny"
+    ],
+    "vest": [
+      "vesta",
+      "vestička"
+    ],
+    "pebbles": [
+      "kamínky",
+      "kamínek",
+      "oblázky",
+      "oblázek"
+    ],
+    "birds": [
+      "ptáci"
+    ],
+    "rock": [
+      "balvan",
+      "kámen",
+      "šutr",
+      "šutrák"
+    ],
+    "shoes": [
+      "bota",
+      "boty"
+    ],
+    "woman": [
+      "choť",
+      "manželka",
+      "paní",
+      "žena",
+      "ženská"
+    ],
+    "boy": [
+      "chlapec",
+      "hoch",
+      "kluk",
+      "klučina",
+      "klučík",
+      "klučíček",
+      "týpek"
+    ],
+    "hat": [
+      "klobouk",
+      "klobouček",
+      "čapka",
+      "čepice",
+      "čepička"
+    ],
+    "cap": [
+      "kšiltovka",
+      "čapka",
+      "čepice",
+      "čepička",
+      "čepičář"
+    ],
+    "sky": [
+      "nebe",
+      "nebesa",
+      "obloha"
+    ],
+    "rocks": [
+      "kameny",
+      "kamení"
+    ],
+    "plane": [
+      "letadlo",
+      "letadélko",
+      "letoun",
+      "plocha",
+      "povětroň"
+    ],
+    "squirrel": [
+      "veverka",
+      "veveruška",
+      "veverčák",
+      "veveřice"
+    ],
+    "sun": [
+      "slunce",
+      "slunko",
+      "sluníčko"
+    ],
+    "water": [
+      "voda",
+      "vodička",
+      "vodstvo"
+    ],
+    "ducklings": [
+      "kachňátka",
+      "káčátka"
+    ],
+    "bucket": [
+      "kyblík",
+      "kyblíček",
+      "kýbl"
+    ],
+    "cup": [
+      "hrnek",
+      "hrneček",
+      "hrníček",
+      "koflík",
+      "šálek"
+    ],
+    "tree": [
+      "strom",
+      "stromek",
+      "stromeček"
+    ],
+    "pants": [
+      "gatě",
+      "kalhoty",
+      "kaťata",
+      "nohavice"
+    ],
+    "wellies": [
+      "gumovky",
+      "gumovka",
+      "gumák",
+      "holínky"
+    ],
+    "frog": [
+      "žabička",
+      "žabka",
+      "žabák",
+      "žába"
+    ],
+    "fishing net": [
+      "síto",
+      "síť",
+      "síťka"
+    ],
+    "flip flops": [
+      "pantofel",
+      "pantofle",
+      "žabky"
+    ],
+    "bird": [
+      "opeřenec",
+      "pták",
+      "ptáče",
+      "ptáček"
+    ],
+    "blanket": [
+      "deka",
+      "dečka"
+    ],
+    "ball": [
+      "balón",
+      "meruna",
+      "mičuda",
+      "míč",
+      "míček"
+    ],
+    "book": [
+      "kniha",
+      "knížka"
+    ],
+    "fish": [
+      "ryba",
+      "rybička",
+      "rybka"
+    ],
+    "tshirt": [
+      "triko",
+      "trikot",
+      "tričko"
+    ],
+    "dog": [
+      "hafan",
+      "hafík",
+      "pejsek",
+      "pes",
+      "pesan",
+      "psisko",
+      "psík",
+      "psíček",
+      "rafan",
+      "vořech",
+      "voříšek",
+      "čokl"
+    ],
+    "man": [
+      "chlap",
+      "maník",
+      "manžel",
+      "muž",
+      "pán"
+    ],
+    "ground": [
+      "podlaha",
+      "přízemí",
+      "uzemnit",
+      "uzemnění",
+      "země"
+    ],
+    "basket": [
+      "koš",
+      "košík",
+      "košíček"
+    ],
+    "lounger": [
+      "lehátko"
+    ],
+    "branch": [
+      "větev",
+      "větvička",
+      "větvoví"
+    ],
+    "bottle": [
+      "lahev",
+      "lahvička",
+      "flaška"
+    ],
+    "duck": [
+      "kachna",
+      "kachnička",
+      "kačena",
+      "kačenka",
+      "kačka"
+    ]
+  },
+  "attributes": {
+    "facial_expression_VALS": {
+      "smiling": [
+        "usmívající"
+      ]
+    },
+    "hairstyle_VALS": {
+      "bun": [
+        "drdol"
+      ],
+      "ponytail": [
+        "culík"
+      ]
+    },
+    "color_VALS": {
+      "blue": [
+        "modrý"
+      ],
+      "red": [
+        "červený"
+      ],
+      "brown": [
+        "hnědý"
+      ],
+      "white": [
+        "bílý"
+      ],
+      "green": [
+        "zelený"
+      ],
+      "yellow": [
+        "žlutý"
+      ],
+      "orange": [
+        "oranžový",
+        "pomeranč"
+      ],
+      "black": [
+        "černý"
+      ]
+    },
+    "state_VALS": {
+      "shining": [
+        "svítí"
+      ]
+    },
+    "action_VALS": {
+      "fishing": [
+        "rybaření",
+        "rybařit"
+      ],
+      "flying": [
+        "letící",
+        "létání",
+        "let"
+      ],
+      "swimming": [
+        "plavání",
+        "plavat"
+      ]
+    },
+    "count_VALS": {
+      "5": [
+        "pět"
+      ],
+      "2": [
+        "dva"
+      ],
+      "7": [
+        "sedm"
+      ],
+      "6": [
+        "šest"
+      ],
+      "17": [
+        "sedmnáct"
+      ],
+      "28": [
+        "dvacet osm"
+      ]
+    },
+    "pattern_VALS": {
+      "checkered": [
+        "kostkovaný",
+        "kostičkový"
+      ],
+      "striped": [
+        "pruhovaný",
+        "proužkovaný"
+      ]
+    }
+  },
+  "predicates": {
+    "following": "{OBJ} {SUBJ}",
+    "falling into": "{OBJ} {SUBJ}",
+    "swimming in": "{OBJ} {SUBJ}",
+    "throwing": "{OBJ} {SUBJ}",
+    "holding": "{OBJ} {SUBJ}",
+    "hairstyle": "{OBJ} {SUBJ}",
+    "count": "{OBJ} {SUBJ}",
+    "chasing": "{OBJ} {SUBJ}",
+    "running away from": "{OBJ} {SUBJ}",
+    "catching": "{OBJ} {SUBJ}",
+    "sitting under": "{OBJ} {SUBJ}",
+    "watching": "{OBJ} {SUBJ}",
+    "pattern": "{OBJ} {SUBJ}",
+    "facial expression": "{OBJ} {SUBJ}",
+    "reading": "{OBJ} {SUBJ}",
+    "action": "{OBJ} {SUBJ}",
+    "climbing": "{OBJ} {SUBJ}",
+    "jumping from": "{OBJ} {SUBJ}",
+    "sitting on": "{OBJ} {SUBJ}",
+    "state": "{OBJ} {SUBJ}",
+    "playing with": "{OBJ} {SUBJ}",
+    "color": "{OBJ} {SUBJ}"
+  }
+}

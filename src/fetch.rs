@@ -144,7 +144,7 @@ pub fn get_forms(word: &str) -> Vec<String> {
     let sections_of_interest = sections
         .iter()
         .filter(|sec| return sec.number.starts_with(czech_prefix))
-        .filter(|sec| return sec.line == "skloňování" || sec.line == "časování")
+        .filter(|sec| return sec.line.contains("skloňování") || sec.line.contains("časování"))
         .collect_vec();
     trace!(
         "found {} sections of interest for \"{}\"",

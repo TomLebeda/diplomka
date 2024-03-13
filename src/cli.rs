@@ -41,6 +41,17 @@ pub enum Commands {
     Generate(GenerateArgs),
     /// Render graph from scene
     Render(RenderArgs),
+    /// Parse the provided text with provided grammar and print the results
+    SemanticParse(ParseArgs),
+}
+
+#[derive(Args, Debug)]
+/// Arguments for the "generate" CLI command
+pub struct ParseArgs {
+    /// Path to the grammar file
+    pub grammar: PathBuf,
+    /// Text to parse
+    pub text: String,
 }
 
 #[derive(Args, Debug)]
@@ -48,8 +59,14 @@ pub enum Commands {
 pub struct RenderArgs {
     /// Path to the scene file (JSON)
     pub scene_file: PathBuf,
-    /// Path to the output file (will be created if doesn't exist and replaced if does)
+    /// Path to the output SVG file (will be created if doesn't exist and replaced if does)
     pub out_file: PathBuf,
+    /// whether to use 'unflatten' preprocessing command
+    #[arg(short, long)]
+    pub unflatten: bool,
+    /// if used, only the raw DOT string will be dumped into stdout without rendering the graph
+    #[arg(short, long)]
+    pub dump: bool,
 }
 
 #[derive(Args, Debug)]
@@ -113,6 +130,8 @@ pub enum ListItems {
     Objects,
     /// List all the triplets defined in the scene, without crumbling.
     Triplets,
+    /// List all the triplets grouped by the predicate.
+    CrumblesGrouped,
     /// List all the predicates used in the scene.
     Predicates,
     /// List all the unique attributes (name, value) in the scene.
@@ -123,6 +142,8 @@ pub enum ListItems {
     AttributeVals,
     /// List all the attributes grouped by key
     AttributesGrouped,
+    /// List all the tags used in the scene
+    Tags,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]

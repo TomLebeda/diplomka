@@ -1,3 +1,5 @@
+use log::debug;
+
 use crate::dataloader::{SceneObject, Triplet};
 
 /// Errors related to [Scene]
@@ -87,10 +89,8 @@ impl SceneError {
                 name, number_of_occurences
             ),
             SceneError::BboxOutOfBounds { object, scene_size } => format!(
-                "bounding box of object '{}' reaches out of image by [x: {}, y: {}] pixels",
+                "bounding box of object '{}' reaches out of image",
                 object.get_name(),
-                scene_size.0 - (object.get_bbox_top_left_corner().0 + object.get_bbox_size().0),
-                scene_size.1 - (object.get_bbox_top_left_corner().1 + object.get_bbox_size().1),
             ),
             SceneError::ParentNotFound {
                 child: child_name,

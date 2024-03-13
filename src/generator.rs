@@ -43,8 +43,6 @@ pub fn generate_grammar(prep_path: PathBuf, out_path: PathBuf) {
 
     // create the string buffer with valid ABNF header
     let mut str_buf = String::from("#ABNF 1.0 UTF-8;\n");
-    // add the root declaration
-    str_buf += "root $triplet;\n\n";
 
     // define the root rule
     let mut triplet_names = checkpoint
@@ -57,7 +55,7 @@ pub fn generate_grammar(prep_path: PathBuf, out_path: PathBuf) {
         String::from("has_parent_object"),
     ]);
     str_buf += format!(
-        "$triplet = {};\n\n",
+        "public $triplet = {};\n\n",
         triplet_names
             .iter()
             .map(|s| return format!("${s}"))
