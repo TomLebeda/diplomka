@@ -1,7 +1,5 @@
 use std::{io::Write, path::PathBuf, process::Command};
 
-use clap::builder::OsStr;
-use image::error;
 use itertools::Itertools;
 use log::*;
 
@@ -21,7 +19,7 @@ impl SceneObject {
         let mut other_rows = self
             .get_attributes()
             .iter()
-            .sorted_unstable_by_key(|(attr, val)| return attr)
+            .sorted_unstable_by_key(|(attr, _val)| return attr)
             .map(|(attr, val)| {
                 return format!(
                     "<tr>
@@ -210,7 +208,10 @@ impl Scene {
             std::process::exit(1);
         }
 
-        std::fs::write(out_file_name, output.stdout);
+        let res = std::fs::write(out_file_name, output.stdout);
+        if res.is_err() {
+            error!("received io error when writing output")
+        }
         info!("oputput written into {}", out_file_name.to_string_lossy());
     }
 }

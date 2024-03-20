@@ -5,14 +5,8 @@ use std::{
     usize,
 };
 
-use image::Rgb;
-use imageproc::{
-    drawing::{draw_hollow_rect_mut, draw_text_mut},
-    rect::Rect,
-};
 use itertools::Itertools;
 use log::*;
-use rusttype::{Font, Scale};
 use serde::{Deserialize, Serialize};
 
 use crate::errors::SceneError;
@@ -228,12 +222,12 @@ impl Scene {
     /// Splits the attached file path at "/" and returns the last part or full name if there is nothing to split
     pub fn get_image_name(&self) -> String {
         let file_name = match self.image_path.rsplit_once('/') {
-            Some((prefix, suffix)) => suffix,
+            Some((_prefix, suffix)) => suffix,
             None => self.image_path.as_str(),
         };
         // remove the .jpg or whatever from the name
         match file_name.split_once('.') {
-            Some((prefix, suffix)) => return prefix.to_string(),
+            Some((prefix, _suffix)) => return prefix.to_string(),
             None => return file_name.to_string(),
         }
     }

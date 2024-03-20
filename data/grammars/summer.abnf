@@ -1,32 +1,81 @@
 #ABNF 1.0 UTF-8;
 
-// public $properties = ($object $action_VALS) {action}
-// 	| ($object $smiling) {facial_expression}
-// 	| ($object )
-// 	// |
-// 	// ($object {OBJ} ( [má|s] $ponytail ) {hairstyle=ponytail}) |
-// 	// ($object {OBJ} ( [má|s] $bun ) {hairstyle=bun}) |
-// 	// (
-// 	// 	($object {OBJ} $GARBAGE<0-> (je | má barvu | (který | která | které) (je | byla | jsou | byl | bylo | byly) ) $GARBAGE<0-> $NULL $color_VALS {VAL}) 
-// 	// 	| ( $color_VALS {VAL} $GARBAGE<0-> $NULL $object {OBJ})
-// 	// ) {color}
-// ;
-
-// public $triplets = () {triplet} ;
-
-// $triplet = $action | $catching | $chasing | $climbing | $color | $count | $facial_expression | $falling_into | $following | $hairstyle | $has_child_object | $has_parent_object | $holding | $jumping_from | $pattern | $playing_with | $reading | $running_away_from | $sitting_on | $sitting_under | $state | $swimming_in | $throwing | $watching;
-
 $has_child_object = $NULL {obj_start} $object {obj_end} má {subj_start} $object {subj_end} {predicate=has_child_object};
 $has_parent_object = $NULL {obj_start} $object {obj_end} (je [sou]částí | (patří|náleží) [pod|k] | tvoří) {subj_start} $object {subj_end} {predicate=has_parent_object};
 
-public $rule = ( $color_VALS $GARBAGE<0-> $object );
+// ├ ─ └ │
+// OBJECTS: type: object
+//          └─ {object name}
+//
+// ATTRIBUTES: type: attribute
+//             ├─ part: obj
+//             │  └─ {object name}
+//             └─ part: attr
+//                └─ attr: {attribute type}
+//                   └─ {attribute value}
+//
+// TRIPLETS: type: triplet
+//           └─ predicate: {predicate name}
+//              ├─ part: obj
+//              │  └─ {object name}
+//              └─ part: subj
+//                 └─ {subject name}
+$out = $object {type=object} | $attribute {type=attribute} | $triplet {type=triplet};
 
 $object = $basket | $blanket | $woman | $tree | $bird | $branch | $shovel | $ducks | $rocks | $sun | $rock | $water | $frog | $flip_flops | $swimsuit
 		| $shirt | $duckling | $fishing_rod | $reeds | $vest | $pebbles | $cup | $shorts | $fishing_net | $lounger | $book | $bottle | $fish | $chair
 		| $man | $ground | $leash | $parasol | $ducklings | $cloud | $ball | $baby | $bucket | $dog | $duck | $wellies | $cap | $birds | $girl | $sky
-		| $pants | $tshirt | $shoes | $squirrel | $hat | $plane | $boy;
-//
-// public $property = 
+		| $pants | $tshirt | $shoes | $squirrel | $hat | $plane | $boy | $people | $animals;
+
+$attribute = $object {part=obj} $GARBAGE<0-> $attr_VALS {part=attr} | $attr_VALS {part=attr} $GARBAGE<0-> $object {part=obj};
+
+$triplet = $catching {predicate=catching} |
+	$chasing {predicate=chasing} |
+	$climbing {predicate=climbing} |
+	$falling_into {predicate=falling_into} |
+	$following {predicate=following} |
+	$holding {predicate=holding} |
+	$jumping_from {predicate=jumping_from} |
+	$playing_with {predicate=playing_with} |
+	$reading {predicate=reading} |
+	$running_away_from {predicate=running_away_from} |
+	$sitting_on {predicate=sitting_on} |
+	$sitting_under {predicate=sitting_under} |
+	$swimming_in {predicate=swimming_in} |
+	$throwing {predicate=throwing} |
+	$watching {predicate=watching};
+
+$catching = $object {part=obj} chytá $object {part=subj};
+$chasing = $object {part=obj} honí $object {part=subj};
+$climbing = $object {part=obj} šplhá na $object {part=subj};
+$falling_into = $object {part=obj} padá do $object {part=subj};
+$following = $object {part=obj} následuje $object {part=subj};
+$holding = $object {part=obj} drží $object {part=subj};
+$jumping_from = $object {part=obj} skáče z $object {part=subj};
+$playing_with = $object {part=obj} [si] hraje [si] s $object {part=subj};
+$reading = $object {part=obj} [si] čte [si] $object {part=subj};
+$running_away_from = $object {part=obj} (utíká|běží) (před|od) $object {part=subj};
+$sitting_on = $object {part=obj} sedí na $object {part=subj};
+$sitting_under = $object {part=obj} sedí pod $object {part=subj};
+$swimming_in = $object {part=obj} plave v $object {part=subj};
+$throwing = $object {part=obj} (hází | háže) $object {part=subj};
+$watching = $object {part=obj} sleduje $object {part=subj};
+
+
+$attr_VALS = $pattern_VALS | $hairstyle_VALS | $action_VALS | $facial_expression_VALS | $color_VALS | $count_VALS | $state_VALS;
+
+$pattern_VALS = ($striped | $checkered) {attr=pattern};
+$hairstyle_VALS = ($bun | $ponytail) {attr=hairstyle};
+$action_VALS = ($swimming | $flying | $fishing) {attr=action};
+$facial_expression_VALS = ($smiling) {attr=facial_expression};
+$color_VALS = ($blue | $black | $red | $white | $green | $brown | $yellow | $orange) {attr=color};
+$count_VALS = $number {attr=count};
+$state_VALS = ($shining) {attr=state};
+
+public $number = ($digits | $tens | $teens | $hundred {100} | $thousand {1000}) <G:1->;
+$digits = $zero {0} | $one {1} | $two {2} | $three {3} | $four {4} | $five {5} | $six {6} | $seven {7} | $eight {8} | $nine {9};
+$tens = $ten {10} | $twenty {20} | $thirty {30} | $fourty {40} | $fifty {50} | $sixty {60} | $seventy {70} | $eighty {80} | $ninety {90};
+$teens = $eleven {11} | $twelve {12} | $thirteen {13} | $fourteen {14} | $fifteen {15} | $sixteen {16} | $seventeen {17} | $eighteen {18} | $nineteen {19};
 
 $basket = ($koš | $košík | $košíček) {basket};
 $blanket = ($deka | $dečka) {blanket};
@@ -39,7 +88,7 @@ $ducks = ($kachny | $kačeny) {ducks};
 $rocks = ($kameny | $kamení) {rocks};
 $sun = ($slunce | $slunko | $sluníčko) {sun};
 $rock = ($balvan | $kámen | $šutr) {rock};
-$water = ($voda | $vodička | $vodstvo) {water};
+$water = ($voda | $vodička | $vodstvo | $řeka | $říčka | $potok | $rybník | $rybníček | $jezero | $jezírko $bazén | $koupaliště) {water};
 $frog = ($žabička | $žabka | $žabák | $žába) {frog};
 $flip_flops = ($pantofle | $žabky) {flip flops};
 $swimsuit = ($plavky) {swimsuit};
@@ -80,7 +129,20 @@ $squirrel = ($veverka | $veveruška | $veverčák | $veveřice) {squirrel};
 $hat = ($klobouk | $klobouček | $čapka | $čepice | $čepička) {hat};
 $plane = ($letadlo | $letadélko | $letoun | $plocha | $povětroň) {plane};
 $boy = ($chlapec | $hoch | $kluk | $klučina | $klučík | $klučíček | $týpek) {boy};
+$people = ($lidé) {people};
+$animals = ($zvířata) {animals};
 
+$lidé = lidé | lidi | lidí | lidem | lidech | lidmi;
+$zvířata = zvířat | zvířata | zvířatech | zvířaty | zvířatům;
+$řeka = řeka | řeky | řece | řeku | řekou | řekách | řekám | řekami;
+$říčka = říčka | říčky | říčce | říčku | říčkou | říčko;
+$potok = potoce | potocích | potok | potoka | potokem | potoku | potoky | potoků | potokům;
+$rybník = rybníce | rybnících | rybník | rybníka | rybníkem | rybníku | rybníky | rybníků | rybníkům;
+$rybníček = rybníčcích | rybníček | rybníčka | rybníčkem | rybníčkovi | rybníčkové | rybníčku | rybníčky | rybníčků | rybníčkům;
+$jezero = jezer | jezera | jezerech | jezerem | jezero | jezeru | jezery | jezerům | jezeře;
+$jezírko = jezírek | jezírka | jezírkem | jezírko | jezírku | jezírky | jezírkách | jezírkům;
+$bazén = bazén | bazéne | bazénech | bazénem | bazénu | bazény | bazéně | bazénů | bazénům;
+$koupaliště = koupališti | koupalištích | koupalištím | koupaliště | koupalištěm | koupališť ;
 $koš = koš | koše | košem | koši | koších | košů | košům;
 $košík = košících | košík | košíkem | košíku | košíky | košíků | košíkům;
 $košíček = košíčcích | košíček | košíčkem | košíčku | košíčky | košíčkách | košíčků | košíčkům;
@@ -275,13 +337,38 @@ $klučík = klučík;
 $klučíček = klučíček;
 $týpek = týpek;
 
-$pattern_VALS = ($striped | $checkered);
-$hairstyle_VALS = ($bun | $ponytail);
-$action_VALS = ($swimming | $flying | $fishing);
-$facial_expression_VALS = ($smiling);
-$color_VALS = ($blue | $black | $red | $white | $green | $brown | $yellow | $orange);
-$count_VALS = ($6 | $17 | $28 | $7 | $5 | $2);
-$state_VALS = ($shining);
+$hundred = sto | stu | sta | stě | set;
+$thousand = tisíc | tisíce ;
+$zero = nula;
+$one = jedna | jeden;
+$two = dva | dvě;
+$three = tři | tří;
+$four = čtyři | štyry | čtyř | štyř;
+$five = pět;
+$six = šest;
+$seven = sedm | sedum;
+$eight = osm | osum;
+$nine =  devět;
+$ten = deset;
+$twenty = dvacet;
+$thirty = třicet;
+$fourty = čtyřicet;
+$fifty = padesát;
+$sixty = šedesát;
+$seventy = sedmdesát | sedumdesát;
+$eighty = osmdesát | osumdesát;
+$ninety = devadesát;
+$eleven = jedenáct;
+$twelve = dvanáct;
+$thirteen = třináct;
+$fourteen = čtrnáct | štrnáct;
+$fifteen = patnáct;
+$sixteen = šestnáct;
+$seventeen = sedmnáct | sedumnáct;
+$eighteen = osmnáct | osumnáct;
+$nineteen = devatenáct;
+
+
 $striped = ($proužkovaný | $pruhovaný) {striped};
 $pruhovaný = (pruhovanou | pruhovaná | pruhované | pruhovaného | pruhovaném | pruhovanému | pruhovaní | pruhovaný | pruhovaných | pruhovaným | pruhovanými);
 $proužkovaný = (proužkovanou | proužkovaná | proužkované | proužkovaného | proužkovaném | proužkovanému | proužkovaní | proužkovaný | proužkovaných | proužkovaným | proužkovanými);
@@ -291,7 +378,7 @@ $kostičkový = kostičkový;
 $bun = ($drdol) {bun};
 $drdol = (drdol | drdole | drdolech | drdolem | drdolu | drdoly | drdolů | drdolům);
 $ponytail = ($culík) {ponytail};
-$culík = (culík | culíku | culíkem | culíka | culíky | culíků );
+$culík = (culík | culíku | culíkem | culíka | culíky | culíků);
 $swimming = ($plavat | $plavání) {swimming};
 $plavání = (plavání | plaváních | plaváním | plaváními);
 $plavat = (plav | plavaje | plavajíc | plavajíce | plaval | plavala | plavali | plavalo | plavaly | plave | plavej | plavejme | plavejte | plaveme | plavete | plaveš | plavme | plavou | plavte | plavu | plaván | plavána | plaváni | plaváno | plavány | poplav | poplavme | poplavte);

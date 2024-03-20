@@ -1,4 +1,3 @@
-#![allow(unused)]
 //! Diploma thesis software by Tomáš Lebeda
 
 /// command-line-interface functions and types
@@ -20,8 +19,6 @@ mod slu;
 /// utilities that don't fit into other categories
 mod utils;
 
-use std::path::{Path, PathBuf};
-
 use clap::Parser;
 use cli::*;
 use dataloader::Scene;
@@ -32,7 +29,8 @@ use slu::get_triplets;
 
 use crate::{
     generator::{generate_grammar, prepare_files},
-    parser::{parse_grammar, Grammar},
+    parser::Grammar,
+    utils::merge_number_tags,
 };
 
 fn main() {
@@ -125,23 +123,20 @@ fn print_parse(args: ParseArgs) {
             trace!("grammar loaded");
             let greedy_results = grammar.find_all(&args.text, &parser::ParsingStyle::Greedy);
             let lazy_results = grammar.find_all(&args.text, &parser::ParsingStyle::Lazy);
-            println!("{}", "-".repeat(50));
-            greedy_results.iter().for_each(|res| println!("{}", res));
-            println!("{}", "-".repeat(50));
-            lazy_results.iter().for_each(|res| println!("{}", res));
-            println!("{}", "-".repeat(50));
-            let objects = greedy_results
-                .iter()
-                .filter(|res| return res.rule == "object")
-                .flat_map(|res| return res.node.tags_dfpo())
-                .join(", ");
-            println!("OBJECTS (greedy): [{}]", objects);
-            let objects = lazy_results
-                .iter()
-                .filter(|res| return res.rule == "object")
-                .flat_map(|res| return res.node.tags_dfpo())
-                .join(", ");
-            println!("OBJECTS (lazy)  : [{}]", objects);
+            println!("{}", "=".repeat(60));
+            greedy_results.iter().for_each(|res| {
+                println!("{}", res);
+                let mut tags = res.node.tags_dfpo();
+                merge_number_tags(&mut tags);
+                println!("{}", "-".repeat(40));
+            });
+            println!("{}", "=".repeat(60));
+            lazy_results.iter().for_each(|res| {
+                println!("{}", res);
+                let mut tags = res.node.tags_dfpo();
+                merge_number_tags(&mut tags);
+                println!("{}", "-".repeat(40));
+            });
         }
         Err(errs) => {
             error!("can't parse grammar:");

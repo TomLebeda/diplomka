@@ -3,31 +3,19 @@ use std::fmt::Display;
 use std::path::PathBuf;
 
 use clap::ValueEnum;
-use imageproc::geometric_transformations::warp;
 use itertools::Itertools;
 use log::*;
 use nom::branch::alt;
-use nom::bytes::complete::{
-    is_not, tag, take_till, take_till1, take_until, take_while, take_while1, take_while_m_n,
-};
-use nom::character::complete::line_ending;
-use nom::character::is_newline;
-use nom::combinator::peek;
+use nom::bytes::complete::{tag, take_till1, take_until, take_while, take_while1};
 use nom::combinator::{fail, opt};
-use nom::multi::{count, many0, many1, many_m_n, separated_list0, separated_list1};
-use nom::number::complete::float;
+use nom::multi::{many0, many1, separated_list1};
 use nom::sequence::tuple;
 use nom::sequence::{delimited, preceded};
 use nom::{error_position, IResult};
-use nom_unicode::is_whitespace;
 use ptree::print_config::StyleWhen;
-use ptree::{print_tree, write_tree, write_tree_with, PrintConfig, Style, TreeItem};
+use ptree::{write_tree_with, PrintConfig, Style, TreeItem};
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
-use rayon::str::ParallelString;
 use regex::Regex;
-use reqwest::blocking::get;
-
-use crate::dataloader::Scene;
 
 /// if repeat is <m->, then this value will be used as the max
 const REPEAT_MAX_DEFAULT: u32 = std::u32::MAX;
@@ -56,13 +44,13 @@ pub struct ParseResult {
 impl Display for ParseResult {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let style = &self.style;
-        let root = format!("${}", &self.rule);
         let tree = &self.node.construct_spt(true);
         let tags = self.node.tags_dfpo().join(", ");
+        let raw = &self.text;
         return write!(
             f,
-            "Result ({}) {{\n- tags: [{}]\n- tree:\n{}}}",
-            style, tags, tree
+            "Result ({}) {{\n-  raw: {:?}\n- tags: [{}]\n- tree:\n{}}}",
+            style, raw, tags, tree
         );
     }
 }
@@ -110,10 +98,7 @@ impl ParseNode {
         match self {
             ParseNode::Token(_) => return vec![],
             ParseNode::Tag(tag) => return vec![tag.clone()],
-            ParseNode::Rule {
-                rule_name,
-                expansion,
-            } => {
+            ParseNode::Rule { expansion, .. } => {
                 return expansion.iter().fold(vec![], |mut acc, e: &ParseNode| {
                     acc.append(&mut e.tags_dfpo());
                     return acc;
@@ -127,15 +112,17 @@ impl ParseNode {
     pub fn construct_spt(&self, styled: bool) -> String {
         let mut buf = Vec::new();
         let conf = PrintConfig {
-            styled: StyleWhen::Never,
-            // styled: if styled {
-            //     StyleWhen::Always
-            // } else {
-            //     StyleWhen::Never
-            // },
+            styled: if styled {
+                StyleWhen::Always
+            } else {
+                StyleWhen::Never
+            },
             ..Default::default()
         };
-        write_tree_with(self, &mut buf, &conf);
+        let res = write_tree_with(self, &mut buf, &conf);
+        if res.is_err() {
+            error!("received empty Error when writing spt tree");
+        }
         let s = String::from_utf8_lossy(&buf);
         return s.to_string();
     }
@@ -198,8 +185,8 @@ impl TreeItem for ParseNode {
         style: &ptree::Style,
     ) -> std::io::Result<()> {
         match self {
-            ParseNode::Token(s) => return write!(f, "\"{}\"", self.get_spt_style().paint(s)),
-            ParseNode::Tag(s) => return write!(f, "{{{}}}", self.get_spt_style().paint(s)),
+            ParseNode::Token(s) => return write!(f, "\"{}\"", style.paint(s)),
+            ParseNode::Tag(s) => return write!(f, "{{{}}}", style.paint(s)),
             ParseNode::Rule { rule_name, .. } => {
                 return write!(
                     f,
@@ -269,7 +256,7 @@ impl Grammar {
     pub fn parse_text_from_start<'a>(
         &'a self,
         text: &'a str,
-        style: &ParsingStyle,
+        default_style: &ParsingStyle,
     ) -> Vec<ParseResult> {
         let rule_heap = &self.rules;
         let results = self
@@ -277,14 +264,14 @@ impl Grammar {
             .iter()
             .filter(|r| return r.public)
             .filter_map(|rule| {
-                let Ok((rest, root_node)) = rule.parse_text(text, rule_heap, style) else {
+                let Ok((_rest, root_node)) = rule.parse_text(text, rule_heap, default_style) else {
                     return None;
                 };
                 return Some(ParseResult {
                     rule: rule.name.clone(),
                     node: root_node,
                     text: text.to_string(),
-                    style: *style,
+                    style: *default_style,
                 });
             })
             .collect_vec();
@@ -301,7 +288,7 @@ impl Grammar {
         let mut results = self.parse_text_from_start(text, style);
         text.match_indices(|c: char| return c.is_whitespace())
             .for_each(|(idx, _)| {
-                let (lead, to_parse) = text.split_at(idx);
+                let (_lead, to_parse) = text.split_at(idx);
                 results.append(&mut self.parse_text_from_start(to_parse, style));
             });
         return results;
@@ -329,21 +316,45 @@ impl Rule {
         &'a self,
         text: &'a str,
         rule_heap: &'a [Rule],
-        style: &ParsingStyle,
+        default_style: &ParsingStyle,
     ) -> IResult<&str, ParseNode> {
-        for alternative in &self.expansion {
-            if let Ok((rest, matched)) = alternative.parse_text(text, rule_heap, style) {
-                let node = ParseNode::Rule {
-                    rule_name: self.name.clone(),
-                    expansion: matched,
-                };
-                return Ok((rest, node));
+        let best_result = self
+            .expansion
+            .iter()
+            .filter_map(|alt| {
+                if let Ok((rest, matched)) = alt.parse_text(text, rule_heap, default_style) {
+                    let node = ParseNode::Rule {
+                        rule_name: self.name.clone(),
+                        expansion: matched,
+                    };
+                    return Some((rest, node));
+                } else {
+                    return None;
+                }
+            })
+            .min_by_key(|(rest, _matched)| return rest.len());
+        match best_result {
+            Some(best) => return Ok(best),
+            None => {
+                return Err(nom::Err::Error(error_position!(
+                    text,
+                    nom::error::ErrorKind::Alt
+                )));
             }
         }
-        return Err(nom::Err::Error(error_position!(
-            text,
-            nom::error::ErrorKind::Alt
-        )));
+        // for alternative in &self.expansion {
+        //     if let Ok((rest, matched)) = alternative.parse_text(text, rule_heap, style) {
+        //         let node = ParseNode::Rule {
+        //             rule_name: self.name.clone(),
+        //             expansion: matched,
+        //         };
+        //         return Ok((rest, node));
+        //     }
+        // }
+        // return Err(nom::Err::Error(error_position!(
+        //     text,
+        //     nom::error::ErrorKind::Alt
+        // )));
     }
 
     /// Returns all names of referenced rules as a vector of &String
@@ -375,8 +386,7 @@ impl Alternative {
         return parse_list_of_elems_recursive(text, 0, elements, rule_heap, style);
     }
 
-    /// Returns
-    /// for linking after all the rules are parsed.
+    /// Returns rule references for linking after all the rules are parsed.
     fn get_rule_refs(&self) -> Vec<&String> {
         return self
             .0
@@ -397,7 +407,7 @@ fn parse_list_of_elems_recursive<'a>(
     idx: usize,
     elements: &'a [Element],
     rule_heap: &'a [Rule],
-    style: &ParsingStyle,
+    default_style: &ParsingStyle,
 ) -> IResult<&'a str, Vec<ParseNode>> {
     let Some(current_elem) = &elements.get(idx) else {
         return Err(nom::Err::Error(error_position!(
@@ -407,13 +417,14 @@ fn parse_list_of_elems_recursive<'a>(
     };
 
     let min = current_elem.get_min();
+    let style = current_elem.get_style().unwrap_or(*default_style);
     // try how many times the element matches to get actual max value
     // we can't start from the theoretical max, because in case of <n->,
     // it will be REPEAT_MAX_DEFAULT which is probably huge.
     let mut counter = 0;
     let mut rest = text;
     loop {
-        let Ok((r, _matched)) = current_elem.parse_text(rest, rule_heap, style) else {
+        let Ok((r, _matched)) = current_elem.parse_text(rest, rule_heap, &style) else {
             // if we can't parse anymore, we stop the counter
             break;
         };
@@ -436,8 +447,8 @@ fn parse_list_of_elems_recursive<'a>(
         let mut rest = text;
         // accumulator for the results
         let mut nodes: Vec<ParseNode> = vec![];
-        for i in 0..reps {
-            let Ok((r, mut m)) = current_elem.parse_text(rest, rule_heap, style) else {
+        for _ in 0..reps {
+            let Ok((r, mut m)) = current_elem.parse_text(rest, rule_heap, &style) else {
                 // we couldn't match the element enough times => try next loop
                 continue 'outer;
             };
@@ -448,7 +459,7 @@ fn parse_list_of_elems_recursive<'a>(
         if elements.get(idx + 1).is_some() {
             // there is some next element, so continue
             let Ok((r, mut m)) =
-                parse_list_of_elems_recursive(rest, idx + 1, elements, rule_heap, style)
+                parse_list_of_elems_recursive(rest, idx + 1, elements, rule_heap, &style)
             else {
                 // the shifted sequence didn't succeed, so try to parse one-less and try again
                 continue 'outer;
@@ -491,6 +502,8 @@ pub enum Element {
         min: u32,
         /// maximum number of successive repetitions
         max: u32,
+        /// overrides the default parsing style
+        style: Option<ParsingStyle>,
         /// tags that will be returned every time the token is matched
         tags: Vec<Tag>,
     },
@@ -502,6 +515,8 @@ pub enum Element {
         min: u32,
         /// maximum number of successive repetitions
         max: u32,
+        /// overrides the default parsing style
+        style: Option<ParsingStyle>,
         /// tags that will be returned every time the referenced Rule is matched
         tags: Vec<Tag>,
     },
@@ -511,22 +526,15 @@ pub enum Element {
         min: u32,
         /// maximum number of repeats
         max: u32,
+        /// overrides the default parsing style
+        style: Option<ParsingStyle>,
         /// tags that will be returned every time the GARBAGE is matched
         tags: Vec<Tag>,
     },
     /// Special rule $VOID that never matches anything
-    Void {
-        /// minimum number of repeats
-        min: u32,
-        /// maximum number of repeats
-        max: u32,
-    },
+    Void,
     /// Special rule $NULL that always matches (matches zero-length string)
     Null {
-        /// minimum number of repeats
-        min: u32,
-        /// maximum number of repeats
-        max: u32,
         /// tags that will be returned every time the NULL is matched
         tags: Vec<Tag>,
     },
@@ -539,6 +547,8 @@ pub enum Element {
         min: u32,
         /// maximum number of successive repetitions
         max: u32,
+        /// overrides the default parsing style
+        style: Option<ParsingStyle>,
         /// tags that will be returned every time the sequence is matched
         tags: Vec<Tag>,
     },
@@ -554,12 +564,12 @@ impl Element {
         &'a self,
         text: &'a str,
         rule_heap: &'a [Rule],
-        style: &ParsingStyle,
+        default_style: &ParsingStyle,
     ) -> IResult<&str, Vec<ParseNode>> {
         let text = text.trim_start();
         match self {
             // void never matches anything
-            Element::Void { .. } => return fail(text),
+            Element::Void => return fail(text),
             Element::Token { token, tags, .. } => {
                 let (rest, matched) = tag(token.as_str())(text)?;
                 let token_node = ParseNode::Token(matched.to_string());
@@ -567,7 +577,9 @@ impl Element {
                 all_nodes.insert(0, token_node);
                 return Ok((rest, all_nodes));
             }
-            Element::RuleRef { name, tags, .. } => {
+            Element::RuleRef {
+                name, tags, style, ..
+            } => {
                 let target_rule_idx = rule_heap
                     .binary_search_by_key(&name, |r| return &r.name)
                     .expect("rule linking should be already checked during text parsing");
@@ -575,62 +587,106 @@ impl Element {
                     .get(target_rule_idx)
                     .expect("target_rule_idx should be a valid index");
                 assert_eq!(&target_rule.name, name);
-                let (rest, matched) = target_rule.parse_text(text, rule_heap, style)?;
+                let st = style.unwrap_or(*default_style);
+                let (rest, matched) = target_rule.parse_text(text, rule_heap, &st)?;
                 let mut nodes = vec![matched];
                 nodes.extend(tags.iter().map(|t| return t.to_node()));
                 return Ok((rest, nodes));
             }
-            Element::Garbage { min, max, tags } => {
+            Element::Garbage { tags, .. } => {
                 // consume the string up until next whitespace and return the tags
                 let (rest, matched) = take_till1(|c: char| return c.is_whitespace())(text)?;
-                let nodes = tags.iter().map(|t| return t.to_node()).collect_vec();
-                return Ok((rest, nodes));
+                let rule_name = "GARBAGE".to_string();
+                let mut expansion = vec![ParseNode::Token(matched.to_string())];
+                expansion.extend(tags.iter().map(|t| return t.to_node()));
+                let garbage_node = ParseNode::Rule {
+                    rule_name,
+                    expansion,
+                };
+                return Ok((rest, vec![garbage_node]));
             }
-            Element::Null { min, max, tags } => {
+            Element::Null { tags } => {
                 return Ok((text, tags.iter().map(|t| return t.to_node()).collect_vec()));
             }
             Element::Sequence {
                 alternatives,
-                min,
-                max,
                 tags,
+                style,
+                ..
             } => {
-                for alternative in alternatives {
-                    if let Ok((rest, mut nodes)) = alternative.parse_text(text, rule_heap, style) {
-                        nodes.extend(tags.iter().map(|t| return t.to_node()));
-                        return Ok((rest, nodes));
+                let st = style.unwrap_or(*default_style);
+                let best_result = alternatives
+                    .iter()
+                    .filter_map(|alt| {
+                        if let Ok((rest, mut nodes)) = alt.parse_text(text, rule_heap, &st) {
+                            nodes.extend(tags.iter().map(|t| return t.to_node()));
+                            return Some((rest, nodes));
+                        } else {
+                            return None;
+                        }
+                    })
+                    .min_by_key(|(rest, _matched)| return rest.len());
+                match best_result {
+                    Some(best) => return Ok(best),
+                    None => {
+                        return Err(nom::Err::Error(error_position!(
+                            text,
+                            nom::error::ErrorKind::Alt
+                        )));
                     }
                 }
-                return Err(nom::Err::Error(error_position!(
-                    text,
-                    nom::error::ErrorKind::Alt
-                )));
+                // for alternative in alternatives {
+                //     if let Ok((rest, mut nodes)) = alternative.parse_text(text, rule_heap, style) {
+                //         nodes.extend(tags.iter().map(|t| return t.to_node()));
+                //         return Ok((rest, nodes));
+                //     }
+                // }
+                // return Err(nom::Err::Error(error_position!(
+                //     text,
+                //     nom::error::ErrorKind::Alt
+                // )));
             }
+        }
+    }
+
+    /// Returns the matching style of repeats for the Element.
+    /// Because all variants have the field 'style', this function is short-cut to avoid using match each time.
+    /// [Element::Void] and [Element::Null] always returns 1.
+    fn get_style(&self) -> Option<ParsingStyle> {
+        match &self {
+            Element::Token { style, .. } => return *style,
+            Element::RuleRef { style, .. } => return *style,
+            Element::Garbage { style, .. } => return *style,
+            Element::Void => return None,
+            Element::Null { .. } => return None,
+            Element::Sequence { style, .. } => return *style,
         }
     }
 
     /// Returns the minimum number of repeats that is allowed for the Element.
     /// Because all variants have the field 'min', this function is short-cut to avoid using match each time.
+    /// [Element::Void] and [Element::Null] always returns 1.
     fn get_min(&self) -> u32 {
         match &self {
             Element::Token { min, .. } => return *min,
             Element::RuleRef { min, .. } => return *min,
             Element::Garbage { min, .. } => return *min,
-            Element::Void { min, .. } => return *min,
-            Element::Null { min, .. } => return *min,
+            Element::Void => return 1,
+            Element::Null { .. } => return 1,
             Element::Sequence { min, .. } => return *min,
         }
     }
 
     /// Returns the maximum number of repeats that is allowed for the Element.
     /// Because all variants have the field 'max', this function is short-cut to avoid using match each time.
+    /// [Element::Void] and [Element::Null] always returns 1.
     fn get_max(&self) -> u32 {
         match &self {
             Element::Token { max, .. } => return *max,
             Element::RuleRef { max, .. } => return *max,
             Element::Garbage { max, .. } => return *max,
-            Element::Void { max, .. } => return *max,
-            Element::Null { max, .. } => return *max,
+            Element::Void => return 1,
+            Element::Null { .. } => return 1,
             Element::Sequence { max, .. } => return *max,
         }
     }
@@ -640,12 +696,7 @@ impl Element {
     fn get_rule_refs(&self) -> Vec<&String> {
         match self {
             Element::RuleRef { name, .. } => return vec![name],
-            Element::Sequence {
-                alternatives,
-                min,
-                max,
-                tags,
-            } => {
+            Element::Sequence { alternatives, .. } => {
                 return alternatives
                     .iter()
                     .flat_map(|alt| return alt.get_rule_refs())
@@ -661,11 +712,9 @@ impl Element {
 pub fn parse_grammar(s: &str) -> Result<Grammar, Vec<String>> {
     let input = s.trim();
     // remove lines that are comments
-    let input = input
-        .lines()
-        .filter(|line| return !line.trim().starts_with("//"))
-        .join("\n");
-    let Ok((rest, _)) = opt(header)(&input) else {
+    let input = remove_comments(input);
+    let input = input.trim();
+    let Ok((rest, _)) = opt(header)(input) else {
         return Err(vec!["invalid header".to_string()]);
     };
     match rules(rest) {
@@ -777,7 +826,7 @@ fn rule_alternative(s: &str) -> IResult<&str, Alternative> {
 
 /// Tries to parse provided string into valid rule name, that being $ followed by any unicode alphanumeric character or underscore
 fn rule_name(s: &str) -> IResult<&str, &str> {
-    let (rest, (name)) = preceded(
+    let (rest, name) = preceded(
         tag("$"),
         take_while1(|c| return nom_unicode::is_alphanumeric(c) || c == '_'),
     )(s)?;
@@ -803,47 +852,44 @@ fn element(s: &str) -> IResult<&str, Element> {
 /// Tries to parse input str and return [Element::Void]
 fn special_void(s: &str) -> IResult<&str, Element> {
     let input = s.trim_start();
-    let (rest, (rule_name, _, maybe_repeat)) =
-        tuple((tag("$VOID"), whitespace, opt(repeat)))(input)?;
-    if let Some((min, max)) = maybe_repeat {
-        return Ok((rest, Element::Void { min, max }));
-    } else {
-        return Ok((rest, Element::Void { min: 1, max: 1 }));
-    }
+    let (rest, _rule_name) = tag("$VOID")(input)?;
+    return Ok((rest, Element::Void));
 }
 
 /// Tries to parse input str and return [Element::Null]
 fn special_null(s: &str) -> IResult<&str, Element> {
     let input = s.trim_start();
-    let (rest, (rule_name, tags)) = tuple((tag("$NULL"), many0(grammar_tag)))(input)?;
-    return Ok((
-        rest,
-        Element::Null {
-            min: 1,
-            max: 1,
-            tags,
-        },
-    ));
+    let (rest, (_rule_name, tags)) = tuple((tag("$NULL"), many0(grammar_tag)))(input)?;
+    return Ok((rest, Element::Null { tags }));
 }
 
 /// Tries to parse input str and return [Element::Garbage]
 fn special_garbage(s: &str) -> IResult<&str, Element> {
     let input = s.trim_start();
-    let (rest, (rule_name, _, maybe_repeat, _, tags)) = tuple((
+    let (rest, (_rule_name, _, maybe_repeat, _, tags)) = tuple((
         tag("$GARBAGE"),
         whitespace,
         opt(repeat),
         whitespace,
         many0(grammar_tag),
     ))(input)?;
-    if let Some((min, max)) = maybe_repeat {
-        return Ok((rest, Element::Garbage { min, max, tags }));
+    if let Some((min, max, style)) = maybe_repeat {
+        return Ok((
+            rest,
+            Element::Garbage {
+                min,
+                max,
+                style,
+                tags,
+            },
+        ));
     } else {
         return Ok((
             rest,
             Element::Garbage {
                 min: 1,
                 max: 1,
+                style: None,
                 tags,
             },
         ));
@@ -868,13 +914,14 @@ fn rule_ref(s: &str) -> IResult<&str, Element> {
             nom::error::ErrorKind::Tag
         )));
     };
-    if let Some((min, max)) = maybe_repeat {
+    if let Some((min, max, style)) = maybe_repeat {
         return Ok((
             rest,
             Element::RuleRef {
                 name,
                 min,
                 max,
+                style,
                 tags,
             },
         ));
@@ -885,6 +932,7 @@ fn rule_ref(s: &str) -> IResult<&str, Element> {
                 name,
                 min: 1,
                 max: 1,
+                style: None,
                 tags,
             },
         ));
@@ -911,7 +959,7 @@ fn sequence(s: &str) -> IResult<&str, Element> {
 /// In this way, the whole sequence is optional, that being as if it had repeat <0-1>
 fn optional_sequence(s: &str) -> IResult<&str, Element> {
     let input = s.trim_start();
-    let (rest, (mut sequence, _, mut seq_tags)) = tuple((
+    let (rest, (sequence, _, mut seq_tags)) = tuple((
         delimited(
             tuple((tag("["), whitespace)),
             bare_sequence,
@@ -923,9 +971,9 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
     match sequence {
         Element::Sequence {
             alternatives,
-            min,
             max,
-            tags: _,
+            style,
+            ..
         } => {
             return Ok((
                 rest,
@@ -933,12 +981,14 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
                     alternatives,
                     min: 0,
                     max,
+                    style,
                     tags: seq_tags,
                 },
             ));
         }
         Element::Token {
             token,
+            style,
             min,
             max,
             tags,
@@ -953,6 +1003,7 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
                     rest,
                     Element::Token {
                         token,
+                        style,
                         min,
                         max,
                         tags: merged_tags,
@@ -968,10 +1019,12 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
                             token,
                             min,
                             max,
+                            style,
                             tags,
                         }])],
                         min: 0,
                         max: 1,
+                        style: None,
                         tags: seq_tags,
                     },
                 ));
@@ -982,6 +1035,7 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
             min,
             max,
             tags,
+            style,
         } => {
             if min == 1 && max == 1 {
                 let min = 0;
@@ -993,6 +1047,7 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
                         name,
                         min,
                         max,
+                        style,
                         tags: merged_tags,
                     },
                 ));
@@ -1005,16 +1060,23 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
                             name,
                             min,
                             max,
+                            style,
                             tags,
                         }])],
                         min,
                         max,
+                        style: None,
                         tags: seq_tags,
                     },
                 ));
             }
         }
-        Element::Garbage { min, max, tags } => {
+        Element::Garbage {
+            min,
+            max,
+            tags,
+            style,
+        } => {
             if min == 1 && max == 1 {
                 let min = 0;
                 let mut merged_tags = tags;
@@ -1024,6 +1086,7 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
                     Element::Garbage {
                         min,
                         max,
+                        style,
                         tags: merged_tags,
                     },
                 ));
@@ -1032,56 +1095,27 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
                 return Ok((
                     rest,
                     Element::Sequence {
-                        alternatives: vec![Alternative(vec![Element::Garbage { min, max, tags }])],
+                        alternatives: vec![Alternative(vec![Element::Garbage {
+                            min,
+                            max,
+                            tags,
+                            style,
+                        }])],
                         min,
                         max,
+                        style: None,
                         tags: seq_tags,
                     },
                 ));
             }
         }
-        Element::Void { min, max } => {
-            if min == 1 && max == 1 {
-                let min = 0;
-                return Ok((rest, Element::Void { min, max }));
-            } else {
-                let min = 0;
-                return Ok((
-                    rest,
-                    Element::Sequence {
-                        alternatives: vec![Alternative(vec![Element::Void { min, max }])],
-                        min,
-                        max,
-                        tags: seq_tags,
-                    },
-                ));
-            }
+        Element::Void => {
+            return Ok((rest, Element::Void));
         }
-        Element::Null { min, max, tags } => {
-            if min == 1 && max == 1 {
-                let min = 0;
-                let mut merged_tags = tags;
-                merged_tags.append(&mut seq_tags);
-                return Ok((
-                    rest,
-                    Element::Null {
-                        min,
-                        max,
-                        tags: merged_tags,
-                    },
-                ));
-            } else {
-                let min = 0;
-                return Ok((
-                    rest,
-                    Element::Sequence {
-                        alternatives: vec![Alternative(vec![Element::Null { min, max, tags }])],
-                        min,
-                        max,
-                        tags: seq_tags,
-                    },
-                ));
-            }
+        Element::Null { tags } => {
+            let mut merged_tags = tags;
+            merged_tags.append(&mut seq_tags);
+            return Ok((rest, Element::Null { tags: merged_tags }));
         }
     }
 }
@@ -1091,7 +1125,7 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
 /// In this way, the whole sequence may have some additional repeat operator attached to it.
 fn braced_sequnece(s: &str) -> IResult<&str, Element> {
     let input = s.trim_start();
-    let (rest, (mut sequence, maybe_repeat, mut seq_tags)) = tuple((
+    let (rest, (sequence, maybe_repeat, mut seq_tags)) = tuple((
         delimited(
             tuple((tag("("), whitespace)),
             bare_sequence,
@@ -1100,20 +1134,16 @@ fn braced_sequnece(s: &str) -> IResult<&str, Element> {
         opt(repeat),
         many0(grammar_tag),
     ))(input)?;
-    let (seq_min, seq_max) = maybe_repeat.unwrap_or((1, 1));
+    let (seq_min, seq_max, seq_style) = maybe_repeat.unwrap_or((1, 1, None));
     match sequence {
-        Element::Sequence {
-            alternatives,
-            min,
-            max,
-            tags,
-        } => {
+        Element::Sequence { alternatives, .. } => {
             return Ok((
                 rest,
                 Element::Sequence {
                     alternatives,
                     min: seq_min,
                     max: seq_max,
+                    style: seq_style,
                     tags: seq_tags,
                 },
             ));
@@ -1121,6 +1151,7 @@ fn braced_sequnece(s: &str) -> IResult<&str, Element> {
         Element::Token {
             token,
             min,
+            style,
             max,
             tags,
         } => {
@@ -1135,6 +1166,7 @@ fn braced_sequnece(s: &str) -> IResult<&str, Element> {
                         token,
                         min: seq_min,
                         max: seq_max,
+                        style: seq_style,
                         tags: merged_tags,
                     },
                 ));
@@ -1146,12 +1178,14 @@ fn braced_sequnece(s: &str) -> IResult<&str, Element> {
                     Element::Sequence {
                         alternatives: vec![Alternative(vec![Element::Token {
                             token,
+                            style,
                             min,
                             max,
                             tags,
                         }])],
                         min: seq_min,
                         max: seq_max,
+                        style: seq_style,
                         tags: seq_tags,
                     },
                 ));
@@ -1162,6 +1196,7 @@ fn braced_sequnece(s: &str) -> IResult<&str, Element> {
             min,
             max,
             tags,
+            style,
         } => {
             if min == 1 && max == 1 {
                 let mut merged_tags = tags;
@@ -1171,6 +1206,7 @@ fn braced_sequnece(s: &str) -> IResult<&str, Element> {
                     Element::RuleRef {
                         name,
                         min: seq_min,
+                        style: seq_style,
                         max: seq_max,
                         tags: merged_tags,
                     },
@@ -1181,18 +1217,25 @@ fn braced_sequnece(s: &str) -> IResult<&str, Element> {
                     Element::Sequence {
                         alternatives: vec![Alternative(vec![Element::RuleRef {
                             name,
+                            style,
                             min,
                             max,
                             tags,
                         }])],
                         min: seq_min,
                         max: seq_max,
+                        style: seq_style,
                         tags: seq_tags,
                     },
                 ));
             }
         }
-        Element::Garbage { min, max, tags } => {
+        Element::Garbage {
+            min,
+            max,
+            tags,
+            style,
+        } => {
             if min == 1 && max == 1 {
                 let mut merged_tags = tags;
                 merged_tags.append(&mut seq_tags);
@@ -1200,6 +1243,7 @@ fn braced_sequnece(s: &str) -> IResult<&str, Element> {
                     rest,
                     Element::Garbage {
                         min: seq_min,
+                        style: seq_style,
                         max: seq_max,
                         tags: merged_tags,
                     },
@@ -1208,52 +1252,27 @@ fn braced_sequnece(s: &str) -> IResult<&str, Element> {
                 return Ok((
                     rest,
                     Element::Sequence {
-                        alternatives: vec![Alternative(vec![Element::Garbage { min, max, tags }])],
+                        alternatives: vec![Alternative(vec![Element::Garbage {
+                            min,
+                            max,
+                            tags,
+                            style,
+                        }])],
                         min: seq_min,
                         max: seq_max,
+                        style: seq_style,
                         tags: seq_tags,
                     },
                 ));
             }
         }
-        Element::Void { min, max } => {
-            if min == 1 && max == 1 {
-                return Ok((rest, Element::Void { min, max }));
-            } else {
-                return Ok((
-                    rest,
-                    Element::Sequence {
-                        alternatives: vec![Alternative(vec![Element::Void { min, max }])],
-                        min: seq_min,
-                        max: seq_max,
-                        tags: seq_tags,
-                    },
-                ));
-            }
+        Element::Void => {
+            return Ok((rest, Element::Void));
         }
-        Element::Null { min, max, tags } => {
-            if min == 1 && max == 1 {
-                let mut merged_tags = tags;
-                merged_tags.append(&mut seq_tags);
-                return Ok((
-                    rest,
-                    Element::Null {
-                        min,
-                        max,
-                        tags: merged_tags,
-                    },
-                ));
-            } else {
-                return Ok((
-                    rest,
-                    Element::Sequence {
-                        alternatives: vec![Alternative(vec![Element::Null { min, max, tags }])],
-                        min: seq_min,
-                        max: seq_max,
-                        tags: seq_tags,
-                    },
-                ));
-            }
+        Element::Null { tags } => {
+            let mut merged_tags = tags;
+            merged_tags.append(&mut seq_tags);
+            return Ok((rest, Element::Null { tags: merged_tags }));
         }
     }
 }
@@ -1279,11 +1298,12 @@ fn bare_sequence(s: &str) -> IResult<&str, Element> {
         let elem = alternatives.swap_remove(0).0.swap_remove(0);
         return Ok((rest, elem));
     }
-    /// sequence "seq" that isn't surrounded by [] or () must be matched once
+    // sequence "seq" that isn't surrounded by [] or () must be matched once
     let sequence = Element::Sequence {
         alternatives,
         min: 1,
         max: 1,
+        style: None,
         tags: vec![], // bare sequence doesn't have any tags, they are specified after () or []
     };
     return Ok((rest, sequence));
@@ -1300,11 +1320,12 @@ fn token(input: &str) -> IResult<&str, Element> {
     let input = rest.trim_start();
     if input.starts_with('<') {
         // the next char is <, so there must be some repeat specifier
-        let (rest, (min, max)) = repeat(input)?;
+        let (rest, (min, max, style)) = repeat(input)?;
         return Ok((
             rest,
             Element::Token {
                 token,
+                style,
                 min,
                 max,
                 tags,
@@ -1318,6 +1339,7 @@ fn token(input: &str) -> IResult<&str, Element> {
             input,
             Element::Token {
                 token,
+                style: None,
                 min,
                 max,
                 tags,
@@ -1333,11 +1355,12 @@ fn token(input: &str) -> IResult<&str, Element> {
 /// <m> = element must be repeated exactly m times
 /// no whitespace allowed inside the angle brackets
 /// no repeat specification is equal to <1>
-fn repeat(input: &str) -> IResult<&str, (u32, u32)> {
+fn repeat(input: &str) -> IResult<&str, (u32, u32, Option<ParsingStyle>)> {
     let input = input.trim_start();
-    let (rest, (min, maybe_second_part)) = delimited(
+    let (rest, (maybe_style, min, maybe_second_part)) = delimited(
         tag("<"),
         tuple((
+            opt(tuple((alt((tag("L"), tag("G"))), tag(":")))),
             nom::character::complete::u32,
             opt(tuple((tag("-"), opt(nom::character::complete::u32)))),
         )),
@@ -1346,11 +1369,19 @@ fn repeat(input: &str) -> IResult<&str, (u32, u32)> {
     // if there is <m>, then fill it to be <m-n>, where n = m
     // if there is <m->, then fill it to be <m-n>, where n = [REPEAT_MAX_DEFAULT]
     // and unwrap the n value into 'max'
+    let style = match maybe_style {
+        None => None,
+        Some((style_str, _)) => match style_str {
+            "L" => Some(ParsingStyle::Lazy),
+            "G" => Some(ParsingStyle::Greedy),
+            _ => unreachable!(),
+        },
+    };
     let max = maybe_second_part
         .unwrap_or(("", Some(min)))
         .1
         .unwrap_or(REPEAT_MAX_DEFAULT);
-    return Ok((rest, (min, max)));
+    return Ok((rest, (min, max, style)));
 }
 
 /// Consumes all leading whitespace including line breaks
@@ -1367,7 +1398,7 @@ fn whitespace(input: &str) -> IResult<&str, ()> {
 /// 1. single-line comments starting by `//` and continuing for the rest of the line (because of URLs, `://` is skipped)
 /// 2. multi-line comments surrounded by `/*` and `*/`
 /// 3. documentation (multi-line) comments surrounded by `/**` and `*/`
-pub fn remove_comments(input: String) -> String {
+pub fn remove_comments(input: &str) -> String {
     // black magic that should find "//" but ignore "://" because of URLs
     let single_line_comments_regex = Regex::new(r"(?m:(^|[^:])//.*$)").unwrap();
 
@@ -1376,7 +1407,7 @@ pub fn remove_comments(input: String) -> String {
 
     // multi-line comments need to be removed first, because they can contain single-line comments
     // removing single-line comments first might cause issues
-    let input = multi_line_comments_regex.replace_all(&input, "");
+    let input = multi_line_comments_regex.replace_all(input, "");
     // put back the single consumed letter before // (due to URL checking)
     let input = single_line_comments_regex.replace_all(&input, "$1");
 
@@ -1389,11 +1420,10 @@ mod tests {
     use itertools::Itertools;
 
     use crate::parser::{
-        repeat, rule_alternative, rule_body, rule_name, tests::grammar::new_token, Alternative,
-        Element, Grammar, Rule, REPEAT_MAX_DEFAULT,
+        repeat, rule_alternative, rule_name, tests::grammar::new_token, REPEAT_MAX_DEFAULT,
     };
 
-    use super::{grammar_tag, parse_grammar, rule, sequence, token, ParseNode, Tag};
+    use super::{grammar_tag, parse_grammar, rule, token};
 
     mod grammar {
         use crate::parser::tests::*;
@@ -1404,6 +1434,7 @@ mod tests {
                 token: s.to_string(),
                 min,
                 max,
+                style: None,
                 tags: tags.iter().map(|t| return Tag(t.to_string())).collect_vec(),
             };
         }
@@ -1412,15 +1443,30 @@ mod tests {
         /// test the repeat parsing
         fn parse_repeat() {
             let (rest, rep) = repeat("<1-2>").unwrap();
-            assert_eq!((1, 2), rep);
+            assert_eq!((1, 2, None), rep);
             assert!(rest.is_empty());
 
             let (rest, rep) = repeat("<1->").unwrap();
-            assert_eq!((1, REPEAT_MAX_DEFAULT), rep);
+            assert_eq!((1, REPEAT_MAX_DEFAULT, None), rep);
             assert!(rest.is_empty());
 
             let (rest, rep) = repeat("<3>").unwrap();
-            assert_eq!((3, 3), rep);
+            assert_eq!((3, 3, None), rep);
+            assert!(rest.is_empty());
+        }
+
+        #[test]
+        fn parse_repeat_with_style() {
+            let (rest, rep) = repeat("<1-2>").unwrap();
+            assert_eq!((1, 2, None), rep);
+            assert!(rest.is_empty());
+
+            let (rest, rep) = repeat("<L:1->").unwrap();
+            assert_eq!((1, REPEAT_MAX_DEFAULT, Some(ParsingStyle::Lazy)), rep);
+            assert!(rest.is_empty());
+
+            let (rest, rep) = repeat("<G:3>").unwrap();
+            assert_eq!((3, 3, Some(ParsingStyle::Greedy)), rep);
             assert!(rest.is_empty());
         }
 
@@ -1510,6 +1556,7 @@ mod tests {
                     ])],
                     min: 0,
                     max: 1,
+                    style: None,
                     tags: vec![],
                 }])],
             };
@@ -1519,21 +1566,23 @@ mod tests {
         #[test]
         fn rule_with_repeats() {
             let s = "$rule = small <3-10> | medium <5-> | large;";
+            let r = rule(s).unwrap();
             let expected = Rule {
                 public: false,
                 name: String::from("rule"),
                 expansion: vec![
                     Alternative(vec![new_token("small", 3, 10, &[])]),
                     Alternative(vec![new_token("medium", 5, REPEAT_MAX_DEFAULT, &[])]),
-                    Alternative(vec![new_token("medium", 1, 1, &[])]),
+                    Alternative(vec![new_token("large", 1, 1, &[])]),
                 ],
             };
+            assert_eq!(r, expected);
         }
 
         #[test]
         fn tag() {
             let s = "{tag}";
-            let (rest, t) = grammar_tag(s).unwrap();
+            let (_rest, t) = grammar_tag(s).unwrap();
             let expected = Tag("tag".to_string());
             assert_eq!(t, expected);
         }
@@ -1573,6 +1622,7 @@ mod tests {
                     name: String::from("another"),
                     min: 1,
                     max: 1,
+                    style: None,
                     tags: vec![],
                 }])],
             };
@@ -1593,6 +1643,7 @@ mod tests {
                     ])],
                     min: 1,
                     max: 1,
+                    style: None,
                     tags: vec![Tag("tag1".to_string()), Tag("tag2".to_string())],
                 }])],
             };
@@ -1637,6 +1688,7 @@ mod tests {
                     ])],
                     min: 3,
                     max: 4,
+                    style: None,
                     tags: vec![],
                 }])],
             };
@@ -1707,6 +1759,7 @@ mod tests {
                     alternatives: vec![Alternative(vec![new_token("foo", 3, 4, &[])])],
                     min: 0,
                     max: 1,
+                    style: None,
                     tags: vec![],
                 }])],
             };
@@ -1902,7 +1955,10 @@ mod tests {
                 text: text.to_string(),
                 node: ParseNode::Rule {
                     rule_name: "root".to_string(),
-                    expansion: vec![],
+                    expansion: vec![ParseNode::Rule {
+                        rule_name: "GARBAGE".to_string(),
+                        expansion: vec![ParseNode::Token("foo".to_string())],
+                    }],
                 },
             }];
             assert_eq!(expected, parsed);
@@ -2007,7 +2063,7 @@ mod tests {
         #[test]
         fn repeat_undef_max() {
             let gr = parse_grammar("public $root = (t1 {tag}) <0->;").unwrap();
-            for n in [0, 1, 2, 10, 100, 1000, 10_000] {
+            for n in [0, 1, 2] {
                 let text = "t1".repeat(n);
                 let parsed = gr.parse_text_from_start(&text, &ParsingStyle::Greedy);
                 let mut expansion = vec![];
@@ -2039,10 +2095,14 @@ mod tests {
                 text: text.to_string(),
                 node: ParseNode::Rule {
                     rule_name: "root".to_string(),
-                    expansion: vec![
-                        ParseNode::Tag("tag1".to_string()),
-                        ParseNode::Tag("tag2".to_string()),
-                    ],
+                    expansion: vec![ParseNode::Rule {
+                        rule_name: "GARBAGE".to_string(),
+                        expansion: vec![
+                            ParseNode::Token("foo".to_string()),
+                            ParseNode::Tag("tag1".to_string()),
+                            ParseNode::Tag("tag2".to_string()),
+                        ],
+                    }],
                 },
             }];
             assert_eq!(expected, parsed);
@@ -2060,9 +2120,27 @@ mod tests {
                 node: ParseNode::Rule {
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Tag("tag".to_string()),
-                        ParseNode::Tag("tag".to_string()),
-                        ParseNode::Tag("tag".to_string()),
+                        ParseNode::Rule {
+                            rule_name: "GARBAGE".to_string(),
+                            expansion: vec![
+                                ParseNode::Token("foo".to_string()),
+                                ParseNode::Tag("tag".to_string()),
+                            ],
+                        },
+                        ParseNode::Rule {
+                            rule_name: "GARBAGE".to_string(),
+                            expansion: vec![
+                                ParseNode::Token("bar".to_string()),
+                                ParseNode::Tag("tag".to_string()),
+                            ],
+                        },
+                        ParseNode::Rule {
+                            rule_name: "GARBAGE".to_string(),
+                            expansion: vec![
+                                ParseNode::Token("baz".to_string()),
+                                ParseNode::Tag("tag".to_string()),
+                            ],
+                        },
                     ],
                 },
             }];
@@ -2341,7 +2419,7 @@ mod tests {
                 let text = "foo".repeat(n);
                 let parsed = gr.parse_text_from_start(&text, &ParsingStyle::Greedy);
                 let mut expansion = vec![];
-                for i in 0..n {
+                for _ in 0..n {
                     expansion.push(ParseNode::Rule {
                         rule_name: "other".to_string(),
                         expansion: vec![

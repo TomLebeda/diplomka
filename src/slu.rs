@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use log::{debug, trace, warn};
+use log::{trace, warn};
 use regex::Regex;
 
 use crate::{

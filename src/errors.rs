@@ -1,5 +1,3 @@
-use log::debug;
-
 use crate::dataloader::{SceneObject, Triplet};
 
 /// Errors related to [Scene]
@@ -46,15 +44,6 @@ pub enum SceneError {
         /// name of the parent object
         parent: String,
     },
-    /// object A is referenced as a child by another object B, but A specify different object C as it's parent
-    ParentMismatch {
-        /// name of the child object
-        child: String,
-        /// name of the currently referenced parent
-        current: String,
-        /// name of the object that references this child object as it's child
-        target: String,
-    },
     /// object references itself as it's own child or parent
     SelfReference {
         /// name of the object
@@ -88,7 +77,7 @@ impl SceneError {
                 "duplicit name '{}' found for {} objects",
                 name, number_of_occurences
             ),
-            SceneError::BboxOutOfBounds { object, scene_size } => format!(
+            SceneError::BboxOutOfBounds { object, .. } => format!(
                 "bounding box of object '{}' reaches out of image",
                 object.get_name(),
             ),
@@ -117,13 +106,6 @@ impl SceneError {
                 parent: parent_name,
             } => format!("child object '{}' references parent object '{}', but the parent doesn't reference the child back",
                 child_name, parent_name
-            ),
-            SceneError::ParentMismatch {
-                child: child_name,
-                current: current_parent_name,
-                target: target_parent_name,
-            } => format!("parent object '{}' references child object '{}', but the child references another parent object '{}'", 
-                target_parent_name, child_name, current_parent_name
             ),
             SceneError::SelfReference { name } => format!("object '{}' references itself (as a child or parent)", name),
             SceneError::ImageNotFound { path } => format!("scene referes to image file '{}' which is not found or is not readable", path),

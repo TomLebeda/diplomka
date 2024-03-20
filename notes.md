@@ -24,6 +24,7 @@
 - pročetl jsem si přepisy popisů plného obrázku a očekávám že bude problém napsat gramatiky tak, aby spolehlivě postihly alespoň většinu formulací
 	- z anotovaných dat by šlo automatizovat generování pravidel
 	- experimentálně jsem zkoušel namátkou předhodit větu + triplet ChatGPT s otázkou ve stylu "je v té větě obsažen ten triplet" a výsledky vypadaly slibně
+	- lemmatizace by mohla pomoct (zjednodušení a zrychlení)
 
 # Využití AI pro generaci dat:
 - ChatGPT -> výsledky většinou jakž-takž, nicméně obsluha problematická
@@ -33,6 +34,7 @@
 
 # Ztrátové funkce/tabulky: 
 - mám nějaké skutečně zkusit sestavit nebo jen připravit systém aby je dokázal přijmout a pak "narychlo" sestavit nějaké dummy hodnoty?
+- možnost hodnotit podle ID, ne jen podle tagů
 
 # Forma/styl/prezentace výsledků:
 - myslím že je pomalu čas začít dokončovat -> jak by měl vypadat výsledek/ukázka? Co do něj zahrnout?

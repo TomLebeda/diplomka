@@ -1,12 +1,10 @@
-use std::{collections::HashMap, fmt::Display, path::PathBuf};
+use std::collections::HashMap;
 
 use itertools::Itertools;
 use log::*;
 use regex::Regex;
 use scraper::{Html, Selector};
 use serde_json::Value;
-
-use crate::fetch;
 
 /// Simplified error type for when fetching fails
 pub enum FetchErr {
@@ -21,8 +19,6 @@ pub enum FetchErr {
     KeyNotFound,
     /// structure of returned response doesn't match expected form
     StructureMismatch,
-    /// section "čeština" was not found
-    MissingSection(String),
 }
 
 /// Struct that represents sections in given wiktionary page
@@ -234,7 +230,7 @@ fn fetch_wiki_synonyms(sec: &WikiSection, word: &str) -> Vec<String> {
                 return vec![];
             }
         },
-        Err(e) => {
+        Err(_e) => {
             error!("didn't receive any valid response");
             return vec![];
         }
@@ -284,7 +280,7 @@ fn fetch_ijp_forms(word: &str) -> Vec<String> {
                 return vec![];
             }
         },
-        Err(e) => {
+        Err(_e) => {
             error!("didn't receive any valid response");
             return vec![];
         }
@@ -356,7 +352,7 @@ fn fetch_wiki_related(sec: &WikiSection, word: &str) -> Vec<String> {
                 return vec![];
             }
         },
-        Err(e) => {
+        Err(_e) => {
             error!("didn't receive any valid response");
             return vec![];
         }
@@ -440,7 +436,7 @@ fn fetch_wiki_forms(word: &str, sec: &WikiSection) -> Vec<String> {
                 return vec![];
             }
         },
-        Err(e) => {
+        Err(_e) => {
             error!("didn't receive any valid response");
             return vec![];
         }
@@ -515,7 +511,7 @@ fn fetch_wiki_sections(word: &str) -> Result<Vec<WikiSection>, FetchErr> {
                 }
             }
         }
-        Err(e) => {
+        Err(_e) => {
             error!("didn't reacevie any valid response");
             return Err(FetchErr::NoResponse);
         }

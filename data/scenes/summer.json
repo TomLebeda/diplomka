@@ -4,6 +4,66 @@
   "image_path": "data/imgs/summer.png",
   "objects": [
     {
+      "name": "animals",
+      "tags": [
+        "animal",
+        "group"
+      ],
+      "top_left_corner": [
+        60,
+        283
+      ],
+      "size": [
+        1689,
+        811
+      ],
+      "parents": [],
+      "children": [
+        "girl",
+        "boy",
+        "woman",
+        "baby",
+        "man #1",
+        "man #2"
+      ],
+      "attributes": [
+        [
+          "count",
+          "6"
+        ]
+      ]
+    },
+    {
+      "name": "people",
+      "tags": [
+        "person",
+        "group"
+      ],
+      "top_left_corner": [
+        60,
+        283
+      ],
+      "size": [
+        1689,
+        811
+      ],
+      "parents": [],
+      "children": [
+        "girl",
+        "boy",
+        "woman",
+        "baby",
+        "man #1",
+        "man #2"
+      ],
+      "attributes": [
+        [
+          "count",
+          "6"
+        ]
+      ]
+    },
+    {
       "name": "fishing net",
       "tags": [
         "item"
@@ -1312,7 +1372,7 @@
       "attributes": [
         [
           "pattern",
-          "checkered"
+          "checkerd"
         ],
         [
           "color",

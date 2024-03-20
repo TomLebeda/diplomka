@@ -1,9 +1,8 @@
-use std::{collections::HashMap, fmt::format, path::PathBuf};
+use std::{collections::HashMap, path::PathBuf};
 
 use itertools::Itertools;
 use log::*;
 use regex::Regex;
-use serde_json::Value;
 
 use crate::{
     dataloader::{Checkpoint, Scene},
@@ -131,7 +130,7 @@ pub fn generate_grammar(prep_path: PathBuf, out_path: PathBuf) {
     str_buf += "\n";
 
     // add the individual variants of the objects
-    for (obj, variants) in &checkpoint.objects {
+    checkpoint.objects.iter().for_each(|(_obj, variants)| {
         for var in variants {
             let rule_name = format!("${}", var).trim().replace(' ', "_");
             let mut rule_exp = get_forms(var);
@@ -145,7 +144,7 @@ pub fn generate_grammar(prep_path: PathBuf, out_path: PathBuf) {
             let rule = format!("{} = {};\n", rule_name, rule_exp);
             str_buf += rule.as_str();
         }
-    }
+    });
     str_buf += "\n";
 
     // add the generic attributes
@@ -161,7 +160,7 @@ pub fn generate_grammar(prep_path: PathBuf, out_path: PathBuf) {
     });
 
     // add the individual variants of attribute values
-    for (attr, variants) in &checkpoint.attributes {
+    checkpoint.attributes.iter().for_each(|(_attr, variants)| {
         for (en_attr, cz_variants) in variants {
             let rule_name = format!("${}", en_attr.trim().replace(' ', "_"));
             let rule_exp = cz_variants
@@ -189,7 +188,7 @@ pub fn generate_grammar(prep_path: PathBuf, out_path: PathBuf) {
                 str_buf += rule.as_str();
             }
         }
-    }
+    });
     str_buf += "\n";
     match std::fs::write(&out_path, &str_buf) {
         Ok(_) => info!(
@@ -197,7 +196,7 @@ pub fn generate_grammar(prep_path: PathBuf, out_path: PathBuf) {
             str_buf.len(),
             out_path.to_string_lossy()
         ),
-        Err(e) => error!(
+        Err(_e) => error!(
             "failed to write output into file \"{}\" (check if directory exists?)",
             out_path.to_string_lossy()
         ),
@@ -259,7 +258,7 @@ pub fn prepare_files(scene_path: PathBuf, out_path: PathBuf) {
         .collect_vec();
     let attr_groups = scene.get_attributes_grouped();
     let mut object_map = word_map_expanded.clone();
-    object_map.retain(|key, val| return object_names.contains(key));
+    object_map.retain(|key, _val| return object_names.contains(key));
     let mut attr_map = HashMap::<String, HashMap<String, Vec<String>>>::new();
     for (attr_name, en_values) in attr_groups {
         let attr_name = format!("{}_VALS", attr_name.replace(' ', "_"));
@@ -295,13 +294,15 @@ pub fn prepare_files(scene_path: PathBuf, out_path: PathBuf) {
         );
         return;
     };
-    std::fs::write(out_path, json_str);
+    let res = std::fs::write(out_path, json_str);
+    if res.is_err() {
+        error!("received error when writing output json");
+    }
 }
 
 /// Returns a list of words that need to be expanded for grammar generation
 /// Result is sorted and unique list of all object names, attribute values and attribute names.
 fn get_words_to_expand(scene: &Scene) -> Vec<String> {
-    let number_regex = Regex::new(r"#\d+").expect("invalid regex for object number matching");
     let mut out = scene.get_object_names();
     out.append(&mut scene.get_attribute_names());
     out.append(&mut scene.get_attribute_values());
