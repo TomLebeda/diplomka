@@ -189,6 +189,17 @@ impl Element {
                 };
                 return vec![(shift, vec![rule_node])];
             }
+            Element::End { tags } => {
+                if shift == text_tokens.len() {
+                    let rule_node = ParseNode::Rule {
+                        rule_name: "END".to_string(),
+                        expansion: tags.iter().map(|t| return t.to_node()).collect_vec(),
+                    };
+                    return vec![(shift, vec![rule_node])];
+                } else {
+                    return vec![];
+                }
+            }
             Element::Sequence {
                 alternatives,
                 style,
@@ -2036,7 +2047,7 @@ mod tests {
         use log::info;
 
         use crate::{
-            parser::{parse_grammar, ParseNode, ParseResult, ParsingStyle},
+            parser::{parse_grammar, ParsingStyle},
             semantic_parser::tests::init,
         };
 
