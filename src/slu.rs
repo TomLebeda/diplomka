@@ -19,44 +19,24 @@ pub fn get_triplets(text: &str, grammar: Grammar) -> Vec<Triplet> {
         .filter_map(|res| {
             let tokens = res.node.tags_dfpo();
             trace!("obtained tokens (dfpo): [{}]", tokens.join(", "));
-            let Some((obj_start_idx, _)) = tokens
+            let (obj_start_idx, _) = tokens
                 .iter()
-                .find_position(|s| return s.as_str() == "obj_start")
-            else {
-                return None;
-            };
-            let Some((obj_end_idx, _)) = tokens
+                .find_position(|s| return s.as_str() == "obj_start")?;
+            let (obj_end_idx, _) = tokens
                 .iter()
-                .find_position(|s| return s.as_str() == "obj_end")
-            else {
-                return None;
-            };
-            let Some((subj_start_idx, _)) = tokens
+                .find_position(|s| return s.as_str() == "obj_end")?;
+            let (subj_start_idx, _) = tokens
                 .iter()
-                .find_position(|s| return s.as_str() == "subj_start")
-            else {
-                return None;
-            };
-            let Some((subj_end_idx, _)) = tokens
+                .find_position(|s| return s.as_str() == "subj_start")?;
+            let (subj_end_idx, _) = tokens
                 .iter()
-                .find_position(|s| return s.as_str() == "subj_end")
-            else {
-                return None;
-            };
-            let Some(obj) = tokens.get(obj_start_idx + 1..obj_end_idx) else {
-                return None;
-            };
-            let Some(subj) = tokens.get(subj_start_idx + 1..subj_end_idx) else {
-                return None;
-            };
-            let Some(pred) = tokens.iter().find_map(|s| {
-                let Some(captures) = predicate_regex.captures(s) else {
-                    return None;
-                };
+                .find_position(|s| return s.as_str() == "subj_end")?;
+            let obj = tokens.get(obj_start_idx + 1..obj_end_idx)?;
+            let subj = tokens.get(subj_start_idx + 1..subj_end_idx)?;
+            let pred = tokens.iter().find_map(|s| {
+                let captures = predicate_regex.captures(s)?;
                 return captures.get(1);
-            }) else {
-                return None;
-            };
+            })?;
             if obj.len() > 1 {
                 warn!(
                     "found multiple tags \"{:?}\" as an OBJECT when extracting triplet",

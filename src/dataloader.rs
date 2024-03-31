@@ -560,6 +560,6 @@ impl Scene {
                 map.insert(attr.0, vec![attr.1]);
             }
         }
-        return map.into_iter().map(|(k, v)| return (k, v)).collect_vec();
+        return map.into_iter().collect_vec();
     }
 }

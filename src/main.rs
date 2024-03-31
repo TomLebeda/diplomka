@@ -14,6 +14,8 @@ mod generator;
 mod parser;
 /// contains functions and types related to visualization and rendering
 mod renderer;
+/// contains functions for semantic parsing of text with grammars
+mod semantic_parser;
 /// spoken language understanding module for handling the natural language (text) processing
 mod slu;
 /// utilities that don't fit into other categories

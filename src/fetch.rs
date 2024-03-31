@@ -481,20 +481,14 @@ fn fetch_wiki_sections(word: &str) -> Result<Vec<WikiSection>, FetchErr> {
                         .iter()
                         .enumerate()
                         .filter_map(|(idx, obj)| {
-                            let Some(line) = obj
+                            let line = obj
                                 .get("line")
                                 .and_then(|v| return v.as_str())
-                                .map(|s| return s.to_owned())
-                            else {
-                                return None;
-                            };
-                            let Some(number) = obj
+                                .map(|s| return s.to_owned())?;
+                            let number = obj
                                 .get("number")
                                 .and_then(|v| return v.as_str())
-                                .map(|s| return s.to_owned())
-                            else {
-                                return None;
-                            };
+                                .map(|s| return s.to_owned())?;
                             return Some(WikiSection {
                                 line,
                                 number,

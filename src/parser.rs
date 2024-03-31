@@ -62,8 +62,8 @@ pub enum ParsingStyle {
     Lazy,
     /// match as many tokens as possible
     Greedy,
-    // /// if there is multiple ways to match, return all of them
-    // All,
+    /// if there is multiple ways to match, return all of them
+    Thorough,
 }
 
 impl Display for ParsingStyle {
@@ -71,6 +71,7 @@ impl Display for ParsingStyle {
         match self {
             ParsingStyle::Lazy => return write!(f, "Lazy"),
             ParsingStyle::Greedy => return write!(f, "Greedy"),
+            ParsingStyle::Thorough => return write!(f, "Thorough"),
         }
     }
 }
@@ -253,6 +254,7 @@ impl Grammar {
     /// This implementation starts the parsing process for each public rule in the grammar
     /// at the beginning of the provided string and continues as far as possible.
     /// Returns empty vector if the all public rules fails right at the beginning.
+    #[deprecated]
     pub fn parse_text_from_start<'a>(
         &'a self,
         text: &'a str,
@@ -276,6 +278,16 @@ impl Grammar {
             })
             .collect_vec();
         return results;
+    }
+
+    /// returns a reference to the vector of rules in the grammar
+    pub fn get_rules(&self) -> &Vec<Rule> {
+        return &self.rules;
+    }
+
+    /// return a list of references to public rules in the grammars
+    pub fn get_public_rules(&self) -> Vec<&Rule> {
+        return self.rules.iter().filter(|r| return r.public).collect_vec();
     }
 
     /// Searches for all possible parse trees within provided text.
@@ -307,11 +319,20 @@ pub struct Rule {
 }
 
 impl Rule {
+    /// returns reference to the vector of alternatives
+    pub fn get_alternatives(&self) -> &Vec<Alternative> {
+        return &self.expansion;
+    }
+    /// returns a cloned name of itself
+    pub fn get_name(&self) -> String {
+        return self.name.clone();
+    }
     /// Parse provide text with the rule.
     /// Parsing starts at the beginning are continues as far as possible.
     /// If rule has multiple alternatives, they will be tested in the order of declaration
     /// and the first that matches will be returned.
     /// If no alternative matches, Error will be returned as if it was [nom::branch::alt()] function
+    #[deprecated]
     pub fn parse_text<'a>(
         &'a self,
         text: &'a str,
@@ -376,6 +397,7 @@ pub struct Alternative(Vec<Element>);
 impl Alternative {
     /// Parse provide text with the alternative.
     /// Parsing starts at the beginning are continues as far as possible.
+    #[deprecated]
     pub fn parse_text<'a>(
         &'a self,
         text: &'a str,
@@ -394,6 +416,11 @@ impl Alternative {
             .flat_map(|elem| return elem.get_rule_refs())
             .collect_vec();
     }
+
+    /// return a reference to the inner list of elements
+    pub fn get_elements(&self) -> &Vec<Element> {
+        return &self.0;
+    }
 }
 
 /// Tries to parse provided string with the sequence elements.
@@ -402,6 +429,7 @@ impl Alternative {
 /// * `text` - Text to parse
 /// * `idx` - index of the current (top-level) element
 /// * `elements` - slice of all elements
+#[deprecated]
 fn parse_list_of_elems_recursive<'a>(
     text: &'a str,
     idx: usize,
@@ -441,6 +469,8 @@ fn parse_list_of_elems_recursive<'a>(
     let repetition_range = match style {
         ParsingStyle::Greedy => (min..=max).rev().collect_vec(),
         ParsingStyle::Lazy => (min..=max).collect_vec(),
+        // TODO: thorough branch needs to be handled differently, this is just temporary
+        ParsingStyle::Thorough => (min..=max).collect_vec(),
     };
     'outer: for reps in repetition_range {
         // remainder to parse resets at the start each loop, we want to parse from the original text
@@ -560,6 +590,7 @@ impl Element {
     /// All elements return vector of parse nodes, because Element may be a sequence
     /// or contain multiple tags that are returned as a nodes as well.
     /// Returned nodes are flattened into vector at the Rule level.
+    #[deprecated]
     fn parse_text<'a>(
         &'a self,
         text: &'a str,
@@ -635,16 +666,6 @@ impl Element {
                         )));
                     }
                 }
-                // for alternative in alternatives {
-                //     if let Ok((rest, mut nodes)) = alternative.parse_text(text, rule_heap, style) {
-                //         nodes.extend(tags.iter().map(|t| return t.to_node()));
-                //         return Ok((rest, nodes));
-                //     }
-                // }
-                // return Err(nom::Err::Error(error_position!(
-                //     text,
-                //     nom::error::ErrorKind::Alt
-                // )));
             }
         }
     }
@@ -652,7 +673,7 @@ impl Element {
     /// Returns the matching style of repeats for the Element.
     /// Because all variants have the field 'style', this function is short-cut to avoid using match each time.
     /// [Element::Void] and [Element::Null] always returns 1.
-    fn get_style(&self) -> Option<ParsingStyle> {
+    pub fn get_style(&self) -> Option<ParsingStyle> {
         match &self {
             Element::Token { style, .. } => return *style,
             Element::RuleRef { style, .. } => return *style,
@@ -666,7 +687,7 @@ impl Element {
     /// Returns the minimum number of repeats that is allowed for the Element.
     /// Because all variants have the field 'min', this function is short-cut to avoid using match each time.
     /// [Element::Void] and [Element::Null] always returns 1.
-    fn get_min(&self) -> u32 {
+    pub fn get_min(&self) -> u32 {
         match &self {
             Element::Token { min, .. } => return *min,
             Element::RuleRef { min, .. } => return *min,
@@ -680,7 +701,7 @@ impl Element {
     /// Returns the maximum number of repeats that is allowed for the Element.
     /// Because all variants have the field 'max', this function is short-cut to avoid using match each time.
     /// [Element::Void] and [Element::Null] always returns 1.
-    fn get_max(&self) -> u32 {
+    pub fn get_max(&self) -> u32 {
         match &self {
             Element::Token { max, .. } => return *max,
             Element::RuleRef { max, .. } => return *max,
@@ -788,6 +809,7 @@ fn rule(s: &str) -> Result<Rule, String> {
         tag("="),
         whitespace,
         rule_body,
+        whitespace,
         tag(";"),
     ))(input)
     {
@@ -795,7 +817,7 @@ fn rule(s: &str) -> Result<Rule, String> {
             if !rest.trim().is_empty() {
                 return Err(format!("rule parsing left non-empty remainder: {rest}"));
             }
-            let (maybe_public, _, name, _, _, _, body, _) = matched;
+            let (maybe_public, _, name, _, _, _, body, _, _) = matched;
             let rule = Rule {
                 public: maybe_public.is_some(),
                 name: name.to_string(),
@@ -1312,40 +1334,24 @@ fn bare_sequence(s: &str) -> IResult<&str, Element> {
 /// Tries to parse input str and return [Element::Token]
 fn token(input: &str) -> IResult<&str, Element> {
     let input = input.trim_start();
-    let (rest, (token, tags)) = tuple((
+    let (rest, (token, _, maybe_repeat, _, tags)) = tuple((
         take_while1(|c| return nom_unicode::is_alphanumeric(c) || ".-_:".contains(c)),
+        whitespace,
+        opt(repeat),
+        whitespace,
         many0(grammar_tag),
     ))(input)?;
-    let token = token.to_owned();
-    let input = rest.trim_start();
-    if input.starts_with('<') {
-        // the next char is <, so there must be some repeat specifier
-        let (rest, (min, max, style)) = repeat(input)?;
-        return Ok((
-            rest,
-            Element::Token {
-                token,
-                style,
-                min,
-                max,
-                tags,
-            },
-        ));
-    } else {
-        // the next char is not <, so there is not a repeat specifier
-        let min = 1;
-        let max = 1;
-        return Ok((
-            input,
-            Element::Token {
-                token,
-                style: None,
-                min,
-                max,
-                tags,
-            },
-        ));
-    }
+    let repeat_operator = maybe_repeat.unwrap_or((1, 1, None));
+    return Ok((
+        rest,
+        Element::Token {
+            token: token.to_string(),
+            min: repeat_operator.0,
+            max: repeat_operator.1,
+            style: repeat_operator.2,
+            tags,
+        },
+    ));
 }
 
 /// Tries to parse input str and returns a repeat specifier
@@ -1417,6 +1423,7 @@ pub fn remove_comments(input: &str) -> String {
 /// unit tests for the 'parser.rs'
 #[cfg(test)]
 mod tests {
+    #[allow(deprecated)]
     use itertools::Itertools;
 
     use crate::parser::{
@@ -1426,6 +1433,7 @@ mod tests {
     use super::{grammar_tag, parse_grammar, rule, token};
 
     mod grammar {
+        #[allow(deprecated)]
         use crate::parser::tests::*;
         use crate::parser::*;
 
@@ -1778,7 +1786,7 @@ mod tests {
 
         #[test]
         fn remove_comments() {
-            let s = "// comment 
+            let s = "// comment
                     public $root = foo;
                     // another comment";
             let gr = parse_grammar(s).unwrap();
@@ -1802,6 +1810,7 @@ mod tests {
     }
 
     mod text {
+        #[allow(deprecated)]
         use crate::parser::tests::*;
         use crate::parser::*;
 
@@ -2347,7 +2356,6 @@ mod tests {
         fn optional_rule_ref() {
             let gr = parse_grammar("public $rule = t1 [$other] t2; $other = t2;").unwrap();
             let parsed = gr.parse_text_from_start("t1 t2 t2", &ParsingStyle::Greedy);
-            dbg!(&parsed);
             let expected = vec![ParseResult {
                 style: ParsingStyle::Greedy,
                 rule: "rule".to_string(),
