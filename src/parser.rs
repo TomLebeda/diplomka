@@ -265,11 +265,11 @@ impl Grammar {
     /// (to the next whitespace) and tries to parse again.
     /// All the successful parsing results are collected and returned.
     pub fn find_all(&self, text: &str, style: &ParsingStyle) -> Vec<ParseResult> {
-        let mut results = self.semantic_parse_text_from_start(text, style);
+        let mut results = self.semantic_parse(text, style, false);
         text.match_indices(|c: char| return c.is_whitespace())
             .for_each(|(idx, _)| {
                 let (_lead, to_parse) = text.split_at(idx);
-                results.append(&mut self.semantic_parse_text_from_start(to_parse, style));
+                results.append(&mut self.semantic_parse(to_parse, style, false));
             });
         return results;
     }
