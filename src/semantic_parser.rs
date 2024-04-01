@@ -242,6 +242,17 @@ impl Element {
                     return Err(());
                 }
             }
+            Element::Begin { tags } => {
+                if shift == 0 {
+                    let rule_node = ParseNode::Rule {
+                        rule_name: "BEGIN".to_string(),
+                        expansion: tags.iter().map(|t| return t.to_node()).collect_vec(),
+                    };
+                    return Ok(vec![(shift, vec![rule_node])]);
+                } else {
+                    return Err(());
+                }
+            }
             Element::Sequence {
                 alternatives,
                 style,

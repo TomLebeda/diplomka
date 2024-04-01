@@ -382,9 +382,14 @@ pub enum Element {
     },
     /// Special rule $VOID that never matches anything
     Void,
-    /// Special rule $END that matches the ending of sentence
+    /// Special rule $END that matches only the ending of a sentence
     End {
         /// tags associated with the end of sentence
+        tags: Vec<Tag>,
+    },
+    /// Special rule $BEGIN that matches only the beginning of a sentence
+    Begin {
+        /// tags associated with the start of sentence
         tags: Vec<Tag>,
     },
     /// Special rule $NULL that always matches (matches zero-length string)
@@ -420,6 +425,7 @@ impl Element {
             Element::Void => return None,
             Element::Null { .. } => return None,
             Element::End { .. } => return None,
+            Element::Begin { .. } => return None,
             Element::Sequence { style, .. } => return *style,
         }
     }
@@ -435,6 +441,7 @@ impl Element {
             Element::Void => return 1,
             Element::Null { .. } => return 1,
             Element::End { .. } => return 1,
+            Element::Begin { .. } => return 1,
             Element::Sequence { min, .. } => return *min,
         }
     }
@@ -450,6 +457,7 @@ impl Element {
             Element::Void => return 1,
             Element::Null { .. } => return 1,
             Element::End { .. } => return 1,
+            Element::Begin { .. } => return 1,
             Element::Sequence { max, .. } => return *max,
         }
     }
@@ -608,6 +616,7 @@ fn element(s: &str) -> IResult<&str, Element> {
         special_void,
         special_null,
         special_end,
+        special_begin,
         rule_ref,
         sequence,
     ))(input);
@@ -633,6 +642,13 @@ fn special_end(s: &str) -> IResult<&str, Element> {
     let input = s.trim_start();
     let (rest, (_rule_name, tags)) = tuple((tag("$END"), many0(grammar_tag)))(input)?;
     return Ok((rest, Element::End { tags }));
+}
+
+/// Tries to parse input str and return [Element::End]
+fn special_begin(s: &str) -> IResult<&str, Element> {
+    let input = s.trim_start();
+    let (rest, (_rule_name, tags)) = tuple((tag("$BEGIN"), many0(grammar_tag)))(input)?;
+    return Ok((rest, Element::Begin { tags }));
 }
 
 /// Tries to parse input str and return [Element::Garbage]
@@ -894,6 +910,11 @@ fn optional_sequence(s: &str) -> IResult<&str, Element> {
             merged_tags.append(&mut seq_tags);
             return Ok((rest, Element::End { tags: merged_tags }));
         }
+        Element::Begin { tags } => {
+            let mut merged_tags = tags;
+            merged_tags.append(&mut seq_tags);
+            return Ok((rest, Element::Begin { tags: merged_tags }));
+        }
     }
 }
 
@@ -1055,6 +1076,11 @@ fn braced_sequnece(s: &str) -> IResult<&str, Element> {
             let mut merged_tags = tags;
             merged_tags.append(&mut seq_tags);
             return Ok((rest, Element::End { tags: merged_tags }));
+        }
+        Element::Begin { tags } => {
+            let mut merged_tags = tags;
+            merged_tags.append(&mut seq_tags);
+            return Ok((rest, Element::Begin { tags: merged_tags }));
         }
     }
 }
