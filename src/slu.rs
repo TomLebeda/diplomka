@@ -3,11 +3,99 @@ use log::{trace, warn};
 use regex::Regex;
 
 use crate::{
-    dataloader::Triplet,
-    parser::{Grammar, ParsingStyle},
+    dataloader::{Attribute, Triplet},
+    parser::{Grammar, ParseResult, ParsingStyle},
+    utils::merge_number_tags,
 };
 
+impl ParseResult {
+    /// Attempts to find a Triplet within the ParseResult.
+    ///
+    /// Uses the following scheme of tags:
+    /// TRIPLETS: type: triplet
+    ///           └─ predicate: {predicate name}
+    ///              ├─ part: obj
+    ///              │  └─ {object name}
+    ///              └─ part: subj
+    ///                 └─ {subject name}
+    pub fn find_triplet(&self) -> Option<Triplet> {
+        let mut tags = self.node.tags_dfpo();
+        merge_number_tags(&mut tags);
+        let tags_refs = tags.iter().map(|s| return s.as_str()).collect_vec();
+        match tags_refs[..] {
+            [obj_name, "part=obj", subj_name, "part=subj", predicate, "type=triplet"] => {
+                let predicate = predicate.trim_start_matches("predicate=");
+                return Some(Triplet {
+                    from: obj_name.to_string(),
+                    predicate: predicate.to_string(),
+                    to: subj_name.to_string(),
+                });
+            }
+            _ => return None,
+        };
+    }
+
+    /// Attempts to find an attribute withing the ParseResult
+    /// Returns tuple of 3 strings: (object, attribute_name, attribute_value)
+    ///
+    /// Uses following scheme of tags:
+    /// ATTRIBUTES: type: attribute
+    ///             ├─ part: obj
+    ///             │  └─ {object name}
+    ///             └─ part: attr
+    ///                └─ attr: {attribute type}
+    ///                   └─ {attribute value}
+    pub fn find_attribute(&self) -> Option<Attribute> {
+        let mut tags = self.node.tags_dfpo();
+        merge_number_tags(&mut tags);
+        let tags_refs = tags.iter().map(|s| return s.as_str()).collect_vec();
+        match tags_refs[..] {
+            [obj_name, "part=obj", attr_value, attr_name, "part=attr", "type=attribute"] => {
+                let attr_name = attr_name.trim_start_matches("attr=");
+                return Some(Attribute {
+                    object: obj_name.to_string(),
+                    attribute: attr_name.to_string(),
+                    value: attr_value.to_string(),
+                });
+            }
+            [attr_value, attr_name, "part=attr", obj_name, "part=obj", "type=attribute"] => {
+                let attr_name = attr_name.trim_start_matches("attr=");
+                return Some(Attribute {
+                    object: obj_name.to_string(),
+                    attribute: attr_name.to_string(),
+                    value: attr_value.to_string(),
+                });
+            }
+            _ => return None,
+        }
+    }
+
+    /// Attempts to find an object within the ParseResult.
+    /// Returns a String that is the name of the object (without numbering).
+    ///
+    /// Uses following scheme of tags:
+    /// OBJECTS: type: object
+    ///          └─ {object name}
+    ///
+    /// Since objects are part of Triplets and Attributes as well,
+    /// they could be find within those results as well.
+    /// But since the sbnf grammar defines custom rule just for objects,
+    /// only those outputs will be used for object detection.
+    pub fn find_object(&self) -> Option<String> {
+        let mut tags = self.node.tags_dfpo();
+        merge_number_tags(&mut tags);
+        let tags_refs = tags.iter().map(|s| return s.as_str()).collect_vec();
+        match tags_refs[..] {
+            [obj_name, "type=object"] => {
+                return Some(obj_name.to_string());
+            }
+            _ => return None,
+        }
+    }
+}
+
 /// extracts triplets from provided text using the provided grammar
+#[deprecated]
 pub fn get_triplets(text: &str, grammar: Grammar) -> Vec<Triplet> {
     trace!("extracting triplets from text {:?}", text);
     let predicate_regex =

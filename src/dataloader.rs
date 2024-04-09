@@ -9,7 +9,30 @@ use itertools::Itertools;
 use log::*;
 use serde::{Deserialize, Serialize};
 
-use crate::errors::SceneError;
+use crate::{errors::SceneError, utils::remove_number_from_obj};
+
+/// A piece of semantic information extracted from a text using provided scene and grammar
+#[derive(Serialize, Deserialize)]
+pub struct Extract {
+    /// number of seconds from the beginning of the speech at which this piece of semantic
+    /// information was obtained
+    pub timestamp: Option<u32>,
+    /// the source sentence from which this piece of semantic information was extracted
+    pub sentence: String,
+    /// the actual data that was extracted
+    pub data: ExtractData,
+}
+
+/// Defines what type of information was extracted
+#[derive(Serialize, Deserialize)]
+pub enum ExtractData {
+    /// the extracted semantic information is just some object name
+    Object(String),
+    /// the extracted semantic information is a triplet describing some relation between two objects
+    Triplet(Triplet),
+    /// the extracted semantic information is a attribute describing some static property of an object
+    Attribute(Attribute),
+}
 
 /// Represents the output of 'prepare' CLI command
 #[derive(Serialize, Deserialize, Debug)]
@@ -65,7 +88,30 @@ pub struct SceneObject {
     attributes: Vec<(String, String)>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
+/// represents triplet 'from --predicate--> to'
+pub struct Attribute {
+    /// name of the object
+    pub object: String,
+    /// name of the attribute
+    pub attribute: String,
+    /// value of the attribute
+    pub value: String,
+}
+
+impl Display for Attribute {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        return write!(
+            f,
+            "{}: {} = {}",
+            self.object.replace(' ', "_"),
+            self.attribute.replace(' ', "_"),
+            self.value.replace(' ', "_")
+        );
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// represents triplet 'from --predicate--> to'
 pub struct Triplet {
     /// source node
@@ -197,6 +243,100 @@ impl SceneObject {
 }
 
 impl Scene {
+    /// Returns true if the scene contains some object with given name, otherwise false.
+    /// If `ignore_numbers` is true, then the object numbering will be ignored, so "foo" will match "foo #1"
+    pub fn contains_object(&self, obj_name: &str, ignore_numbers: bool) -> bool {
+        for object in &self.objects {
+            if ignore_numbers {
+                if obj_name == remove_number_from_obj(&object.name) {
+                    return true;
+                }
+            } else {
+                if obj_name == object.name {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /// Returns true if the scene contains some object with given name, otherwise false.
+    /// If `ignore_numbers` is true, then the object numbering will be ignored, so "foo" will match "foo #1"
+    /// If `ignore_value` is true, then the value doesn't need to match as well
+    pub fn contains_attribute(
+        &self,
+        attr: &Attribute,
+        ignore_value: bool,
+        ignore_numbers: bool,
+    ) -> bool {
+        for object in &self.objects {
+            let name = match ignore_numbers {
+                true => remove_number_from_obj(&object.name),
+                false => &object.name,
+            };
+            let name_matches = attr.object == name;
+            if !name_matches {
+                continue;
+            }
+            let attribute_exist = object.get_attribute_names().contains(&attr.attribute);
+            if !attribute_exist {
+                continue;
+            }
+            if ignore_value {
+                if name_matches && attribute_exist {
+                    return true;
+                }
+            } else {
+                let (_, attr_value) = object
+                    .attributes
+                    .iter()
+                    .find(|(name, _)| return name == &attr.attribute)
+                    .unwrap(); // should be safe because we checked if attribute exist
+                let value_matches = &attr.value == attr_value;
+                // obj_name and attr_name matches must have already passed by now
+                if value_matches {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /// Returns true if the scene contains some object with given name, otherwise false.
+    /// Hierarchy between objects is considered a special case of triplets, it is handled here as well.
+    /// For the hierarchy case, the `ignore_numbers` toggle is used
+    pub fn contains_triplet(&self, triplet: &Triplet, ignore_numbers: bool) -> bool {
+        if triplet.predicate == "has child object" {
+            let Some(parent) = self.get_object(&triplet.from) else {
+                return false;
+            };
+            let child_names = match ignore_numbers {
+                false => parent.get_children(),
+                true => parent
+                    .children
+                    .iter()
+                    .map(|name| return remove_number_from_obj(name).to_string())
+                    .collect_vec(),
+            };
+            return child_names.contains(&triplet.to);
+        } else if triplet.predicate == "has parent object" {
+            let Some(child) = self.get_object(&triplet.from) else {
+                return false;
+            };
+            let parent_names = match ignore_numbers {
+                false => child.get_children(),
+                true => child
+                    .parents
+                    .iter()
+                    .map(|name| return remove_number_from_obj(name).to_string())
+                    .collect_vec(),
+            };
+            return parent_names.contains(&triplet.to);
+        } else {
+            return self.triplets.contains(triplet);
+        }
+    }
+
     /// Creates triplet-only representation from the scene.
     /// All objects and their attributes will be transformed into triplets as well as the hierarchy.
     pub fn crumble(&self) -> Vec<Triplet> {

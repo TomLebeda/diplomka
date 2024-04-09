@@ -33,7 +33,6 @@
 		- nevýhoda: potřeba neuronové sítě schopné porovnat přirozenou řeč a triplet => custom architektura (= potřeba trénovacích dat)
 			-> experimentálně vyzkoušeno, že lze generovat syntetická trénovací anotovaná data (ChatGPT), ale riziko degenerace sítě?
 
-
 # ZMÍNIT V REFERÁTU:
 - bylo potřeba udělat lazy matching (vs greedy), jinak by $GARBAGE sežral moc 
 	- -> např: z věty "hnědý pes honí malou oranžovou veverku" by našel "hnědá veverka"
@@ -95,4 +94,3 @@
 	-> tohle by se možná hodilo prodiskutovat s někým, kdo má vhled do té medicínské stránky, aby řekl jestli to má vůbec cenu?
 
 - Kolik by tak mělo být rešerše ve finální práci? 
-

@@ -27,8 +27,9 @@ use dataloader::Scene;
 use fetch::*;
 use itertools::Itertools;
 use log::*;
-use slu::get_triplets;
 
+use crate::dataloader::{Extract, ExtractData};
+#[allow(deprecated)]
 use crate::{
     generator::{generate_grammar, prepare_files},
     parser::Grammar,
@@ -48,13 +49,159 @@ fn main() {
         Commands::Stats(args) => print_stats(args),
         Commands::List(args) => print_list(args),
         Commands::Crumble(args) => print_crumbles(args),
-        Commands::Triplets(args) => print_triplets(args),
         Commands::Fetch(args) => print_fetch(args),
         Commands::Prepare(args) => print_prepare(args),
         Commands::Generate(args) => print_generate(args),
         Commands::Render(args) => print_render(args),
-        Commands::SemanticParse(args) => print_parse(args),
+        Commands::Parse(args) => print_parse(args),
+        Commands::Extract(args) => print_extract(args),
+        Commands::Evaluate(args) => print_eval(args),
     };
+}
+
+/// Print the process of 'eval' command
+fn print_eval(args: EvalArgs) {
+    trace!("executing 'evaluate' command");
+    let scene = match Scene::from_file(&args.scene_file) {
+        Ok(scene) => scene,
+        Err(e) => {
+            error!("can't load scene: {e}");
+            std::process::exit(1);
+        }
+    };
+    let Ok(extracts_str) = std::fs::read_to_string(&args.extracts) else {
+        error!(
+            "can't read file {:?} (file missing or corrupted?)",
+            &args.extracts
+        );
+        std::process::exit(1);
+    };
+    let Ok(extracts) = serde_json::from_str(&extracts_str) else {
+        error!(
+            "can't parse content of file {:?} into JSON (invalid format?)",
+            &args.extracts
+        );
+        std::process::exit(1);
+    };
+    eval_extracts(scene, extracts);
+}
+
+/// Runs evaluation on the provided scene and list of extracts.
+/// Prints out some statistics and comparisons that could be used as a feature vectors.
+fn eval_extracts(scene: Scene, extracts: Vec<Extract>) {
+    let objects = extracts
+        .iter()
+        .filter_map(|ex| {
+            return match &ex.data {
+                ExtractData::Object(obj) => Some(obj),
+                _ => None,
+            };
+        })
+        .collect_vec();
+    println!(
+        "# of objects: {}/{}",
+        objects.iter().unique().collect_vec().len(),
+        scene.get_object_count()
+    );
+    // println!("# of attributes: {}/{}", scene.get_attributes().len());
+    // println!("# of triplets: {}/{}", scene.get_triplet_count());
+}
+
+/// Print the process of 'compare' command
+fn print_extract(args: ExtractArgs) {
+    trace!("executing 'extract' command");
+    let scene = match Scene::from_file(&args.scene_file) {
+        Ok(scene) => scene,
+        Err(e) => {
+            error!("can't load scene: {e}");
+            std::process::exit(1);
+        }
+    };
+    let grammar = match Grammar::from_file(&args.grammar) {
+        Ok(grammar) => grammar,
+        Err(errs) => {
+            error!("can't load grammar:");
+            for (i, e) in errs.iter().enumerate() {
+                error!("problem #{}: {}", i + 1, e);
+            }
+            std::process::exit(1);
+        }
+    };
+    let Ok(text) = std::fs::read_to_string(&args.text_file) else {
+        error!("failed to read text file");
+        std::process::exit(1);
+    };
+    let mut extracts: Vec<Extract> = vec![];
+    for line in text.lines() {
+        trace!("processing line: {:?}", line);
+        let results = grammar.semantic_parse(line, &parser::ParsingStyle::Thorough, false);
+        // some rules can match the same thing in multiple ways, so filter only the results that have unique tag sequences
+        let results = results
+            .iter()
+            .unique_by(|res| return res.node.tags_dfpo())
+            .collect_vec();
+        trace!("obtained {} raw semantic parse-trees", results.len());
+        for res in results {
+            if let Some(obj) = res.find_object() {
+                match scene.contains_object(&obj, true) {
+                    false => {
+                        trace!("[remove] object {} (not in scene)", obj);
+                    }
+                    true => {
+                        trace!("[keep] object {}", obj);
+                        extracts.push(Extract {
+                            timestamp: None,
+                            sentence: line.to_string(),
+                            data: ExtractData::Object(obj.clone()),
+                        });
+                    }
+                }
+            }
+            if let Some(attr) = res.find_attribute() {
+                match scene.contains_attribute(&attr, true, true) {
+                    false => {
+                        trace!("[remove] attribute {} (not in scene)", attr);
+                    }
+                    true => {
+                        trace!("[keep] attribute {}", attr);
+                        extracts.push(Extract {
+                            timestamp: None,
+                            sentence: line.to_string(),
+                            data: ExtractData::Attribute(attr.clone()),
+                        });
+                    }
+                }
+            }
+            if let Some(trip) = res.find_triplet() {
+                match scene.contains_triplet(&trip, true) {
+                    false => {
+                        trace!("[remove] triplet {} (not in scene)", trip);
+                    }
+                    true => {
+                        trace!("[keep] triplet {}", trip);
+                        extracts.push(Extract {
+                            timestamp: None,
+                            sentence: line.to_string(),
+                            data: ExtractData::Triplet(trip.clone()),
+                        });
+                    }
+                }
+            }
+        }
+    }
+    trace!("processed all lines");
+    let Ok(extracts_json) = serde_json::to_string_pretty(&extracts) else {
+        error!("failed to serializace extracts into json");
+        std::process::exit(1)
+    };
+    let res = std::fs::write(&args.out_file, extracts_json);
+    if res.is_err() {
+        error!("received io error when writing output")
+    }
+    info!("oputput written into {}", &args.out_file.to_string_lossy());
+    if args.eval {
+        eval_extracts(scene, extracts);
+    }
 }
 
 /// Print the process of 'render' CLI command
@@ -94,51 +241,39 @@ fn print_fetch(args: FetchArgs) {
     println!("{} - related: {}", &args.word, related.join(", "));
 }
 
-/// Print all the triplets found in the text using the provided grammar.
-/// Triplet is detected as a [gasp::ParseResult] that contains all of the following patterns inside it's tags:
-///     1. object: {obj_start} {object-label} {obj_end}
-///     2. predicate: {predicate=predicate-label}
-///     3. subject: {subj_start} {subj-label} {subj_end}
-fn print_triplets(args: TripletsArgs) {
-    trace!("executing 'triplets' command");
-    match Grammar::from_file(args.grammar) {
-        Ok(grammar) => {
-            trace!("grammar loaded");
-            get_triplets(&args.text, grammar)
-                .iter()
-                .for_each(|t| println!("{}", t));
-        }
-        Err(errs) => {
-            error!("can't parse grammar:");
-            for (i, e) in errs.iter().enumerate() {
-                error!("parsing err #{i}: {e}");
-            }
-        }
-    }
-}
-
 /// Print the results of semantic parsing
 fn print_parse(args: ParseArgs) {
     trace!("executing 'parse' command");
-    match Grammar::from_file(args.grammar) {
+    match Grammar::from_file(&args.grammar) {
         Ok(grammar) => {
             trace!("grammar loaded");
-            let greedy_results = grammar.find_all(&args.text, &parser::ParsingStyle::Greedy);
-            let lazy_results = grammar.find_all(&args.text, &parser::ParsingStyle::Lazy);
-            println!("{}", "=".repeat(60));
-            greedy_results.iter().for_each(|res| {
-                println!("{}", res);
-                let mut tags = res.node.tags_dfpo();
-                merge_number_tags(&mut tags);
-                println!("{}", "-".repeat(40));
-            });
-            println!("{}", "=".repeat(60));
-            lazy_results.iter().for_each(|res| {
-                println!("{}", res);
-                let mut tags = res.node.tags_dfpo();
-                merge_number_tags(&mut tags);
-                println!("{}", "-".repeat(40));
-            });
+            let mut results = vec![];
+            // let greedy_results = grammar.find_all(&args.text, &parser::ParsingStyle::Greedy);
+            // trace!("# of greedy results: {}", greedy_results.len());
+            // let lazy_results = grammar.find_all(&args.text, &parser::ParsingStyle::Lazy);
+            // trace!("# of lazy results: {}", lazy_results.len());
+            results.append(&mut grammar.semantic_parse(
+                &args.text,
+                &parser::ParsingStyle::Thorough,
+                false,
+            ));
+            for result in results {
+                if args.verbose {
+                    let mut tags = result.node.tags_dfpo();
+                    merge_number_tags(&mut tags);
+                    println!();
+                    println!("{}", result);
+                }
+                if let Some(obj) = result.find_object() {
+                    println!("   [object] {}", obj);
+                }
+                if let Some(attr) = result.find_attribute() {
+                    println!("[attribute] {}", attr);
+                }
+                if let Some(triplet) = result.find_triplet() {
+                    println!("  [triplet] {}", triplet);
+                }
+            }
         }
         Err(errs) => {
             error!("can't parse grammar:");

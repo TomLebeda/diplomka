@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use log::*;
 
 use crate::parser::{Alternative, Element, Grammar, ParseNode, ParseResult, ParsingStyle, Rule};
 
@@ -334,7 +333,44 @@ fn semantic_parse_list_of_elements(
     };
     match style {
         ParsingStyle::Lazy => {
-            let rep_range = current_element.get_min()..=current_element.get_max();
+            // try how many times the element matches to get actual max value
+            // we can't use theoretical max, because in case of <n->,
+            // it will be REPEAT_MAX_DEFAULT which is probably huge.
+            let mut counter = 0;
+            let mut inner_shift = shift;
+            loop {
+                if counter == current_element.get_max() {
+                    // we hit the theoretical max => break the counter loop
+                    break;
+                }
+                if let Ok(results) = current_element.semantic_parse(
+                    inner_shift,
+                    text_tokens,
+                    rule_heap,
+                    &ParsingStyle::Greedy, // always greedy for max-rep counting
+                    true,                  // force the greedy style for max-rep counting
+                ) {
+                    // we are greedy => in case there are multiple returned branches,
+                    // pick the one with biggest shift (as it was the longest parsing)
+                    let best = results.iter().max_by_key(|(s, _)| return s);
+                    match best {
+                        Some((best_shift, _)) => {
+                            inner_shift = *best_shift;
+                            counter += 1;
+                        }
+                        None => {
+                            // we can't parse anymore => break the counter loop
+                            break;
+                        }
+                    }
+                } else {
+                    // we can't parse anymore => break the counter loop
+                    break;
+                }
+            }
+            // as the max we use the counter value => it's either smaller than the theoretical
+            // or equal (if we hit the stopping condition inside the counter loop)
+            let rep_range = current_element.get_min()..=counter;
             'outer: for reps in rep_range {
                 // the shift index will reset every each outer loop,
                 // because we want to parse from the original starting point
@@ -511,9 +547,6 @@ fn semantic_parse_list_of_elements(
             return Err(());
         }
         ParsingStyle::Thorough => {
-            info!("{{");
-            trace!("current element: {:?}", current_element);
-            trace!("current shift: {:?}", shift);
             // try how many times the element matches to get actual max value
             // even in thorough parsing we need to limit because of <0-> could go forever
             // it will be REPEAT_MAX_DEFAULT which is probably huge.
@@ -553,7 +586,6 @@ fn semantic_parse_list_of_elements(
             let mut use_counter = 0;
             let mut total_branches: Vec<(usize, Vec<ParseNode>)> = vec![];
             let mut current_branches: Vec<(usize, Vec<ParseNode>)> = vec![(shift, vec![])];
-            trace!("before loop branches: {:?}", current_branches);
             loop {
                 if use_counter >= current_element.get_min() {
                     // we are in the legal range =>
@@ -565,10 +597,8 @@ fn semantic_parse_list_of_elements(
                     // this needs to be after the total_branches append operation
                     break;
                 }
-                trace!("loop started, use_counter: {}", use_counter);
                 let mut new_branches = vec![];
                 for branch in current_branches {
-                    trace!("loop: processing branch: {:?}", branch);
                     if let Ok(mut new_sub_branches) = current_element.semantic_parse(
                         branch.0,    // sub-branch starts from the previous branch's shift
                         text_tokens, // text tokens are always the same
@@ -576,44 +606,27 @@ fn semantic_parse_list_of_elements(
                         &style,      // style doesn't change
                         force_style, // inherit whether to force the style or not
                     ) {
-                        trace!("loop: obtained new sub-branches: {:?}", new_sub_branches);
                         let full_branches = new_sub_branches.iter_mut().map(|sub_branch| {
                             let mut full_branch = branch.1.clone();
                             full_branch.append(&mut sub_branch.1);
                             return (sub_branch.0, full_branch);
                         });
                         new_branches.extend(full_branches);
-                    } else {
-                        trace!("loop: branch failed");
                     }
                 }
                 current_branches = new_branches;
                 use_counter += 1;
             }
-            debug!(
-                "total branches [{}]: {:?}",
-                total_branches.len(),
-                total_branches
-            );
-            trace!(
-                "loop ended, use counter: {}, # of branches: {}",
-                use_counter,
-                current_branches.len()
-            );
             let current_branches = total_branches;
             if use_counter < current_element.get_min() {
                 // we failed to match at least min times, so this branch fails => return empty vec
-                trace!("failed to match min times, returning empty");
-                info!("}}");
                 return Err(());
             }
             // now we exhausted the current element and we need all the branches to be processed by
             // the next sub-sequence (shifting the element index by +1)
-            trace!("before shift branches: {:?}", current_branches);
             if elements.get(element_idx + 1).is_some() {
                 let mut output_branches = vec![];
                 for branch in current_branches {
-                    trace!("shift: processing branch: {:?}", branch);
                     if let Ok(mut new_sub_branches) = semantic_parse_list_of_elements(
                         branch.0,        // use the shift of the branch
                         element_idx + 1, // start from the next element
@@ -623,24 +636,19 @@ fn semantic_parse_list_of_elements(
                         &style,
                         force_style,
                     ) {
-                        trace!("mapped new_sub_branches: {:?}", &new_sub_branches);
                         let full_branches = new_sub_branches.iter_mut().map(|sub_branch| {
                             let mut full_branch = branch.1.clone();
                             full_branch.append(&mut sub_branch.1);
                             return (sub_branch.0, full_branch);
                         });
                         output_branches.extend(full_branches);
-                    } else {
-                        trace!("shifted: branch failed");
                     }
                 }
 
                 // and return the results
-                info!("}}");
                 return Ok(output_branches);
             }
             // if we are here, then there is no next element
-            info!("}}");
             return Ok(current_branches);
         }
     }

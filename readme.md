@@ -7,12 +7,12 @@
 	- [x] test, zda je gramatika validní (reference na pravidla)
 	- [x] test, zda se pravidla neopakují
 	- [x] test parsování textů
-- [ ] polo-automatize tvoření gramatik
+- [x] polo-automatize tvoření gramatik
 	- [x] automatizace hledání tvarů
 	- [x] automatizace hledání synonym
 	- [x] automatizace hledání souvisejících slov
 	- [x] automatizace generování pravidel ze slovníku forem
-	- [ ] automatizace kontroly, zda gramatika postihuje celou scénu
+	- [x] automatizace kontroly, zda gramatika postihuje celou scénu
 - [ ] systém hodnocení
 	- [ ] systém pro hodnocení relativní pozice
 	- [ ] systém pro hodnocení absolutní pozice
@@ -31,7 +31,6 @@
 - [x] tooling pro práci s reprezentací scény
 	- [x] parsing
 	- [x] validation
-		- [ ] kontrola, zda mají stejné atributy stejné datové typy
 	- [x] listing/queries
 	- [x] overview (printing statistics)
 - [x] vymyslet reprezentaci scény

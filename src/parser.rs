@@ -6,7 +6,8 @@ use clap::ValueEnum;
 use itertools::Itertools;
 use log::*;
 use nom::branch::alt;
-use nom::bytes::complete::{tag, take_until, take_while, take_while1};
+use nom::bytes::complete::{is_a, tag, take_until, take_while, take_while1};
+use nom::character::complete::one_of;
 use nom::combinator::opt;
 use nom::multi::{many0, many1, separated_list1};
 use nom::sequence::tuple;
@@ -237,8 +238,8 @@ impl Display for ParseNode {
 impl Grammar {
     /// Loads and parses grammar from provided file.
     /// Returns Grammar if parsing is successful or prints error and terminates process otherwise.
-    pub fn from_file(path: PathBuf) -> Result<Grammar, Vec<String>> {
-        let Ok(raw_str) = std::fs::read_to_string(&path) else {
+    pub fn from_file(path: &PathBuf) -> Result<Grammar, Vec<String>> {
+        let Ok(raw_str) = std::fs::read_to_string(path) else {
             error!("can't find/read file {}", &path.to_string_lossy());
             return Err(vec![format!(
                 "can't find/read file {}",
@@ -1141,34 +1142,55 @@ fn token(input: &str) -> IResult<&str, Element> {
 }
 
 /// Tries to parse input str and returns a repeat specifier
+///
 /// allowed syntax:
 /// <m-n> = element must be repeated at least m times and at most n times (both inclusive)
 /// <m-> = element must be repeated at least m times (inclusive) and at most [REPEAT_MAX_DEFAULT]
 /// <m> = element must be repeated exactly m times
+/// <*> = equivalent to <0->
+/// <+> = equivalent to <1->
+/// <?> = equivalent to <0-1>
+/// After the first '<' can be inserted string 'L:' or 'G:' or 'T:' which will
+/// override the default style of parsing to Lazy, Greedy or Thorough respectively.
+/// Leaving just <L:> is illegal, there must be something following the ':'.
+///
 /// no whitespace allowed inside the angle brackets
 /// no repeat specification is equal to <1>
 fn repeat(input: &str) -> IResult<&str, (u32, u32, Option<ParsingStyle>)> {
     let input = input.trim_start();
-    let (rest, (maybe_style, min, maybe_second_part)) = delimited(
-        tag("<"),
-        tuple((
-            opt(tuple((alt((tag("L"), tag("G"))), tag(":")))),
-            nom::character::complete::u32,
-            opt(tuple((tag("-"), opt(nom::character::complete::u32)))),
-        )),
-        tag(">"),
-    )(input)?;
+
+    // we can't directly specify both variants now, because they would have different return types
+    // so we get just the string and later try to parse it separately
+    let repeat_spec = is_a("0123456789-+*?");
+    let style_spec = tuple((one_of("LGT"), tag(":")));
+    let insides = tuple((opt(style_spec), repeat_spec));
+    let (rest, (maybe_style, mut repeat_str)) = delimited(tag("<"), insides, tag(">"))(input)?;
+
     // if there is <m>, then fill it to be <m-n>, where n = m
     // if there is <m->, then fill it to be <m-n>, where n = [REPEAT_MAX_DEFAULT]
     // and unwrap the n value into 'max'
     let style = match maybe_style {
         None => None,
         Some((style_str, _)) => match style_str {
-            "L" => Some(ParsingStyle::Lazy),
-            "G" => Some(ParsingStyle::Greedy),
+            'L' => Some(ParsingStyle::Lazy),
+            'G' => Some(ParsingStyle::Greedy),
+            'T' => Some(ParsingStyle::Thorough),
             _ => unreachable!(),
         },
     };
+    // literally replace the shortcuts for the equivalent full representation
+    if repeat_str == "*" {
+        repeat_str = "0-";
+    } else if repeat_str == "+" {
+        repeat_str = "1-"
+    } else if repeat_str == "?" {
+        repeat_str = "0-1"
+    }
+    let (_, (min, maybe_second_part)) = tuple((
+        nom::character::complete::u32,
+        opt(tuple((tag("-"), opt(nom::character::complete::u32)))),
+    ))(repeat_str)?;
+
     let max = maybe_second_part
         .unwrap_or(("", Some(min)))
         .1
@@ -1232,7 +1254,6 @@ mod tests {
         }
 
         #[test]
-        /// test the repeat parsing
         fn parse_repeat() {
             let (rest, rep) = repeat("<1-2>").unwrap();
             assert_eq!((1, 2, None), rep);
@@ -1248,6 +1269,21 @@ mod tests {
         }
 
         #[test]
+        fn parse_repeat_shortcuts() {
+            let (rest, rep) = repeat("<+>").unwrap();
+            assert_eq!((1, REPEAT_MAX_DEFAULT, None), rep);
+            assert!(rest.is_empty());
+
+            let (rest, rep) = repeat("<*>").unwrap();
+            assert_eq!((0, REPEAT_MAX_DEFAULT, None), rep);
+            assert!(rest.is_empty());
+
+            let (rest, rep) = repeat("<L:+>").unwrap();
+            assert_eq!((1, REPEAT_MAX_DEFAULT, Some(ParsingStyle::Lazy)), rep);
+            assert!(rest.is_empty());
+        }
+
+        #[test]
         fn parse_repeat_with_style() {
             let (rest, rep) = repeat("<1-2>").unwrap();
             assert_eq!((1, 2, None), rep);
@@ -1259,6 +1295,10 @@ mod tests {
 
             let (rest, rep) = repeat("<G:3>").unwrap();
             assert_eq!((3, 3, Some(ParsingStyle::Greedy)), rep);
+            assert!(rest.is_empty());
+
+            let (rest, rep) = repeat("<T:3>").unwrap();
+            assert_eq!((3, 3, Some(ParsingStyle::Thorough)), rep);
             assert!(rest.is_empty());
         }
 

@@ -1,11 +1,11 @@
 /// Removes the trailing numbering #n of objects (everything after the # is removed)
-pub fn remove_number_from_obj(str: &str) -> String {
+pub fn remove_number_from_obj(str: &str) -> &str {
     // I don't use regex because I don't want to compile the expression on every call
     let s = str.trim();
     if let Some(idx) = s.find('#') {
-        return s[..idx].trim().to_owned();
+        return s[..idx].trim();
     } else {
-        return s.to_owned();
+        return s;
     }
 }
 
@@ -85,7 +85,6 @@ pub fn merge_number_tags(tags: &mut Vec<String>) {
             changed = true;
         }
     }
-    println!("merged: {:?}", tags);
 }
 
 /// unit tests for the 'utils.rs'

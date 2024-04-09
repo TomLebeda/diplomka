@@ -254,7 +254,7 @@ pub fn prepare_files(scene_path: PathBuf, out_path: PathBuf) {
     let object_names = scene
         .get_object_names()
         .iter()
-        .map(|o| return remove_number_from_obj(o))
+        .map(|o| return remove_number_from_obj(o).to_string())
         .collect_vec();
     let attr_groups = scene.get_attributes_grouped();
     let mut object_map = word_map_expanded.clone();
@@ -308,7 +308,7 @@ fn get_words_to_expand(scene: &Scene) -> Vec<String> {
     out.append(&mut scene.get_attribute_values());
     return out
         .iter()
-        .map(|s| return remove_number_from_obj(s))
+        .map(|s| return remove_number_from_obj(s).to_string())
         .sorted_unstable()
         .unique()
         .collect_vec();

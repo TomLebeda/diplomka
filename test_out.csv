@@ -1,0 +1,32 @@
+object,water,na břehu rybníka je 5 osob a několik zvířat
+object,people,na břehu rybníka je 5 osob a několik zvířat
+object,animals,na břehu rybníka je 5 osob a několik zvířat
+object,woman,vlevo sedí žena na lehátku čte si knihu pod slunečníkem
+object,lounger,vlevo sedí žena na lehátku čte si knihu pod slunečníkem
+object,book,vlevo sedí žena na lehátku čte si knihu pod slunečníkem
+object,parasol,vlevo sedí žena na lehátku čte si knihu pod slunečníkem
+triplet,woman reading book,vlevo sedí žena na lehátku čte si knihu pod slunečníkem
+object,blanket,vedle sebe má rozprostřenou piknikovou deku s košíkem a s jídlem na piknik
+object,basket,vedle sebe má rozprostřenou piknikovou deku s košíkem a s jídlem na piknik
+object,girl,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+object,swimsuit,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+object,boy,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+object,cap,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+object,tshirt,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+object,shorts,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+attribute,girl: hairstyle = ponytail,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+attribute,tshirt: pattern = striped,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+triplet,girl has_child_object swimsuit,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+triplet,boy has_child_object cap,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+triplet,boy has_child_object tshirt,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+triplet,boy has_child_object shorts,je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy
+object,man,na pravé straně sedí rybář který chytá ryby má nahozený prut a vedle sebe podběrák
+object,fish,na pravé straně sedí rybář který chytá ryby má nahozený prut a vedle sebe podběrák
+object,fishing rod,na pravé straně sedí rybář který chytá ryby má nahozený prut a vedle sebe podběrák
+object,fishing net,na pravé straně sedí rybář který chytá ryby má nahozený prut a vedle sebe podběrák
+attribute,man: action = fishing,na pravé straně sedí rybář který chytá ryby má nahozený prut a vedle sebe podběrák
+object,woman,mezi ženou a rybářem je uprostřed dítě které vypadá že padá do rybníka doufám že ho někdo zachrání že si ho někdo všimne
+object,man,mezi ženou a rybářem je uprostřed dítě které vypadá že padá do rybníka doufám že ho někdo zachrání že si ho někdo všimne
+object,child,mezi ženou a rybářem je uprostřed dítě které vypadá že padá do rybníka doufám že ho někdo zachrání že si ho někdo všimne
+object,water,mezi ženou a rybářem je uprostřed dítě které vypadá že padá do rybníka doufám že ho někdo zachrání že si ho někdo všimne
+triplet,child falling_into water,mezi ženou a rybářem je uprostřed dítě které vypadá že padá do rybníka doufám že ho někdo zachrání že si ho někdo všimne

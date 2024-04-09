@@ -30,8 +30,6 @@ pub enum Commands {
     List(ListArgs),
     /// Crumbles the scene into triplets (including object attributes) and prints them.
     Crumble(CrumbleArgs),
-    /// Extracts triplets from provided text using provided grammar
-    Triplets(TripletsArgs),
     /// Fetch forms or synonyms of given word from the internet or other data sources
     Fetch(FetchArgs),
     /// Prepare files with words for provided scene description.
@@ -42,16 +40,52 @@ pub enum Commands {
     /// Render graph from scene
     Render(RenderArgs),
     /// Parse the provided text with provided grammar and print the results
-    SemanticParse(ParseArgs),
+    Parse(ParseArgs),
+    /// Extract the semantics of provided text with a reference scene description.
+    Extract(ExtractArgs),
+    /// Load output from 'extract' command and compute final evaluation
+    Evaluate(EvalArgs),
 }
 
 #[derive(Args, Debug)]
-/// Arguments for the "generate" CLI command
+/// Arguments for the "parse" CLI command
+pub struct EvalArgs {
+    /// Path to the extracts file (which is output from 'extract' command)
+    pub extracts: PathBuf,
+    /// Path to the scene file (JSON)
+    pub scene_file: PathBuf,
+}
+
+#[derive(Args, Debug)]
+/// Arguments for the "parse" CLI command
 pub struct ParseArgs {
     /// Path to the grammar file
     pub grammar: PathBuf,
     /// Text to parse
     pub text: String,
+    /// if true, print out extra details
+    #[arg(short, long)]
+    pub verbose: bool,
+}
+
+#[derive(Args, Debug)]
+/// Arguments for the "parse" CLI command
+pub struct ExtractArgs {
+    /// Path to the scene file (JSON)
+    pub scene_file: PathBuf,
+    /// Path to the grammar file
+    pub grammar: PathBuf,
+    /// Path to the file containing text to parse.
+    /// Each sentence must be on it's own line
+    pub text_file: PathBuf,
+    /// Path to the output file where extracts will be stored
+    pub out_file: PathBuf,
+    /// if true, print out extra details
+    #[arg(short, long)]
+    pub verbose: bool,
+    /// if true, continue with the evaluation as if `evaluate` command was called right after
+    #[arg(short, long)]
+    pub eval: bool,
 }
 
 #[derive(Args, Debug)]
@@ -85,18 +119,6 @@ pub struct PrepareArgs {
     pub scene_file: PathBuf,
     /// Path to the output file (will be created if doesn't exist and replaced if does)
     pub out_file: PathBuf,
-}
-
-#[derive(Args, Debug)]
-/// Arguments for the "triplets" CLI command
-pub struct TripletsArgs {
-    /// path to the abnf file that should be used for parsing
-    pub grammar: PathBuf,
-    /// string that will be parsed with the grammar
-    pub text: String,
-    #[arg(short, long, value_enum, default_value_t = ParsingStyle::Lazy)]
-    /// what type of parsing should be used
-    pub style: ParsingStyle,
 }
 
 #[derive(Args, Debug)]

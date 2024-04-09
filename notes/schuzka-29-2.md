@@ -1,4 +1,4 @@
-# Poznámky na schůzku 29. 2.
+# Poznámky ze schůzku 29. 2.
 - Co bylo řečeno v práci "Analýza jazykový deficitů u osob s neurodegenerativním onemocněním mozku" (Michaela Zapletalová):
 	- zda si lidé všímají detailů
 	- zda lidé popisují obrázek komplexně
@@ -37,9 +37,3 @@
 	- holé věty
 	- předčasné ukončení
 
-# Poznámky na další schůzku:
-1. vizualizace -> jaká je cílová podoba?
-	- dokáži renderovat DOT + Graphviz => SVG -> problém s layoutem (ani jeden engine neprodukuje hezké výsledky pro větší grafy)
-	- teoretická možnost udělat layout grafu ručně jako SVG/HTML a pak "jen" referovat na objekty/linky/atributy
-2. přidal jsem tagy
-3. gramatiky?
