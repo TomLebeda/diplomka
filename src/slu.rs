@@ -96,6 +96,7 @@ impl ParseResult {
 
 /// extracts triplets from provided text using the provided grammar
 #[deprecated]
+#[allow(dead_code)]
 pub fn get_triplets(text: &str, grammar: Grammar) -> Vec<Triplet> {
     trace!("extracting triplets from text {:?}", text);
     let predicate_regex =

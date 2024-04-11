@@ -35,6 +35,20 @@ impl Grammar {
     }
 }
 
+/// Given list of ParseNodes, returns total number of [ParseNode::Token] variants, recursively.
+pub fn get_text_token_count(nodes: &[ParseNode]) -> u32 {
+    return nodes
+        .iter()
+        .map(|node| -> u32 {
+            return match node {
+                ParseNode::Token(_, _) => 1,
+                ParseNode::Tag(_) => 0,
+                ParseNode::Rule { expansion, .. } => get_text_token_count(expansion),
+            };
+        })
+        .sum();
+}
+
 impl Rule {
     /// runs semantic parsing on the provided token string, returns all all tuples `(shift, node)`
     /// where `shift` is the new offset (index of token where the parsing ended) and `node` is the
@@ -59,6 +73,8 @@ impl Rule {
             ) {
                 for (idx, nodes) in results {
                     let rule_node = ParseNode::Rule {
+                        start: shift as u32,
+                        shift: get_text_token_count(&nodes),
                         rule_name: self.get_name(),
                         expansion: nodes,
                     };
@@ -161,7 +177,7 @@ impl Element {
                     .get(shift)
                     .is_some_and(|text_token| return text_token == token)
                 {
-                    let token_node = ParseNode::Token(token.clone());
+                    let token_node = ParseNode::Token(shift as u32, token.clone());
                     let mut output_nodes = vec![token_node];
                     let tag_nodes = tags.iter().map(|tag| return tag.to_node());
                     output_nodes.extend(tag_nodes);
@@ -206,10 +222,12 @@ impl Element {
             Element::Garbage { tags, .. } => match text_tokens.get(shift) {
                 // garbage matches whatever single token
                 Some(token) => {
-                    let mut nodes = vec![ParseNode::Token(token.to_string())];
+                    let mut nodes = vec![ParseNode::Token(shift as u32, token.to_string())];
                     nodes.extend(tags.iter().map(|t| return t.to_node()));
                     // it is technically a rule, so it will return [ParseNode::Rule]
                     let rule_node = ParseNode::Rule {
+                        start: shift as u32,
+                        shift: get_text_token_count(&nodes),
                         rule_name: "GARBAGE".to_string(),
                         expansion: nodes,
                     };
@@ -225,6 +243,8 @@ impl Element {
             }
             Element::Null { tags } => {
                 let rule_node = ParseNode::Rule {
+                    start: shift as u32,
+                    shift: 0,
                     rule_name: "NULL".to_string(),
                     expansion: tags.iter().map(|t| return t.to_node()).collect_vec(),
                 };
@@ -233,6 +253,8 @@ impl Element {
             Element::End { tags } => {
                 if shift == text_tokens.len() {
                     let rule_node = ParseNode::Rule {
+                        start: shift as u32,
+                        shift: 0,
                         rule_name: "END".to_string(),
                         expansion: tags.iter().map(|t| return t.to_node()).collect_vec(),
                     };
@@ -244,6 +266,8 @@ impl Element {
             Element::Begin { tags } => {
                 if shift == 0 {
                     let rule_node = ParseNode::Rule {
+                        start: shift as u32,
+                        shift: 0,
                         rule_name: "BEGIN".to_string(),
                         expansion: tags.iter().map(|t| return t.to_node()).collect_vec(),
                     };
@@ -683,8 +707,10 @@ mod tests {
                 text: text.to_string(),
                 style: ParsingStyle::Lazy,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
-                    expansion: vec![ParseNode::Token("foo".to_string())],
+                    expansion: vec![ParseNode::Token(0, "foo".to_string())],
                 },
             }];
             assert_eq!(expected, parsed);
@@ -701,9 +727,11 @@ mod tests {
                 text: text.to_string(),
                 style: ParsingStyle::Lazy,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
                         ParseNode::Tag("tag1".to_string()),
                         ParseNode::Tag("tag2".to_string()),
                     ],
@@ -721,16 +749,20 @@ mod tests {
             let expected = vec![ParseResult {
                 style: ParsingStyle::Lazy,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 0,
                             rule_name: "NULL".to_string(),
                             expansion: vec![ParseNode::Tag("tag1".to_string())],
                         },
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                         ParseNode::Tag("tag2".to_string()),
-                        ParseNode::Token("t3".to_string()),
+                        ParseNode::Token(2, "t3".to_string()),
                         ParseNode::Tag("tag3".to_string()),
                     ],
                 },
@@ -749,17 +781,21 @@ mod tests {
             let expected = vec![ParseResult {
                 style: ParsingStyle::Lazy,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 0,
                             rule_name: "NULL".to_string(),
                             expansion: vec![],
                         },
                         ParseNode::Tag("tag1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                         ParseNode::Tag("tag2".to_string()),
-                        ParseNode::Token("t3".to_string()),
+                        ParseNode::Token(2, "t3".to_string()),
                     ],
                 },
                 rule: "root".to_string(),
@@ -778,8 +814,10 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
-                    expansion: vec![ParseNode::Token("t2".to_string())],
+                    expansion: vec![ParseNode::Token(0, "t2".to_string())],
                 },
             }];
             let parsed = gr.semantic_parse(text, &ParsingStyle::Lazy, false);
@@ -796,8 +834,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 0,
                         rule_name: "NULL".to_string(),
                         expansion: vec![],
                     }],
@@ -817,9 +859,11 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Tag("tag1".to_string()),
                     ],
                 },
@@ -839,10 +883,14 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "GARBAGE".to_string(),
-                        expansion: vec![ParseNode::Token("foo".to_string())],
+                        expansion: vec![ParseNode::Token(0, "foo".to_string())],
                     }],
                 },
             }];
@@ -860,6 +908,8 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![],
                 },
@@ -873,8 +923,10 @@ mod tests {
                 rule: "root".to_string(),
                 text: text2.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
-                    expansion: vec![ParseNode::Token("t1".to_string())],
+                    expansion: vec![ParseNode::Token(0, "t1".to_string())],
                 },
             }];
             assert_eq!(parsed2, expected2);
@@ -886,10 +938,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: text3.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t1".to_string()),
                     ],
                 },
             }];
@@ -906,6 +960,8 @@ mod tests {
                 rule: "root".to_string(),
                 text: "".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![],
                 },
@@ -918,9 +974,11 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Tag("tag".to_string()),
                     ],
                 },
@@ -933,13 +991,15 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1 t1 t1".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Tag("tag".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(1, "t1".to_string()),
                         ParseNode::Tag("tag".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(2, "t1".to_string()),
                         ParseNode::Tag("tag".to_string()),
                     ],
                 },
@@ -956,8 +1016,8 @@ mod tests {
                 let text = text.trim();
                 let parsed = gr.semantic_parse(text, &ParsingStyle::Lazy, false);
                 let mut expansion = vec![];
-                for _ in 0..n {
-                    expansion.push(ParseNode::Token("t1".to_string()));
+                for i in 0..n {
+                    expansion.push(ParseNode::Token(i as u32, "t1".to_string()));
                     expansion.push(ParseNode::Tag("tag".to_string()));
                 }
                 let expected = vec![ParseResult {
@@ -965,6 +1025,8 @@ mod tests {
                     rule: "root".to_string(),
                     text: text.to_string(),
                     node: ParseNode::Rule {
+                        start: 0,
+                        shift: n as u32,
                         rule_name: "root".to_string(),
                         expansion,
                     },
@@ -984,11 +1046,15 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "GARBAGE".to_string(),
                         expansion: vec![
-                            ParseNode::Token("foo".to_string()),
+                            ParseNode::Token(0, "foo".to_string()),
                             ParseNode::Tag("tag1".to_string()),
                             ParseNode::Tag("tag2".to_string()),
                         ],
@@ -1009,26 +1075,34 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
                         ParseNode::Rule {
                             rule_name: "GARBAGE".to_string(),
+                            start: 0,
+                            shift: 1,
                             expansion: vec![
-                                ParseNode::Token("foo".to_string()),
+                                ParseNode::Token(0, "foo".to_string()),
                                 ParseNode::Tag("tag".to_string()),
                             ],
                         },
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "GARBAGE".to_string(),
                             expansion: vec![
-                                ParseNode::Token("bar".to_string()),
+                                ParseNode::Token(1, "bar".to_string()),
                                 ParseNode::Tag("tag".to_string()),
                             ],
                         },
                         ParseNode::Rule {
+                            start: 2,
+                            shift: 1,
                             rule_name: "GARBAGE".to_string(),
                             expansion: vec![
-                                ParseNode::Token("baz".to_string()),
+                                ParseNode::Token(2, "baz".to_string()),
                                 ParseNode::Tag("tag".to_string()),
                             ],
                         },
@@ -1049,8 +1123,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 0,
                         rule_name: "NULL".to_string(),
                         expansion: vec![ParseNode::Tag("tag".to_string())],
                     }],
@@ -1078,9 +1156,11 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("token".to_string()),
+                        ParseNode::Token(0, "token".to_string()),
                         ParseNode::Tag("tag".to_string()),
                     ],
                 },
@@ -1100,11 +1180,15 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "other".to_string(),
                         expansion: vec![
-                            ParseNode::Token("token".to_string()),
+                            ParseNode::Token(0, "token".to_string()),
                             ParseNode::Tag("tag".to_string()),
                             ParseNode::Tag("second tag".to_string()),
                         ],
@@ -1125,17 +1209,19 @@ mod tests {
                 rule: "rule".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 5,
                     rule_name: "rule".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Tag("tag1".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(1, "t1".to_string()),
                         ParseNode::Tag("tag1".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(2, "t1".to_string()),
                         ParseNode::Tag("tag2".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(3, "t1".to_string()),
                         ParseNode::Tag("tag2".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(4, "t2".to_string()),
                     ],
                 },
             }];
@@ -1153,12 +1239,16 @@ mod tests {
                 rule: "root".to_string(),
                 text: "foo bar".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("bar".to_string())],
+                            expansion: vec![ParseNode::Token(1, "bar".to_string())],
                         },
                     ],
                 },
@@ -1177,14 +1267,18 @@ mod tests {
                 rule: "root".to_string(),
                 text: "foo bar".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
                         ParseNode::Tag("tag foo".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
                             expansion: vec![
-                                ParseNode::Token("bar".to_string()),
+                                ParseNode::Token(1, "bar".to_string()),
                                 ParseNode::Tag("tag bar".to_string()),
                             ],
                         },
@@ -1205,12 +1299,14 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1 t2 t3".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                         ParseNode::Tag("tag".to_string()),
-                        ParseNode::Token("t3".to_string()),
+                        ParseNode::Token(2, "t3".to_string()),
                     ],
                 },
             }];
@@ -1221,10 +1317,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1 t3".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t3".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t3".to_string()),
                     ],
                 },
             }];
@@ -1241,14 +1339,18 @@ mod tests {
                 rule: "rule".to_string(),
                 text: "t1 t2 t3".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "rule".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("t2".to_string())],
+                            expansion: vec![ParseNode::Token(1, "t2".to_string())],
                         },
-                        ParseNode::Token("t3".to_string()),
+                        ParseNode::Token(2, "t3".to_string()),
                     ],
                 },
             }];
@@ -1265,10 +1367,12 @@ mod tests {
                 rule: "rule".to_string(),
                 text: "t1 t2".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "rule".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                     ],
                 },
             }];
@@ -1285,15 +1389,21 @@ mod tests {
                 rule: "root".to_string(),
                 text: "foo foo".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
                         ParseNode::Rule {
+                            start: 0,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("foo".to_string())],
+                            expansion: vec![ParseNode::Token(0, "foo".to_string())],
                         },
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("foo".to_string())],
+                            expansion: vec![ParseNode::Token(1, "foo".to_string())],
                         },
                     ],
                 },
@@ -1311,11 +1421,13 @@ mod tests {
                 let text = text.trim();
                 let parsed = gr.semantic_parse(text, &ParsingStyle::Lazy, false);
                 let mut expansion = vec![];
-                for _ in 0..n {
+                for i in 0..n {
                     expansion.push(ParseNode::Rule {
+                        start: i as u32,
+                        shift: 1,
                         rule_name: "other".to_string(),
                         expansion: vec![
-                            ParseNode::Token("foo".to_string()),
+                            ParseNode::Token(i as u32, "foo".to_string()),
                             ParseNode::Tag("bar".to_string()),
                         ],
                     });
@@ -1326,6 +1438,8 @@ mod tests {
                     rule: "root".to_string(),
                     text: text.to_string(),
                     node: ParseNode::Rule {
+                        start: 0,
+                        shift: n as u32,
                         rule_name: "root".to_string(),
                         expansion,
                     },
@@ -1348,19 +1462,27 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1 t1 t1".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 3,
                         rule_name: "other".to_string(),
                         expansion: vec![
-                            ParseNode::Token("t1".to_string()),
+                            ParseNode::Token(0, "t1".to_string()),
                             ParseNode::Rule {
+                                start: 1,
+                                shift: 2,
                                 rule_name: "other".to_string(),
                                 expansion: vec![
-                                    ParseNode::Token("t1".to_string()),
+                                    ParseNode::Token(1, "t1".to_string()),
                                     ParseNode::Rule {
+                                        start: 2,
+                                        shift: 1,
                                         rule_name: "other".to_string(),
                                         expansion: vec![
-                                            ParseNode::Token("t1".to_string()),
+                                            ParseNode::Token(2, "t1".to_string()),
                                             ParseNode::Tag("last".to_string()),
                                         ],
                                     },
@@ -1385,26 +1507,36 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 4,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 4,
                         rule_name: "other".to_string(),
                         expansion: vec![
-                            ParseNode::Token("t1".to_string()),
+                            ParseNode::Token(0, "t1".to_string()),
                             ParseNode::Rule {
+                                start: 1,
+                                shift: 2,
                                 rule_name: "other".to_string(),
                                 expansion: vec![
-                                    ParseNode::Token("t1".to_string()),
+                                    ParseNode::Token(1, "t1".to_string()),
                                     ParseNode::Rule {
+                                        start: 2,
+                                        shift: 0,
                                         rule_name: "other".to_string(),
                                         expansion: vec![ParseNode::Rule {
+                                            start: 2,
+                                            shift: 0,
                                             rule_name: "NULL".to_string(),
                                             expansion: vec![ParseNode::Tag("end".to_string())],
                                         }],
                                     },
-                                    ParseNode::Token("t2".to_string()),
+                                    ParseNode::Token(2, "t2".to_string()),
                                 ],
                             },
-                            ParseNode::Token("t2".to_string()),
+                            ParseNode::Token(3, "t2".to_string()),
                         ],
                     }],
                 },
@@ -1424,11 +1556,15 @@ mod tests {
                 text: text.to_string(),
                 style: ParsingStyle::Greedy,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
+                        ParseNode::Token(1, "foo".to_string()),
                         ParseNode::Rule {
+                            start: 2,
+                            shift: 0,
                             rule_name: "END".to_string(),
                             expansion: vec![],
                         },
@@ -1463,8 +1599,10 @@ mod tests {
                 text: text.to_string(),
                 style: ParsingStyle::Greedy,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
-                    expansion: vec![ParseNode::Token("foo".to_string())],
+                    expansion: vec![ParseNode::Token(0, "foo".to_string())],
                 },
             }];
             assert_eq!(expected, parsed);
@@ -1479,9 +1617,11 @@ mod tests {
             let expected = vec![ParseResult {
                 style: ParsingStyle::Greedy,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
                         ParseNode::Tag("tag1".to_string()),
                         ParseNode::Tag("tag2".to_string()),
                     ],
@@ -1501,16 +1641,20 @@ mod tests {
             let expected = vec![ParseResult {
                 style: ParsingStyle::Greedy,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 0,
                             rule_name: "NULL".to_string(),
                             expansion: vec![ParseNode::Tag("tag1".to_string())],
                         },
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                         ParseNode::Tag("tag2".to_string()),
-                        ParseNode::Token("t3".to_string()),
+                        ParseNode::Token(2, "t3".to_string()),
                         ParseNode::Tag("tag3".to_string()),
                     ],
                 },
@@ -1529,17 +1673,21 @@ mod tests {
             let expected = vec![ParseResult {
                 style: ParsingStyle::Greedy,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 0,
                             rule_name: "NULL".to_string(),
                             expansion: vec![],
                         },
                         ParseNode::Tag("tag1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                         ParseNode::Tag("tag2".to_string()),
-                        ParseNode::Token("t3".to_string()),
+                        ParseNode::Token(2, "t3".to_string()),
                     ],
                 },
                 rule: "root".to_string(),
@@ -1558,8 +1706,10 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
-                    expansion: vec![ParseNode::Token("t2".to_string())],
+                    expansion: vec![ParseNode::Token(0, "t2".to_string())],
                 },
             }];
             let parsed = gr.semantic_parse(text, &ParsingStyle::Greedy, false);
@@ -1576,8 +1726,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 0,
                         rule_name: "NULL".to_string(),
                         expansion: vec![],
                     }],
@@ -1597,9 +1751,11 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Tag("tag2".to_string()),
                     ],
                 },
@@ -1619,10 +1775,14 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "GARBAGE".to_string(),
-                        expansion: vec![ParseNode::Token("foo".to_string())],
+                        expansion: vec![ParseNode::Token(0, "foo".to_string())],
                     }],
                 },
             }];
@@ -1640,6 +1800,8 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![],
                 },
@@ -1653,8 +1815,10 @@ mod tests {
                 rule: "root".to_string(),
                 text: text2.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
-                    expansion: vec![ParseNode::Token("t1".to_string())],
+                    expansion: vec![ParseNode::Token(0, "t1".to_string())],
                 },
             }];
             assert_eq!(parsed2, expected2);
@@ -1666,10 +1830,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: text3.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t1".to_string()),
                     ],
                 },
             }];
@@ -1686,6 +1852,8 @@ mod tests {
                 rule: "root".to_string(),
                 text: "".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![],
                 },
@@ -1698,9 +1866,11 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Tag("tag".to_string()),
                     ],
                 },
@@ -1713,13 +1883,15 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1 t1 t1".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Tag("tag".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(1, "t1".to_string()),
                         ParseNode::Tag("tag".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(2, "t1".to_string()),
                         ParseNode::Tag("tag".to_string()),
                     ],
                 },
@@ -1736,8 +1908,8 @@ mod tests {
                 let text = text.trim();
                 let parsed = gr.semantic_parse(text, &ParsingStyle::Greedy, false);
                 let mut expansion = vec![];
-                for _ in 0..n {
-                    expansion.push(ParseNode::Token("t1".to_string()));
+                for i in 0..n {
+                    expansion.push(ParseNode::Token(i as u32, "t1".to_string()));
                     expansion.push(ParseNode::Tag("tag".to_string()));
                 }
                 let expected = vec![ParseResult {
@@ -1745,6 +1917,8 @@ mod tests {
                     rule: "root".to_string(),
                     text: text.to_string(),
                     node: ParseNode::Rule {
+                        start: 0,
+                        shift: n as u32,
                         rule_name: "root".to_string(),
                         expansion,
                     },
@@ -1764,11 +1938,15 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "GARBAGE".to_string(),
                         expansion: vec![
-                            ParseNode::Token("foo".to_string()),
+                            ParseNode::Token(0, "foo".to_string()),
                             ParseNode::Tag("tag1".to_string()),
                             ParseNode::Tag("tag2".to_string()),
                         ],
@@ -1789,26 +1967,34 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
                         ParseNode::Rule {
+                            start: 0,
+                            shift: 1,
                             rule_name: "GARBAGE".to_string(),
                             expansion: vec![
-                                ParseNode::Token("foo".to_string()),
+                                ParseNode::Token(0, "foo".to_string()),
                                 ParseNode::Tag("tag".to_string()),
                             ],
                         },
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "GARBAGE".to_string(),
                             expansion: vec![
-                                ParseNode::Token("bar".to_string()),
+                                ParseNode::Token(1, "bar".to_string()),
                                 ParseNode::Tag("tag".to_string()),
                             ],
                         },
                         ParseNode::Rule {
+                            start: 2,
+                            shift: 1,
                             rule_name: "GARBAGE".to_string(),
                             expansion: vec![
-                                ParseNode::Token("baz".to_string()),
+                                ParseNode::Token(2, "baz".to_string()),
                                 ParseNode::Tag("tag".to_string()),
                             ],
                         },
@@ -1829,8 +2015,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 0,
                         rule_name: "NULL".to_string(),
                         expansion: vec![ParseNode::Tag("tag".to_string())],
                     }],
@@ -1858,9 +2048,11 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("token".to_string()),
+                        ParseNode::Token(0, "token".to_string()),
                         ParseNode::Tag("tag".to_string()),
                     ],
                 },
@@ -1880,11 +2072,15 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "other".to_string(),
                         expansion: vec![
-                            ParseNode::Token("token".to_string()),
+                            ParseNode::Token(0, "token".to_string()),
                             ParseNode::Tag("tag".to_string()),
                             ParseNode::Tag("second tag".to_string()),
                         ],
@@ -1904,13 +2100,15 @@ mod tests {
                 rule: "rule".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "rule".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Tag("tag1".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(1, "t1".to_string()),
                         ParseNode::Tag("tag1".to_string()),
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(2, "t1".to_string()),
                         ParseNode::Tag("tag2".to_string()),
                     ],
                 },
@@ -1929,12 +2127,16 @@ mod tests {
                 rule: "root".to_string(),
                 text: "foo bar".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("bar".to_string())],
+                            expansion: vec![ParseNode::Token(1, "bar".to_string())],
                         },
                     ],
                 },
@@ -1953,14 +2155,18 @@ mod tests {
                 rule: "root".to_string(),
                 text: "foo bar".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
                         ParseNode::Tag("tag foo".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
                             expansion: vec![
-                                ParseNode::Token("bar".to_string()),
+                                ParseNode::Token(1, "bar".to_string()),
                                 ParseNode::Tag("tag bar".to_string()),
                             ],
                         },
@@ -1981,12 +2187,14 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1 t2 t2".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                         ParseNode::Tag("tag".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(2, "t2".to_string()),
                     ],
                 },
             }];
@@ -1997,10 +2205,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1 t2".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                     ],
                 },
             }];
@@ -2017,14 +2227,18 @@ mod tests {
                 rule: "rule".to_string(),
                 text: "t1 t2 t2".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "rule".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("t2".to_string())],
+                            expansion: vec![ParseNode::Token(1, "t2".to_string())],
                         },
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(2, "t2".to_string()),
                     ],
                 },
             }];
@@ -2041,10 +2255,12 @@ mod tests {
                 rule: "rule".to_string(),
                 text: "t1 t2".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "rule".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                     ],
                 },
             }];
@@ -2061,15 +2277,21 @@ mod tests {
                 rule: "root".to_string(),
                 text: "foo foo".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
                         ParseNode::Rule {
+                            start: 0,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("foo".to_string())],
+                            expansion: vec![ParseNode::Token(0, "foo".to_string())],
                         },
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("foo".to_string())],
+                            expansion: vec![ParseNode::Token(1, "foo".to_string())],
                         },
                     ],
                 },
@@ -2087,11 +2309,13 @@ mod tests {
                 let text = text.trim();
                 let parsed = gr.semantic_parse(text, &ParsingStyle::Greedy, false);
                 let mut expansion = vec![];
-                for _ in 0..n {
+                for i in 0..n {
                     expansion.push(ParseNode::Rule {
+                        start: i as u32,
+                        shift: 1,
                         rule_name: "other".to_string(),
                         expansion: vec![
-                            ParseNode::Token("foo".to_string()),
+                            ParseNode::Token(i as u32, "foo".to_string()),
                             ParseNode::Tag("bar".to_string()),
                         ],
                     });
@@ -2102,6 +2326,8 @@ mod tests {
                     rule: "root".to_string(),
                     text: text.to_string(),
                     node: ParseNode::Rule {
+                        start: 0,
+                        shift: n as u32,
                         rule_name: "root".to_string(),
                         expansion,
                     },
@@ -2124,19 +2350,27 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1 t1 t1".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 3,
                         rule_name: "other".to_string(),
                         expansion: vec![
-                            ParseNode::Token("t1".to_string()),
+                            ParseNode::Token(0, "t1".to_string()),
                             ParseNode::Rule {
+                                start: 1,
+                                shift: 2,
                                 rule_name: "other".to_string(),
                                 expansion: vec![
-                                    ParseNode::Token("t1".to_string()),
+                                    ParseNode::Token(1, "t1".to_string()),
                                     ParseNode::Rule {
+                                        start: 2,
+                                        shift: 1,
                                         rule_name: "other".to_string(),
                                         expansion: vec![
-                                            ParseNode::Token("t1".to_string()),
+                                            ParseNode::Token(2, "t1".to_string()),
                                             ParseNode::Tag("last".to_string()),
                                         ],
                                     },
@@ -2161,26 +2395,36 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 4,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 4,
                         rule_name: "other".to_string(),
                         expansion: vec![
-                            ParseNode::Token("t1".to_string()),
+                            ParseNode::Token(0, "t1".to_string()),
                             ParseNode::Rule {
+                                start: 1,
+                                shift: 2,
                                 rule_name: "other".to_string(),
                                 expansion: vec![
-                                    ParseNode::Token("t1".to_string()),
+                                    ParseNode::Token(1, "t1".to_string()),
                                     ParseNode::Rule {
+                                        start: 2,
+                                        shift: 0,
                                         rule_name: "other".to_string(),
                                         expansion: vec![ParseNode::Rule {
+                                            start: 2,
+                                            shift: 0,
                                             rule_name: "NULL".to_string(),
                                             expansion: vec![ParseNode::Tag("end".to_string())],
                                         }],
                                     },
-                                    ParseNode::Token("t2".to_string()),
+                                    ParseNode::Token(2, "t2".to_string()),
                                 ],
                             },
-                            ParseNode::Token("t2".to_string()),
+                            ParseNode::Token(3, "t2".to_string()),
                         ],
                     }],
                 },
@@ -2199,11 +2443,15 @@ mod tests {
                 text: text.to_string(),
                 style: ParsingStyle::Greedy,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
+                        ParseNode::Token(1, "foo".to_string()),
                         ParseNode::Rule {
+                            start: 2,
+                            shift: 0,
                             rule_name: "END".to_string(),
                             expansion: vec![],
                         },
@@ -2238,8 +2486,10 @@ mod tests {
                 text: text.to_string(),
                 style: ParsingStyle::Thorough,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
-                    expansion: vec![ParseNode::Token("foo".to_string())],
+                    expansion: vec![ParseNode::Token(0, "foo".to_string())],
                 },
             }];
             assert_eq!(expected, parsed);
@@ -2254,9 +2504,11 @@ mod tests {
             let expected = vec![ParseResult {
                 style: ParsingStyle::Thorough,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
                         ParseNode::Tag("tag1".to_string()),
                         ParseNode::Tag("tag2".to_string()),
                     ],
@@ -2276,16 +2528,20 @@ mod tests {
             let expected = vec![ParseResult {
                 style: ParsingStyle::Thorough,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 0,
                             rule_name: "NULL".to_string(),
                             expansion: vec![ParseNode::Tag("tag1".to_string())],
                         },
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                         ParseNode::Tag("tag2".to_string()),
-                        ParseNode::Token("t3".to_string()),
+                        ParseNode::Token(2, "t3".to_string()),
                         ParseNode::Tag("tag3".to_string()),
                     ],
                 },
@@ -2304,17 +2560,21 @@ mod tests {
             let expected = vec![ParseResult {
                 style: ParsingStyle::Thorough,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 0,
                             rule_name: "NULL".to_string(),
                             expansion: vec![],
                         },
                         ParseNode::Tag("tag1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                         ParseNode::Tag("tag2".to_string()),
-                        ParseNode::Token("t3".to_string()),
+                        ParseNode::Token(2, "t3".to_string()),
                     ],
                 },
                 rule: "root".to_string(),
@@ -2333,8 +2593,10 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
-                    expansion: vec![ParseNode::Token("t2".to_string())],
+                    expansion: vec![ParseNode::Token(0, "t2".to_string())],
                 },
             }];
             let parsed = gr.semantic_parse(text, &ParsingStyle::Thorough, false);
@@ -2351,8 +2613,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 0,
                         rule_name: "NULL".to_string(),
                         expansion: vec![],
                     }],
@@ -2382,10 +2648,14 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "GARBAGE".to_string(),
-                        expansion: vec![ParseNode::Token("foo".to_string())],
+                        expansion: vec![ParseNode::Token(0, "foo".to_string())],
                     }],
                 },
             }];
@@ -2402,6 +2672,8 @@ mod tests {
                 text: text.to_string(),
                 style: ParsingStyle::Thorough,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![],
                 },
@@ -2422,6 +2694,8 @@ mod tests {
                     text: text.to_string(),
                     style: ParsingStyle::Thorough,
                     node: ParseNode::Rule {
+                        start: 0,
+                        shift: 0,
                         rule_name: "root".to_string(),
                         expansion: vec![],
                     },
@@ -2431,8 +2705,10 @@ mod tests {
                     rule: "root".to_string(),
                     text: text.to_string(),
                     node: ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "root".to_string(),
-                        expansion: vec![ParseNode::Token("t1".to_string())],
+                        expansion: vec![ParseNode::Token(0, "t1".to_string())],
                     },
                 },
             ];
@@ -2459,6 +2735,8 @@ mod tests {
                 text: text.to_string(),
                 style: ParsingStyle::Thorough,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![],
                 },
@@ -2478,6 +2756,8 @@ mod tests {
                     text: text.to_string(),
                     style: ParsingStyle::Thorough,
                     node: ParseNode::Rule {
+                        start: 0,
+                        shift: 0,
                         rule_name: "root".to_string(),
                         expansion: vec![],
                     },
@@ -2487,9 +2767,11 @@ mod tests {
                     rule: "root".to_string(),
                     text: text.to_string(),
                     node: ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "root".to_string(),
                         expansion: vec![
-                            ParseNode::Token("t1".to_string()),
+                            ParseNode::Token(0, "t1".to_string()),
                             ParseNode::Tag("tag".to_string()),
                         ],
                     },
@@ -2527,11 +2809,15 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "GARBAGE".to_string(),
                         expansion: vec![
-                            ParseNode::Token("foo".to_string()),
+                            ParseNode::Token(0, "foo".to_string()),
                             ParseNode::Tag("tag1".to_string()),
                             ParseNode::Tag("tag2".to_string()),
                         ],
@@ -2552,26 +2838,34 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
                         ParseNode::Rule {
+                            start: 0,
+                            shift: 1,
                             rule_name: "GARBAGE".to_string(),
                             expansion: vec![
-                                ParseNode::Token("foo".to_string()),
+                                ParseNode::Token(0, "foo".to_string()),
                                 ParseNode::Tag("tag".to_string()),
                             ],
                         },
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "GARBAGE".to_string(),
                             expansion: vec![
-                                ParseNode::Token("bar".to_string()),
+                                ParseNode::Token(1, "bar".to_string()),
                                 ParseNode::Tag("tag".to_string()),
                             ],
                         },
                         ParseNode::Rule {
+                            start: 2,
+                            shift: 1,
                             rule_name: "GARBAGE".to_string(),
                             expansion: vec![
-                                ParseNode::Token("baz".to_string()),
+                                ParseNode::Token(2, "baz".to_string()),
                                 ParseNode::Tag("tag".to_string()),
                             ],
                         },
@@ -2592,8 +2886,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 0,
                         rule_name: "NULL".to_string(),
                         expansion: vec![ParseNode::Tag("tag".to_string())],
                     }],
@@ -2621,9 +2919,11 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("token".to_string()),
+                        ParseNode::Token(0, "token".to_string()),
                         ParseNode::Tag("tag".to_string()),
                     ],
                 },
@@ -2643,11 +2943,15 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 1,
                     rule_name: "root".to_string(),
                     expansion: vec![ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "other".to_string(),
                         expansion: vec![
-                            ParseNode::Token("token".to_string()),
+                            ParseNode::Token(0, "token".to_string()),
                             ParseNode::Tag("tag".to_string()),
                             ParseNode::Tag("second tag".to_string()),
                         ],
@@ -2660,9 +2964,6 @@ mod tests {
         #[test]
         fn ambiguous_diff_tags() {
             init();
-            // NOTE: in this case, even in Throrough parsing,
-            // the elements will be exhausted in the order they are written
-            // even though it could be possible to match the {tag1} 1x and {tag2} 2x
             let gr = parse_grammar("public $rule = t <0-2> {1} t<0-2> {2} ;").unwrap();
             let text = "t t t";
             let parsed = gr.semantic_parse(text, &ParsingStyle::Thorough, false);
@@ -2688,12 +2989,16 @@ mod tests {
                 rule: "root".to_string(),
                 text: "foo bar".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("bar".to_string())],
+                            expansion: vec![ParseNode::Token(1, "bar".to_string())],
                         },
                     ],
                 },
@@ -2712,14 +3017,18 @@ mod tests {
                 rule: "root".to_string(),
                 text: "foo bar".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
                         ParseNode::Tag("tag foo".to_string()),
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
                             expansion: vec![
-                                ParseNode::Token("bar".to_string()),
+                                ParseNode::Token(1, "bar".to_string()),
                                 ParseNode::Tag("tag bar".to_string()),
                             ],
                         },
@@ -2750,13 +3059,17 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1 t2 t2".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 3,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                         ParseNode::Tag("tag".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(2, "t2".to_string()),
                         ParseNode::Rule {
+                            start: 3,
+                            shift: 0,
                             rule_name: "END".to_string(),
                             expansion: vec![],
                         },
@@ -2776,10 +3089,12 @@ mod tests {
                 rule: "root".to_string(),
                 text: "t1 t2".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                     ],
                 },
             }];
@@ -2812,10 +3127,12 @@ mod tests {
                 rule: "rule".to_string(),
                 text: "t1 t2".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "rule".to_string(),
                     expansion: vec![
-                        ParseNode::Token("t1".to_string()),
-                        ParseNode::Token("t2".to_string()),
+                        ParseNode::Token(0, "t1".to_string()),
+                        ParseNode::Token(1, "t2".to_string()),
                     ],
                 },
             }];
@@ -2832,15 +3149,21 @@ mod tests {
                 rule: "root".to_string(),
                 text: "foo foo".to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
                         ParseNode::Rule {
+                            start: 0,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("foo".to_string())],
+                            expansion: vec![ParseNode::Token(0, "foo".to_string())],
                         },
                         ParseNode::Rule {
+                            start: 1,
+                            shift: 1,
                             rule_name: "other".to_string(),
-                            expansion: vec![ParseNode::Token("foo".to_string())],
+                            expansion: vec![ParseNode::Token(1, "foo".to_string())],
                         },
                     ],
                 },
@@ -2860,6 +3183,8 @@ mod tests {
                 rule: "root".to_string(),
                 text: text.to_string(),
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 0,
                     rule_name: "root".to_string(),
                     expansion: vec![],
                 },
@@ -2880,6 +3205,8 @@ mod tests {
                     rule: "root".to_string(),
                     text: text.to_string(),
                     node: ParseNode::Rule {
+                        start: 0,
+                        shift: 0,
                         rule_name: "root".to_string(),
                         expansion: vec![],
                     },
@@ -2889,12 +3216,16 @@ mod tests {
                     rule: "root".to_string(),
                     text: text.to_string(),
                     node: ParseNode::Rule {
+                        start: 0,
+                        shift: 1,
                         rule_name: "root".to_string(),
                         expansion: vec![
                             ParseNode::Rule {
+                                start: 0,
+                                shift: 1,
                                 rule_name: "other".to_string(),
                                 expansion: vec![
-                                    ParseNode::Token("foo".to_string()),
+                                    ParseNode::Token(0, "foo".to_string()),
                                     ParseNode::Tag("bar".to_string()),
                                 ],
                             },
@@ -2949,11 +3280,15 @@ mod tests {
                 text: text.to_string(),
                 style: ParsingStyle::Thorough,
                 node: ParseNode::Rule {
+                    start: 0,
+                    shift: 2,
                     rule_name: "root".to_string(),
                     expansion: vec![
-                        ParseNode::Token("foo".to_string()),
-                        ParseNode::Token("foo".to_string()),
+                        ParseNode::Token(0, "foo".to_string()),
+                        ParseNode::Token(1, "foo".to_string()),
                         ParseNode::Rule {
+                            start: 2,
+                            shift: 0,
                             rule_name: "END".to_string(),
                             expansion: vec![],
                         },

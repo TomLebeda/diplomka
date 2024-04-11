@@ -1,4 +1,4 @@
-/// Removes the trailing numbering #n of objects (everything after the # is removed)
+/// Removes the trailing numbering `#n` of objects (everything after the # is removed)
 pub fn remove_number_from_obj(str: &str) -> &str {
     // I don't use regex because I don't want to compile the expression on every call
     let s = str.trim();

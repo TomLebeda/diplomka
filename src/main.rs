@@ -27,8 +27,11 @@ use dataloader::Scene;
 use fetch::*;
 use itertools::Itertools;
 use log::*;
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use serde_json::Value;
+use utils::remove_number_from_obj;
 
-use crate::dataloader::{Extract, ExtractData};
+use crate::dataloader::{Extract, ExtractData, Score};
 #[allow(deprecated)]
 use crate::{
     generator::{generate_grammar, prepare_files},
@@ -69,6 +72,20 @@ fn print_eval(args: EvalArgs) {
             std::process::exit(1);
         }
     };
+    let Ok(loss_table_str) = std::fs::read_to_string(&args.loss_file) else {
+        error!(
+            "can't read file {:?} (file missing or corrupted?)",
+            &args.loss_file
+        );
+        std::process::exit(1);
+    };
+    let Ok(loss_table) = serde_json::from_str::<Value>(&loss_table_str) else {
+        error!(
+            "can't parse content of file {:?} into JSON (invalid format?)",
+            &args.extracts
+        );
+        std::process::exit(1);
+    };
     let Ok(extracts_str) = std::fs::read_to_string(&args.extracts) else {
         error!(
             "can't read file {:?} (file missing or corrupted?)",
@@ -83,26 +100,44 @@ fn print_eval(args: EvalArgs) {
         );
         std::process::exit(1);
     };
-    eval_extracts(scene, extracts);
+    eval(scene, extracts, loss_table);
 }
 
 /// Runs evaluation on the provided scene and list of extracts.
 /// Prints out some statistics and comparisons that could be used as a feature vectors.
-fn eval_extracts(scene: Scene, extracts: Vec<Extract>) {
-    let objects = extracts
+fn eval(scene: Scene, extracts: Vec<Extract>, loss_map: Value) -> Score {
+    let extracted_objects = extracts
         .iter()
-        .filter_map(|ex| {
-            return match &ex.data {
-                ExtractData::Object(obj) => Some(obj),
+        .filter_map(|ext| {
+            return match &ext.data {
+                ExtractData::Object(obj) => Some(obj.as_str()),
                 _ => None,
             };
         })
         .collect_vec();
-    println!(
-        "# of objects: {}/{}",
-        objects.iter().unique().collect_vec().len(),
-        scene.get_object_count()
-    );
+    let missing_objects = scene
+        .get_all_objects()
+        .par_iter()
+        .map(|obj| -> f32 {
+            // extracted_objects don't have numbering
+            let name = remove_number_from_obj(obj.name.as_str());
+            if extracted_objects.contains(&name) {
+                // we found the object => no loss
+                return 0.0;
+            }
+            return 1.0;
+        })
+        .sum();
+    return Score {
+        missing_objects,
+        missing_attributes: todo!(),
+        missing_triplets: todo!(),
+        wrong_values: todo!(),
+        grouped_missing_objects: todo!(),
+        grouped_missing_attributes: todo!(),
+        grouped_missing_triplets: todo!(),
+        grouped_wrong_values: todo!(),
+    };
     // println!("# of attributes: {}/{}", scene.get_attributes().len());
     // println!("# of triplets: {}/{}", scene.get_triplet_count());
 }
@@ -199,9 +234,6 @@ fn print_extract(args: ExtractArgs) {
         error!("received io error when writing output")
     }
     info!("oputput written into {}", &args.out_file.to_string_lossy());
-    if args.eval {
-        eval_extracts(scene, extracts);
-    }
 }
 
 /// Print the process of 'render' CLI command

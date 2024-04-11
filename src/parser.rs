@@ -80,12 +80,16 @@ impl Display for ParsingStyle {
 #[derive(Debug, PartialEq, serde::Serialize, serde::Deserialize, Clone)]
 /// Node in a parse tree from parsing text with semantic grammars.
 pub enum ParseNode {
-    /// Node representing some token that was matched during semantic parsing (by parent rule-node)
-    Token(String),
+    /// Node representing some token that was matched at given position during semantic parsing (by parent rule-node)
+    Token(u32, String),
     /// Node representing some tag that was returned by previously matched [Element]
     Tag(String),
     /// Node representing some rule that was successfully matched, this is the only node that contains children (sub-tree)
     Rule {
+        /// index of the first text-token that was matched by this rule
+        start: u32,
+        /// number of text-tokens that this rule has consumed
+        shift: u32,
         /// name of the rule that has matched
         rule_name: String,
         /// Expansion of the node => rule match will always expand into sub-tree
@@ -98,7 +102,7 @@ impl ParseNode {
     /// The traversal is depth-first-post-order.
     pub fn tags_dfpo(&self) -> Vec<String> {
         match self {
-            ParseNode::Token(_) => return vec![],
+            ParseNode::Token(_, _) => return vec![],
             ParseNode::Tag(tag) => return vec![tag.clone()],
             ParseNode::Rule { expansion, .. } => {
                 return expansion.iter().fold(vec![], |mut acc, e: &ParseNode| {
@@ -187,7 +191,7 @@ impl TreeItem for ParseNode {
         style: &ptree::Style,
     ) -> std::io::Result<()> {
         match self {
-            ParseNode::Token(s) => return write!(f, "\"{}\"", style.paint(s)),
+            ParseNode::Token(_i, s) => return write!(f, "\"{}\"", style.paint(s)),
             ParseNode::Tag(s) => return write!(f, "{{{}}}", style.paint(s)),
             ParseNode::Rule { rule_name, .. } => {
                 return write!(
@@ -214,17 +218,21 @@ impl Display for ParseNode {
             ParseNode::Tag(s) => {
                 return write!(f, "Tag({s})");
             }
-            ParseNode::Token(s) => {
-                return write!(f, "Token({s})");
+            ParseNode::Token(i, s) => {
+                return write!(f, "Token([{i}]: {s})");
             }
             ParseNode::Rule {
+                start,
+                shift: count,
                 rule_name,
                 expansion,
             } => {
                 return write!(
                     f,
-                    "Rule(${}) -> [\n{}]",
+                    "Rule(${}){{{}+{}}} -> [\n{}]",
                     rule_name,
+                    start,
+                    count,
                     expansion
                         .iter()
                         .map(|node| return format!("\t{}\n", node))
@@ -265,6 +273,7 @@ impl Grammar {
     /// After the parsing fails (or reaches the end), the starting point is shifted one word over
     /// (to the next whitespace) and tries to parse again.
     /// All the successful parsing results are collected and returned.
+    #[allow(dead_code)]
     pub fn find_all(&self, text: &str, style: &ParsingStyle) -> Vec<ParseResult> {
         let mut results = self.semantic_parse(text, style, false);
         text.match_indices(|c: char| return c.is_whitespace())

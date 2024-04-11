@@ -3,8 +3,6 @@ use std::path::PathBuf;
 
 use clap::{Args, Parser, Subcommand};
 
-use crate::parser::ParsingStyle;
-
 #[derive(Parser)]
 #[command(author = "Tomáš Lebeda <tom.lebeda@gmail.com>")]
 #[command(about = "Software for working with scenes")]
@@ -54,6 +52,8 @@ pub struct EvalArgs {
     pub extracts: PathBuf,
     /// Path to the scene file (JSON)
     pub scene_file: PathBuf,
+    /// Path to the loss-table file (JSON)
+    pub loss_file: PathBuf,
 }
 
 #[derive(Args, Debug)]

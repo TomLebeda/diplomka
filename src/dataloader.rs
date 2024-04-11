@@ -11,6 +11,27 @@ use serde::{Deserialize, Serialize};
 
 use crate::{errors::SceneError, utils::remove_number_from_obj};
 
+/// Represents final evaluation score computed from extracted data, scene and loss table.
+#[derive(Serialize, Deserialize, Default)]
+pub struct Score {
+    /// accumulated score of all missing objects
+    pub missing_objects: f32,
+    /// accumulated score of all missing attributes
+    pub missing_attributes: f32,
+    /// accumulated score of all missing triplets
+    pub missing_triplets: f32,
+    /// accumulated score of all wrong attribute values
+    pub wrong_values: f32,
+    /// accumulated score of missing objects, but grouped by each tag
+    pub grouped_missing_objects: HashMap<String, f32>,
+    /// accumulated score of missing objects, but grouped by each attribute
+    pub grouped_missing_attributes: HashMap<String, f32>,
+    /// accumulated score of missing objects, but grouped by each predicate
+    pub grouped_missing_triplets: HashMap<String, f32>,
+    /// accumulated score of wrong values, but grouped by each attribute
+    pub grouped_wrong_values: HashMap<String, f32>,
+}
+
 /// A piece of semantic information extracted from a text using provided scene and grammar
 #[derive(Serialize, Deserialize)]
 pub struct Extract {
@@ -73,19 +94,19 @@ pub struct Scene {
 /// Representation of the objects withing a scene.
 pub struct SceneObject {
     /// name of the object, must be unique (serves as ID)
-    name: String,
+    pub name: String,
     /// list of tags that are associated with the object
-    tags: Vec<String>,
+    pub tags: Vec<String>,
     /// coordinates (x, y) of top left corner of bounding box of the object, in pixels counted from top-left corner of the image
-    top_left_corner: (u32, u32),
+    pub top_left_corner: (u32, u32),
     /// size (width, height) of the bounding box in pixels
-    size: (u32, u32),
+    pub size: (u32, u32),
     /// names of parent objects, empty if this object doesn't have any parent objects
-    parents: Vec<String>,
+    pub parents: Vec<String>,
     /// names of child objects, empty vec if this object doesn't consist of other objects.
-    children: Vec<String>,
+    pub children: Vec<String>,
     /// list of attributes (key, value) of this object
-    attributes: Vec<(String, String)>,
+    pub attributes: Vec<(String, String)>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
