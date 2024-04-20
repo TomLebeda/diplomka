@@ -109,7 +109,7 @@
       "top_left_corner": [653, 283],
       "size": [179, 232],
       "parents": [],
-      "children": ["swimsuit #1"],
+      "children": [],
       "attributes": [["hairstyle", "ponytail"]]
     },
     {
@@ -117,7 +117,7 @@
       "tags": ["clothing"],
       "top_left_corner": [719, 330],
       "size": [56, 78],
-      "parents": ["girl"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "red"]]
     },
@@ -136,7 +136,7 @@
       "top_left_corner": [719, 330],
       "size": [56, 78],
       "parents": [],
-      "children": ["cap", "tshirt #1", "shorts", "shoes"],
+      "children": [],
       "attributes": []
     },
     {
@@ -273,16 +273,16 @@
       "tags": ["clothing"],
       "top_left_corner": [1088, 387],
       "size": [49, 27],
-      "parents": ["boy"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "white"]]
     },
     {
-      "name": "tshirt #1",
+      "name": "tshirt",
       "tags": ["clothing"],
       "top_left_corner": [1071, 427],
       "size": [93, 81],
-      "parents": ["boy"],
+      "parents": [],
       "children": [],
       "attributes": [
         ["color", "white"],
@@ -294,7 +294,7 @@
       "tags": ["clothing"],
       "top_left_corner": [1074, 506],
       "size": [103, 47],
-      "parents": ["boy"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "blue"]]
     },
@@ -303,7 +303,7 @@
       "tags": ["clothing"],
       "top_left_corner": [1031, 599],
       "size": [155, 26],
-      "parents": ["boy"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "white"]]
     },
@@ -313,7 +313,7 @@
       "top_left_corner": [60, 426],
       "size": [458, 312],
       "parents": [],
-      "children": ["book", "flip flops", "swimsuit #2"],
+      "children": [],
       "attributes": [
         ["hairstyle", "bun"],
         ["action", "sitting"],
@@ -325,7 +325,7 @@
       "tags": ["clothing"],
       "top_left_corner": [110, 563],
       "size": [53, 88],
-      "parents": ["woman"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "white"]]
     },
@@ -334,7 +334,7 @@
       "tags": ["clothing"],
       "top_left_corner": [404, 661],
       "size": [115, 82],
-      "parents": ["woman"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "white"]]
     },
@@ -343,7 +343,7 @@
       "tags": ["item"],
       "top_left_corner": [156, 539],
       "size": [98, 79],
-      "parents": ["woman"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "red"]]
     },
@@ -542,7 +542,7 @@
       "top_left_corner": [1474, 446],
       "size": [287, 334],
       "parents": [],
-      "children": ["hat", "vest", "shirt", "pants", "wellies"],
+      "children": [],
       "attributes": [
         ["facial expression", "smiling"],
         ["action", "fishing"]
@@ -553,7 +553,7 @@
       "tags": ["clothing"],
       "top_left_corner": [1589, 446],
       "size": [95, 45],
-      "parents": ["man #2"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "black"]]
     },
@@ -562,7 +562,7 @@
       "tags": ["clothing"],
       "top_left_corner": [1628, 511],
       "size": [123, 178],
-      "parents": ["man #2"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "green"]]
     },
@@ -571,7 +571,7 @@
       "tags": ["clothing"],
       "top_left_corner": [1550, 535],
       "size": [151, 129],
-      "parents": ["man #2"],
+      "parents": [],
       "children": [],
       "attributes": [
         ["pattern", "checkerd"],
@@ -583,7 +583,7 @@
       "tags": ["clothing"],
       "top_left_corner": [1559, 643],
       "size": [109, 84],
-      "parents": ["man #2"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "blue"]]
     },
@@ -592,7 +592,7 @@
       "tags": ["clothing"],
       "top_left_corner": [1463, 690],
       "size": [214, 88],
-      "parents": ["man #2"],
+      "parents": [],
       "children": [],
       "attributes": [["color", "black"]]
     },
@@ -821,6 +821,66 @@
       "from": "duckling #5",
       "predicate": "following",
       "to": "duck"
+    },
+    {
+      "from": "girl",
+      "predicate": "wearing",
+      "to": "swimsuit #1"
+    },
+    {
+      "from": "man #1",
+      "predicate": "wearing",
+      "to": "swimsuit #1"
+    },
+    {
+      "from": "boy",
+      "predicate": "wearing",
+      "to": "shorts"
+    },
+    {
+      "from": "man #2",
+      "predicate": "wearing",
+      "to": "hat"
+    },
+    {
+      "from": "man #2",
+      "predicate": "wearing",
+      "to": "shirt"
+    },
+    {
+      "from": "man #2",
+      "predicate": "wearing",
+      "to": "wellies"
+    },
+    {
+      "from": "man #2",
+      "predicate": "wearing",
+      "to": "pants"
+    },
+    {
+      "from": "man #2",
+      "predicate": "wearing",
+      "to": "west"
+    },
+    {
+      "from": "woman",
+      "predicate": "wearing",
+      "to": "flip flops"
+    },
+    {
+      "from": "boy",
+      "predicate": "wearing",
+      "to": "shoes"
+    },
+    {
+      "from": "woman",
+      "predicate": "wearing",
+      "to": "swimsuit #2"
+    },
+    {
+      "from": "boy",
+      "predicate": "wearing",
+      "to": "cap"
     }
   ]
 }

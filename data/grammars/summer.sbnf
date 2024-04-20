@@ -23,8 +23,8 @@ $object = $basket | $blanket | $woman | $tree | $bird | $branch | $shovel | $duc
 		| $man | $ground | $leash | $parasol | $ducklings | $cloud | $ball | $child | $children | $bucket | $dog | $duck | $wellies | $cap | $birds | $girl | $sky
 		| $pants | $tshirt | $shoes | $squirrel | $hat | $plane | $boy | $people | $animals;
 
-$attribute = $object    {part=obj}  $GARBAGE<*> $attr_VALS {part=ettr}
-           | $attr_VALS {part=attr} $GARBAGE<*> $object    {part=obj};
+$attribute = $object    {part=obj}  $GARBAGE<L:*> $attr_VALS {part=attr} 
+           | $attr_VALS {part=attr} $GARBAGE<L:*> $object    {part=obj};
 
 $triplet = $catching {predicate=catching} |
 	$chasing {predicate=chasing} |
@@ -41,27 +41,29 @@ $triplet = $catching {predicate=catching} |
 	$swimming_in {predicate=swimming in} |
 	$throwing {predicate=throwing} |
 	$watching {predicate=watching} | 
+	$wearing {predicate=wearing} | 
     $has_child_object {predicate=has child object} | 
     $has_parent_object {predicate=has parent object};
 
-$has_child_object = $object {part=obj} $GARBAGE<*> (má|s) $GARBAGE<*> $object {part=subj};
-$has_parent_object = $object {part=obj} $GARBAGE<*> (je (součástí|částí) | (patří|náleží) [pod|k] | tvoří) $GARBAGE<*> $object {part=subj};
+$has_child_object = $object {part=obj} $GARBAGE<L:*> (má|s) $GARBAGE<L:*> $object {part=subj};
+$has_parent_object = $object {part=obj} $GARBAGE<L:*> (je (součástí|částí) | (patří|náleží) [pod|k] | tvoří) $GARBAGE<L:*> $object {part=subj};
 // the garbages are neede because of adjectives could be injected pretty much anywhere
-$catching = $object {part=obj} $GARBAGE<*> chytá $GARBAGE<*> $object {part=subj};
-$chasing = $object {part=obj} $GARBAGE<*> honí $GARBAGE<*> $object {part=subj};
-$climbing = $object {part=obj} $GARBAGE<*> šplhá na $GARBAGE<*> $object {part=subj};
-$falling_into = $object {part=obj} $GARBAGE<*> padá do $GARBAGE<*> $object {part=subj};
-$following = $object {part=obj} $GARBAGE<*> následuje $GARBAGE<*> $object {part=subj};
-$holding = $object {part=obj} $GARBAGE<*> drží $GARBAGE<*> $object {part=subj};
-$jumping_from = $object {part=obj} $GARBAGE<*> skáče z $GARBAGE<*> $object {part=subj};
-$playing_with = $object {part=obj} $GARBAGE<*> (si hraje | hraje si) s $GARBAGE<*> $object {part=subj};
-$reading = $object {part=obj} $GARBAGE<*> [si] čte [si] $GARBAGE<*> $object {part=subj};
-$running_away_from = $object {part=obj} $GARBAGE<*> (utíká | běží) (před | od) $GARBAGE<*> $object {part=subj};
-$sitting_on = $object {part=obj} $GARBAGE<*> sedí na $GARBAGE<*> $object {part=subj};
-$sitting_under = $object {part=obj} $GARBAGE<*> sedí pod $GARBAGE<*> $object {part=subj};
-$swimming_in = $object {part=obj} $GARBAGE<*> plave v $GARBAGE<*> $object {part=subj};
-$throwing = $object {part=obj} $GARBAGE<*> (hází | háže) $GARBAGE<*> $object {part=subj};
-$watching = $object {part=obj} $GARBAGE<*> sleduje $GARBAGE<*> $object {part=subj};
+$catching = $object {part=obj} $GARBAGE<L:*> chytá $GARBAGE<L:*> $object {part=subj};
+$chasing = $object {part=obj} $GARBAGE<L:*> (honí | následuje | prohání | ((běží|utíká) $GARBAGE<L:*> za)) $GARBAGE<L:*> $object {part=subj};
+$climbing = $object {part=obj} $GARBAGE<L:*> šplhá na $GARBAGE<L:*> $object {part=subj};
+$falling_into = $object {part=obj} $GARBAGE<L:*> padá do $GARBAGE<L:*> $object {part=subj};
+$following = $object {part=obj} $GARBAGE<L:*> následuje $GARBAGE<L:*> $object {part=subj};
+$holding = $object {part=obj} $GARBAGE<L:*> drží $GARBAGE<L:*> $object {part=subj};
+$jumping_from = $object {part=obj} $GARBAGE<L:*> skáče z $GARBAGE<L:*> $object {part=subj};
+$playing_with = $object {part=obj} $GARBAGE<L:*> (si hraje | hraje si) s $GARBAGE<L:*> $object {part=subj};
+$reading = $object {part=obj} $GARBAGE<L:*> [si] čte [si] $GARBAGE<L:*> $object {part=subj};
+$running_away_from = $object {part=obj} $GARBAGE<L:*> (utíká | běží) (před | od) $GARBAGE<L:*> $object {part=subj};
+$sitting_on = $object {part=obj} $GARBAGE<L:*> sedí na $GARBAGE<L:*> $object {part=subj};
+$sitting_under = $object {part=obj} $GARBAGE<L:*> sedí pod $GARBAGE<L:*> $object {part=subj};
+$swimming_in = $object {part=obj} $GARBAGE<L:*> plave v $GARBAGE<L:*> $object {part=subj};
+$throwing = $object {part=obj} $GARBAGE<L:*> (hází | háže) $GARBAGE<L:*> $object {part=subj};
+$watching = $object {part=obj} $GARBAGE<L:*> sleduje $GARBAGE<L:*> $object {part=subj};
+$wearing = ($object {part=obj} $GARBAGE<L:*> (v|s|nosí|má) $GARBAGE<L:*> $object {part=subj});
 
 $attr_VALS = $pattern_VALS | $hairstyle_VALS | $action_VALS | $facial_expression_VALS | $color_VALS | $count_VALS | $state_VALS;
 

@@ -77,7 +77,9 @@ impl Display for ParsingStyle {
     }
 }
 
-#[derive(Debug, PartialEq, serde::Serialize, serde::Deserialize, Clone)]
+#[derive(
+    Debug, PartialEq, serde::Serialize, serde::Deserialize, Clone, Eq, PartialOrd, Ord, Hash,
+)]
 /// Node in a parse tree from parsing text with semantic grammars.
 pub enum ParseNode {
     /// Node representing some token that was matched at given position during semantic parsing (by parent rule-node)
@@ -98,6 +100,128 @@ pub enum ParseNode {
 }
 
 impl ParseNode {
+    /// Recursively update all nodes, using the provided function pointer.
+    /// Returns true if some update happened in the node or it's sub-tree.
+    pub fn specify_obj_numbers(
+        &mut self,
+        start_idx: u32,
+        token_count: u32,
+        old_obj_name: &str,
+        new_obj_name: &str,
+    ) -> bool {
+        if let ParseNode::Rule { expansion, .. } = self {
+            if let Some((tag_idx, _)) = expansion.iter().find_position(|node| match node {
+                ParseNode::Tag(t) => return t == old_obj_name,
+                _ => return false,
+            }) {
+                // we got the tag that needs to be specified and the index in the expansion
+                if tag_idx == 0 {
+                    // later we subtract, so it may panic because of overflow (0-1) => better check now
+                    error!("found tag node with index 0 - this should be impossible, something is wrong");
+                    return false;
+                }
+                // the previous node should be Rule with matching start and shift
+                if let Some(ParseNode::Rule { start, shift, .. }) = expansion.get(tag_idx - 1) {
+                    if start == &start_idx && shift == &token_count {
+                        expansion[tag_idx] = ParseNode::Tag(new_obj_name.to_string());
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                let mut updated = false;
+                // continue recursively
+                for node in expansion {
+                    if node.specify_obj_numbers(start_idx, token_count, old_obj_name, new_obj_name)
+                    {
+                        updated = true;
+                    }
+                }
+                return updated;
+            }
+        }
+        return false;
+    }
+
+    /// Reconstructs the original string as a list of (index, token)
+    /// that was matched by the whole sub-tree starting with the given node
+    pub fn reconstruct_string(&self) -> Vec<(u32, String)> {
+        match self {
+            ParseNode::Rule { expansion, .. } => {
+                let mut out = vec![];
+                out.extend(
+                    expansion
+                        .iter()
+                        .flat_map(|ex| return ex.reconstruct_string()),
+                );
+                return out;
+            }
+            ParseNode::Token(i, s) => return vec![(*i, s.to_string())],
+            ParseNode::Tag(_) => return vec![],
+        }
+    }
+
+    /// Returns references to all [ParseNode::Rule] whose rule names match the provided filter
+    pub fn find_rules(&self, name: &str) -> Vec<&ParseNode> {
+        match self {
+            ParseNode::Rule {
+                expansion,
+                rule_name,
+                ..
+            } => {
+                let mut out = vec![];
+                if rule_name == name {
+                    out.push(self);
+                }
+                out.extend(expansion.iter().flat_map(|ex| return ex.find_rules(name)));
+                return out;
+            }
+            _ => return vec![],
+        }
+    }
+    /// Returns references to all [ParseNode::Token] whose token-string match the provided filter
+    pub fn find_tokens(&self, token: &str) -> Vec<&ParseNode> {
+        match self {
+            ParseNode::Token(_idx, s) => {
+                if s == token {
+                    return vec![self];
+                } else {
+                    return vec![];
+                }
+            }
+            ParseNode::Tag(_) => return vec![],
+            ParseNode::Rule { expansion, .. } => {
+                return expansion
+                    .par_iter()
+                    .flat_map_iter(|ex| return ex.find_tokens(token))
+                    .collect();
+            }
+        }
+    }
+    /// Returns references to all [ParseNode::Token] whose token-string match the provided filter
+    pub fn find_tags(&self, tag: &str) -> Vec<&ParseNode> {
+        match self {
+            ParseNode::Token(..) => {
+                return vec![];
+            }
+            ParseNode::Tag(t) => {
+                if t == tag {
+                    return vec![self];
+                } else {
+                    return vec![];
+                }
+            }
+            ParseNode::Rule { expansion, .. } => {
+                return expansion
+                    .par_iter()
+                    .flat_map_iter(|ex| return ex.find_tags(tag))
+                    .collect();
+            }
+        }
+    }
     /// Traverses the [ParseNode] tree and returns a vector of all tags that have been visited.
     /// The traversal is depth-first-post-order.
     pub fn tags_dfpo(&self) -> Vec<String> {

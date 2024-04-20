@@ -9,10 +9,113 @@ use itertools::Itertools;
 use log::*;
 use serde::{Deserialize, Serialize};
 
-use crate::{errors::SceneError, utils::remove_number_from_obj};
+use crate::{errors::SceneError, parser::ParseNode, utils::remove_number_from_obj};
+
+/// Represents configuration of loss values
+#[derive(Debug, Serialize, Deserialize, Default)]
+pub struct LossTable {
+    /// default loss value for all missing objects
+    pub missing_objects: f32,
+    /// default loss value for all missing attributes
+    pub missing_attributes: f32,
+    /// default loss value for all missing triplets
+    pub missing_triplets: f32,
+    /// additional loss for when object is present, but is missing number
+    /// will apply to all loss values as additional value
+    pub numberless_penalty: f32,
+    /// default loss value for all wrong values on attributes
+    pub wrong_values: f32,
+    /// override loss values for specific missing objects (by tag)
+    pub missing_objects_override: Vec<(String, f32)>,
+    /// override loss values for specific missing attributes (by attribute)
+    pub missing_attributes_override: Vec<(String, f32)>,
+    /// override loss values for specific missing triplets (by predicate)
+    pub missing_triplets_override: Vec<(String, f32)>,
+    /// override loss values for specific wrong attribute values (by attribute)
+    pub wrong_values_override: Vec<WrongValueOverride>,
+}
+
+impl LossTable {
+    /// Returns the loss value for missing object, while respecting priority of loss values.
+    pub fn get_loss_missing_obj(&self, obj: &SceneObject) -> f32 {
+        // find first tag-loss value
+        for tag in &obj.tags {
+            if let Some((_, loss)) = self
+                .missing_objects_override
+                .iter()
+                .find(|(t, _)| return t == tag)
+            {
+                return *loss;
+            }
+        }
+        // if there is none, use the default loss
+        return self.missing_objects;
+    }
+
+    /// Returns the loss value for missing attribute, while respecting priority of loss values.
+    pub fn get_loss_missing_attr(&self, attr: &str) -> f32 {
+        // try to find attribute-specific loss value for missing attribute
+        if let Some((_, loss)) = self
+            .missing_attributes_override
+            .iter()
+            .find(|(a, _)| return a == attr)
+        {
+            return *loss;
+        }
+        // otherwise return the default value
+        return self.missing_attributes;
+    }
+
+    /// Returns the loss value for missing triplet, while respecting priority of loss values.
+    pub fn get_loss_missing_triplet(&self, predicate: &str) -> f32 {
+        // try to find predicate-specific loss value for missing attribute
+        if let Some((_, loss)) = self
+            .missing_triplets_override
+            .iter()
+            .find(|(pred, _)| return pred == predicate)
+        {
+            return *loss;
+        }
+        // otherwise return the default value
+        return self.missing_triplets;
+    }
+
+    /// Returns the loss value for wrong value, while respecting priority of loss values.
+    pub fn get_loss_wrong_value(
+        &self,
+        value: &String,
+        target_value: &String,
+        attribute: &str,
+    ) -> f32 {
+        if let Some(value_override) = self
+            .wrong_values_override
+            .iter()
+            .find(|o| return o.attribute == attribute)
+        {
+            for (values, loss) in &value_override.overrides {
+                if values.contains(value) && values.contains(target_value) {
+                    return *loss;
+                }
+            }
+            return value_override.default;
+        }
+        return self.wrong_values;
+    }
+}
+
+/// Sub-type that specifies how to override loss values for specific attribute
+#[derive(Debug, Serialize, Deserialize)]
+pub struct WrongValueOverride {
+    /// the attribute that this override applies to
+    pub attribute: String,
+    /// default loss value for the attribute
+    pub default: f32,
+    /// list of sets of values that have each own
+    pub overrides: Vec<(Vec<String>, f32)>,
+}
 
 /// Represents final evaluation score computed from extracted data, scene and loss table.
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize, Default, Debug)]
 pub struct Score {
     /// accumulated score of all missing objects
     pub missing_objects: f32,
@@ -33,7 +136,7 @@ pub struct Score {
 }
 
 /// A piece of semantic information extracted from a text using provided scene and grammar
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Extract {
     /// number of seconds from the beginning of the speech at which this piece of semantic
     /// information was obtained
@@ -42,10 +145,38 @@ pub struct Extract {
     pub sentence: String,
     /// the actual data that was extracted
     pub data: ExtractData,
+    /// the original parse tree in a form of root (ParseNode)
+    pub tree: ParseNode,
+}
+
+impl Extract {
+    /// returns true if the contained data are of type [ExtractData::Object]
+    pub fn has_obj(&self) -> bool {
+        match self.data {
+            ExtractData::Object(_) => return true,
+            _ => return false,
+        }
+    }
+
+    /// returns true if the contained data are of type [ExtractData::Triplet]
+    pub fn has_triplet(&self) -> bool {
+        match self.data {
+            ExtractData::Triplet(..) => return true,
+            _ => return false,
+        }
+    }
+
+    /// returns true if the contained data are of type [ExtractData::Attribute]
+    pub fn has_attribute(&self) -> bool {
+        match self.data {
+            ExtractData::Attribute(..) => return true,
+            _ => return false,
+        }
+    }
 }
 
 /// Defines what type of information was extracted
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum ExtractData {
     /// the extracted semantic information is just some object name
     Object(String),
@@ -53,6 +184,16 @@ pub enum ExtractData {
     Triplet(Triplet),
     /// the extracted semantic information is a attribute describing some static property of an object
     Attribute(Attribute),
+}
+
+impl Display for ExtractData {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ExtractData::Object(o) => return write!(f, "Object {{{o}}}"),
+            ExtractData::Triplet(t) => return write!(f, "Triplet {{{t}}}"),
+            ExtractData::Attribute(a) => return write!(f, "Attribute {{{a}}}"),
+        }
+    }
 }
 
 /// Represents the output of 'prepare' CLI command
@@ -110,7 +251,7 @@ pub struct SceneObject {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord)]
-/// represents triplet 'from --predicate--> to'
+/// represents some attribute (property) of some [SceneObject]
 pub struct Attribute {
     /// name of the object
     pub object: String,
@@ -169,7 +310,7 @@ impl SceneObject {
         return self.tags.clone();
     }
     /// Returns a list of all attribute names that are in this object.
-    pub fn get_attribute_names(&self) -> Vec<String> {
+    pub fn get_attr_names(&self) -> Vec<String> {
         return self
             .attributes
             .iter()
@@ -192,8 +333,18 @@ impl SceneObject {
     }
 
     /// Returns all unique attributes (key, value) withing this object (cloned)
-    pub fn get_attributes(&self) -> Vec<(String, String)> {
-        return self.attributes.clone();
+    pub fn get_attributes(&self) -> Vec<Attribute> {
+        return self
+            .attributes
+            .iter()
+            .map(|(attr_name, attr_val)| {
+                return Attribute {
+                    object: self.name.to_string(),
+                    attribute: attr_name.clone(),
+                    value: attr_val.clone(),
+                };
+            })
+            .collect_vec();
     }
 
     /// Returns the name of the object, which serves as its ID.
@@ -299,7 +450,7 @@ impl Scene {
             if !name_matches {
                 continue;
             }
-            let attribute_exist = object.get_attribute_names().contains(&attr.attribute);
+            let attribute_exist = object.get_attr_names().contains(&attr.attribute);
             if !attribute_exist {
                 continue;
             }
@@ -354,7 +505,17 @@ impl Scene {
             };
             return parent_names.contains(&triplet.to);
         } else {
-            return self.triplets.contains(triplet);
+            if ignore_numbers {
+                return self.triplets.iter().any(|t| {
+                    let from_matches =
+                        remove_number_from_obj(&t.from) == remove_number_from_obj(&triplet.from);
+                    let to_matches =
+                        remove_number_from_obj(&t.to) == remove_number_from_obj(&triplet.to);
+                    return from_matches && to_matches;
+                });
+            } else {
+                return self.triplets.contains(triplet);
+            }
         }
     }
 
@@ -369,13 +530,12 @@ impl Scene {
         return triplets;
     }
 
-    /// Returns all unique attributes (key, value) present in all objects of the scene.
-    pub fn get_attributes(&self) -> Vec<(String, String)> {
+    /// Returns all attributes present in all objects of the scene.
+    pub fn get_attributes(&self) -> Vec<Attribute> {
         return self
             .objects
             .iter()
             .flat_map(|obj| return obj.get_attributes())
-            .unique()
             .collect_vec();
     }
 
@@ -403,7 +563,7 @@ impl Scene {
             .sorted()
             .collect_vec();
     }
-    /// Returns a list of all tags that are used in the scene.
+    /// Returns a list of all object tags that are used in the scene.
     /// Values are sorted alphabetically and unique.
     pub fn get_tags(&self) -> Vec<String> {
         return self
@@ -421,7 +581,7 @@ impl Scene {
         return self
             .objects
             .iter()
-            .flat_map(|obj| return obj.get_attribute_names())
+            .flat_map(|obj| return obj.get_attr_names())
             .unique()
             .sorted()
             .collect_vec();
@@ -457,6 +617,28 @@ impl Scene {
     /// Returns a reference to vector of all Triplets in the scene (without crumbling)
     pub fn get_all_triplets(&self) -> &Vec<Triplet> {
         return &self.triplets;
+    }
+
+    /// Returns a cloned vector of all Triplets in the scene (without crumbling, but with hierarchy included)
+    pub fn get_all_triplets_with_hierarchy(&self) -> Vec<Triplet> {
+        let mut triplets = self.triplets.clone();
+        for obj in &self.objects {
+            obj.parents.iter().for_each(|parent| {
+                triplets.push(Triplet {
+                    from: obj.name.clone(),
+                    predicate: String::from("has parent object"),
+                    to: parent.clone(),
+                })
+            });
+            obj.children.iter().for_each(|c| {
+                triplets.push(Triplet {
+                    from: obj.name.clone(),
+                    predicate: String::from("has child object"),
+                    to: c.clone(),
+                })
+            });
+        }
+        return triplets;
     }
 
     /// Searches for object by name and returns it.
@@ -715,10 +897,10 @@ impl Scene {
         let attributes = self.get_attributes();
         let mut map: HashMap<String, Vec<String>> = HashMap::new();
         for attr in attributes {
-            if let Some(current) = map.get_mut(&attr.0) {
-                current.push(attr.1)
+            if let Some(current) = map.get_mut(&attr.attribute) {
+                current.push(attr.value)
             } else {
-                map.insert(attr.0, vec![attr.1]);
+                map.insert(attr.attribute, vec![attr.value]);
             }
         }
         return map.into_iter().collect_vec();

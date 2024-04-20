@@ -1,5 +1,5 @@
 # TODOS:
-- [ ] dědičnost objektů (ptá sedí na větvi + větev je součástí stromu => pták sedí na stromě)
+- [x] dědičnost objektů (ptá sedí na větvi + větev je součástí stromu => pták sedí na stromě)
 - [x] implementace SRGS-like jazyka
 	- [ ] formální definice
 	- [x] systém komentářů
@@ -13,13 +13,13 @@
 	- [x] automatizace hledání souvisejících slov
 	- [x] automatizace generování pravidel ze slovníku forem
 	- [x] automatizace kontroly, zda gramatika postihuje celou scénu
-- [ ] systém hodnocení
-	- [ ] systém pro hodnocení relativní pozice
-	- [ ] systém pro hodnocení absolutní pozice
-	- [ ] systém pro hodnocení barev
-	- [ ] systém pro hodnocení velikostí objektů
-	- [ ] binární hodnocení tripletů (počet)
-	- [ ] ztrátové funkce pro objekty
+- [x] systém hodnocení
+	- [x] systém pro hodnocení relativní pozice
+	- [x] systém pro hodnocení absolutní pozice
+	- [x] systém pro hodnocení barev
+	- [x] systém pro hodnocení velikostí objektů
+	- [x] binární hodnocení tripletů (počet)
+	- [x] ztrátové funkce pro objekty
 - [x] extrakce tripletů z textu
 	- [x] re-implementace pomocí vlastního SRGS-like jazyka
 	- [x] základní extrakce

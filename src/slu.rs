@@ -4,11 +4,11 @@ use regex::Regex;
 
 use crate::{
     dataloader::{Attribute, Triplet},
-    parser::{Grammar, ParseResult, ParsingStyle},
+    parser::{Grammar, ParseNode, ParseResult, ParsingStyle},
     utils::merge_number_tags,
 };
 
-impl ParseResult {
+impl ParseNode {
     /// Attempts to find a Triplet within the ParseResult.
     ///
     /// Uses the following scheme of tags:
@@ -18,8 +18,8 @@ impl ParseResult {
     ///              │  └─ {object name}
     ///              └─ part: subj
     ///                 └─ {subject name}
-    pub fn find_triplet(&self) -> Option<Triplet> {
-        let mut tags = self.node.tags_dfpo();
+    pub fn extract_triplet(&self) -> Option<Triplet> {
+        let mut tags = self.tags_dfpo();
         merge_number_tags(&mut tags);
         let tags_refs = tags.iter().map(|s| return s.as_str()).collect_vec();
         match tags_refs[..] {
@@ -45,8 +45,8 @@ impl ParseResult {
     ///             └─ part: attr
     ///                └─ attr: {attribute type}
     ///                   └─ {attribute value}
-    pub fn find_attribute(&self) -> Option<Attribute> {
-        let mut tags = self.node.tags_dfpo();
+    pub fn extract_attribute(&self) -> Option<Attribute> {
+        let mut tags = self.tags_dfpo();
         merge_number_tags(&mut tags);
         let tags_refs = tags.iter().map(|s| return s.as_str()).collect_vec();
         match tags_refs[..] {
@@ -81,8 +81,8 @@ impl ParseResult {
     /// they could be find within those results as well.
     /// But since the sbnf grammar defines custom rule just for objects,
     /// only those outputs will be used for object detection.
-    pub fn find_object(&self) -> Option<String> {
-        let mut tags = self.node.tags_dfpo();
+    pub fn extract_object(&self) -> Option<String> {
+        let mut tags = self.tags_dfpo();
         merge_number_tags(&mut tags);
         let tags_refs = tags.iter().map(|s| return s.as_str()).collect_vec();
         match tags_refs[..] {
@@ -91,6 +91,14 @@ impl ParseResult {
             }
             _ => return None,
         }
+    }
+}
+
+impl ParseResult {
+    /// Searches through the parse result and returns references to all
+    /// [ParseNode::Token]s that match the provided string slice
+    pub fn find_tokens(&self, token: &str) -> Vec<&ParseNode> {
+        return self.node.find_tokens(token);
     }
 }
 

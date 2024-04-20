@@ -63,7 +63,7 @@
   },
   {
     "text": "Je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym tričkem a kraťasy.",
-    "objects": ["girl", "boy", "swimsuit", "cap", "tshirt", "shorts"],
+    "objects": ["girl", "boy", "swimsuit #1", "cap", "tshirt", "shorts"],
     "attributes": [
       {
         "object": "tshirt",
@@ -80,7 +80,7 @@
       {
         "from": "girl",
         "predicate": "has_child_object",
-        "to": "swimsuit"
+        "to": "swimsuit #1"
       },
       {
         "from": "boy",
@@ -101,10 +101,10 @@
   },
   {
     "text": "Na pravé straně sedí rybář, který chytá ryby, má nahozený prut a vedle sebe podběrák.",
-    "objects": ["man", "fish", "fishing rod", "fishing net"],
+    "objects": ["man #2", "fish", "fishing rod", "fishing net"],
     "attributes": [
       {
-        "object": "man",
+        "object": "man #2",
         "attribute": "action",
         "value": "fishing"
       }
@@ -113,7 +113,7 @@
   },
   {
     "text": "Před ním skáče žába z kamene do rybníka.",
-    "objects": ["frog", "rock", "water"],
+    "objects": ["frog", "rock #1", "water"],
     "attributes": [],
     "triplets": [
       {
@@ -125,7 +125,7 @@
   },
   {
     "text": "Mezi ženou a rybářem je uprostřed dítě, které vypadá, že padá do rybníka, doufám, že ho někdo zachrání, že si ho někdo všimne.",
-    "objects": ["woman", "man", "child", "water"],
+    "objects": ["woman", "man #2", "child", "water"],
     "triplets": [
       {
         "from": "child",
@@ -137,10 +137,10 @@
   },
   {
     "text": "A vpředu vpravo muž plave.",
-    "objects": ["man"],
+    "objects": ["man #1"],
     "attributes": [
       {
-        "object": "man",
+        "object": "man #1",
         "attribute": "action",
         "value": "swimming"
       }

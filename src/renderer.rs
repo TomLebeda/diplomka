@@ -19,14 +19,14 @@ impl SceneObject {
         let mut other_rows = self
             .get_attributes()
             .iter()
-            .sorted_unstable_by_key(|(attr, _val)| return attr)
-            .map(|(attr, val)| {
+            .sorted_unstable_by_key(|attr| return &attr.attribute)
+            .map(|attr| {
                 return format!(
                     "<tr>
                         <td align=\"LEFT\"><FONT color=\"{}\">{}</FONT></td>
                         <td align=\"LEFT\"><FONT color=\"{}\">{}</FONT></td>
                     </tr>",
-                    key_color, attr, value_color, val
+                    key_color, attr.attribute, value_color, attr.value
                 );
             })
             .collect_vec();
