@@ -1,12 +1,12 @@
 /target
 thesis/.vimproject
-thesis/indent.log
-thesis/main.auxlock
-thesis/main.log
-thesis/tikz
+theses/main.log
+theses/data
+theses/tikz
 theses/indent.log
 theses/.vimproject
 theses/main.auxlock
 theses/indent.log
 temp.abnf
 data/diadem
+theses/main.log
