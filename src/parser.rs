@@ -99,6 +99,7 @@ pub enum ParseNode {
     },
 }
 
+#[allow(dead_code)]
 impl ParseNode {
     /// Recursively update all nodes, using the provided function pointer.
     /// Returns true if some update happened in the node or it's sub-tree.

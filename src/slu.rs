@@ -4,7 +4,7 @@ use regex::Regex;
 
 use crate::{
     dataloader::{Attribute, Triplet},
-    parser::{Grammar, ParseNode, ParseResult, ParsingStyle},
+    parser::{Grammar, ParseNode, ParsingStyle},
     utils::merge_number_tags,
 };
 
@@ -79,7 +79,7 @@ impl ParseNode {
     ///
     /// Since objects are part of Triplets and Attributes as well,
     /// they could be find within those results as well.
-    /// But since the sbnf grammar defines custom rule just for objects,
+    /// But since the spgf grammar defines custom rule just for objects,
     /// only those outputs will be used for object detection.
     pub fn extract_object(&self) -> Option<String> {
         let mut tags = self.tags_dfpo();
@@ -91,14 +91,6 @@ impl ParseNode {
             }
             _ => return None,
         }
-    }
-}
-
-impl ParseResult {
-    /// Searches through the parse result and returns references to all
-    /// [ParseNode::Token]s that match the provided string slice
-    pub fn find_tokens(&self, token: &str) -> Vec<&ParseNode> {
-        return self.node.find_tokens(token);
     }
 }
 

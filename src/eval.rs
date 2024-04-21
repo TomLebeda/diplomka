@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use itertools::Itertools;
-use log::{info, trace};
+use log::info;
 use rayon::iter::{FromParallelIterator, IntoParallelRefIterator, ParallelIterator};
 
 use crate::{

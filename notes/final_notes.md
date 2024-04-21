@@ -42,7 +42,8 @@ vedle sebe má rozprostřenou piknikovou deku s košíkem a s jídlem na piknik
 + snaha navrhovat obrázky i gramatiky tak, aby nevznikaly pokud možno nejednoznačnosti
 
 # Vlastní SRGS-like jazyk/formát:
-- název + zkratka?
+- název + zkratka?:
+    -> Semantic Parsing Grammar Format (SPGF)
 - formální definice jako příloha nebo ("přímo" do pdf)?
 
 # Hodnocení přes ztrátové funkce:

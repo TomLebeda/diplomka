@@ -149,32 +149,6 @@ pub struct Extract {
     pub tree: ParseNode,
 }
 
-impl Extract {
-    /// returns true if the contained data are of type [ExtractData::Object]
-    pub fn has_obj(&self) -> bool {
-        match self.data {
-            ExtractData::Object(_) => return true,
-            _ => return false,
-        }
-    }
-
-    /// returns true if the contained data are of type [ExtractData::Triplet]
-    pub fn has_triplet(&self) -> bool {
-        match self.data {
-            ExtractData::Triplet(..) => return true,
-            _ => return false,
-        }
-    }
-
-    /// returns true if the contained data are of type [ExtractData::Attribute]
-    pub fn has_attribute(&self) -> bool {
-        match self.data {
-            ExtractData::Attribute(..) => return true,
-            _ => return false,
-        }
-    }
-}
-
 /// Defines what type of information was extracted
 #[derive(Serialize, Deserialize, Debug)]
 pub enum ExtractData {

@@ -29,7 +29,6 @@ use dataloader::{LossTable, Scene};
 use fetch::*;
 use itertools::Itertools;
 use log::*;
-use rayon::iter::ParallelIterator;
 use utils::remove_number_from_obj;
 
 use crate::{
@@ -37,7 +36,7 @@ use crate::{
     eval::eval,
     parser::ParseNode,
 };
-#[allow(deprecated)]
+
 use crate::{
     generator::{generate_grammar, prepare_files},
     parser::Grammar,

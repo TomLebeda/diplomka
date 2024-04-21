@@ -23,7 +23,7 @@ $object = $basket | $blanket | $woman | $tree | $bird | $branch | $shovel | $duc
 		| $man | $ground | $leash | $parasol | $ducklings | $cloud | $ball | $child | $children | $bucket | $dog | $duck | $wellies | $cap | $birds | $girl | $sky
 		| $pants | $tshirt | $shoes | $squirrel | $hat | $plane | $boy | $people | $animals;
 
-$attribute = $object    {part=obj}  $GARBAGE<L:*> $attr_VALS {part=attr} 
+$attribute = $object    {part=obj}  $GARBAGE<L:*> $attr_VALS {part=attr}
            | $attr_VALS {part=attr} $GARBAGE<L:*> $object    {part=obj};
 
 $triplet = $catching {predicate=catching} |
