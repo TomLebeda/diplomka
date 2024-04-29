@@ -13,3 +13,7 @@ data/diadem
 theses/main.log
 indent.log
 theses/osnova.md
+theses/main.aux
+theses/main.out
+theses/main.toc
+theses/main.xdv

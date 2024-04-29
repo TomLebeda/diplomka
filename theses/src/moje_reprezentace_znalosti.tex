@@ -39,7 +39,7 @@ Detailnější popis těchto jednotlivých aspektů je v následujících část
 
 % TODO: jak s anglikanismy?
 % TODO: jak a kde použít \emph pro "objekt"? 
-\subsubsection*{Objekty ve scéně}
+\subsubsection{Objekty ve scéně}\label{subsubsec:objekty_ve_scene}
 \newcommand{\objekt}{{\color{red!70!black}\texttt{objekt}}}
 Cokoli, co lze v obrázku ohraničit rámečkem (angl.~bounding-box) a při separaci od zbytku scény (obrázku) neztratí nebo zásadně nezmění svůj význam,
 lze považovat za \emph{objekt}.
@@ -61,7 +61,7 @@ Pro aplikaci, kde je podstatné zachycení živých objektů, může být množi
 Pro jiné použití pak ale může být podstatné zachytit prostředí a neživé předměty,
 takže množina objektů by byla tvořena částmi prostředí (např.~stromy, křoví, voda, skály), budovami nebo obecnými předměty.
 
-\subsubsection*{Hierarchie objektů}
+\subsubsection{Hierarchie objektů}
 Kromě množiny samotných objektů lze v obrázku také definovat jejich hierarchii.
 To přirozeně plyne z výše zmíněné definice \emph{objektu}, která umožňuje specifikovat část existujícího objektu jako další samostatné objekty.
 
@@ -98,13 +98,61 @@ Mohou však nastat situace, kdy je potřeba jeden objekt zařadit do několika r
 Z tohoto důvodu bylo rozhodnuto, že každý objekt může mít libovolné množství rodičů a libovolné množství potomků.
 % TODO: zdůvodňovat? dávat příklad? přirovnávat k OOP dědičnost vs kompozice (případně zmínit flaws of inheritance)?
 
-\subsubsection*{Statické atributy objektů}
-% TODO:
-% 1. dává smysl, že když máme objekty, chceme popsat jejich vlastnosti
-% 2. jako atributy jsem označil ty informace, které nejsou závislé na jiných objektech - typicky vlastnosti nebo samostatné činnosti, například barva nebo "plave"
-% 3. příklad?
+\subsubsection{Atributy objektů}
+Vedle pouhého výčtu samotných objektů ve scéně je dále přirozeným požadavkem, aby byla reprezentace znalostí schopna zachytit i jejich vlastnosti.
+K tomu slouží třetí aspekt popisu - \emph{atribut}.
 
-\subsubsection*{Dynamické vazby mezi objekty}
+Atributem je možné popsat jakoukoli informaci o objektu, která není závislá na jiném objektu.
+Jinými slovy, pokud bychom objekt izolovali od zbytku scény (obrázku), tak všechny vlastnosti, které se tím nezmění nebo nezaniknou, lze popsat pomocí atributů.
+Typickým příkladem je barva nebo tvar objektu či jeho části.
+% Příkladem vlastnosti, která formulované definici atributu neodpovídá, je například velikost.
+% To je z toho důvodu, že pokud bychom objekt izolovali od zbytku obrázku, ztrácíme informace o relativní velikosti oproti zbytku scény a nemůžeme již určit,
+% zda je objekt \enquote{velký} či \enquote{malý}.
+
+Atribut se skládá ze zvoleného \emph{názvu} a přiřazené \emph{hodnoty}, kdy konkrétní názvy a hodnoty jsou volbou experta, který tvoří referenční popis.
+Název atributu označuje jakou vlastnost daný atribut popisuje a přiřazená hodnota pak udává, jaké konkrétní hodnoty nabývá.
+Každý objekt může mít libovolné množství těchto atributů.
+
+Názvu atributu pod jedním objektem nemusí být unikátní, lze specifikovat stejný atribut vícekrát s různými hodnotami.
+Typickým příkladem může být vícebarevný objekt, kde atribut s názvem \enquote{barva} bude vícekrát, pro různé konkrétní barvy.
+Příklad jednoho takového popisu je na Obrázku~\ref{fig:example_tshirt}, kde název objektu je \enquote{tričko}
+a definované jsou tři atributy: dvě barvy a vzor.
+
+% TODO: hezčí tabulka pro popis objektu?
+% TODO: přidat popisky do tabulky co jsou atributy?
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}
+		\definecolor{green1}{HTML}{A6E3A1}
+		\begin{scope}
+			\draw[clip] (0,-1) -- ++(0.7,0) -- ++(0,1.3) -- ++(0.5,-0.5) -- ++(0.4,0.4) -- ++(-0.9,0.9) -- ++(-0.4,0)
+			arc[start angle=0,end angle=-180,x radius=0.3, y radius=0.2]
+			-- ++(-0.4,0) -- ++(-0.9,-0.9) -- ++(0.4,-0.4) -- ++(0.5,0.5) -- ++(0,-1.3) -- cycle;
+			\begin{scope}[rotate=20]
+				\draw[fill=green1,draw=none] (0,0) circle (2);
+				\foreach \n in {0, 1, ..., 10}{
+						\node[transform shape,scale=0.3,fill=blue!65,draw=none,minimum width=10cm, minimum height=4mm] at (0,-2+\n*0.4) {};
+					}
+			\end{scope}
+		\end{scope}
+		\matrix[draw, anchor=west] at (3, 0) {
+			\node (header) {\texttt{\textbf{tričko}}}; \\
+			\node {\texttt{barva:}}; &
+			\node {\texttt{modrá}};          \\
+			\node {\texttt{barva:}}; &
+			\node {\texttt{zelená}};          \\
+			\node {\texttt{vzor:}}; &
+			\node {\texttt{pruhy}};          \\
+		};
+	\end{tikzpicture}
+	\caption{Příklad použití atributů pro popis objektu}\label{fig:example_tshirt}
+\end{figure}
+
+% Pro složitější objekty se opět naskýtá problém toho, jaké vlastnosti vybrat a zapsat do referenčního popisu, a které je možné naopak zanedbat.
+% Tato otázka je podobná problematice nejednoznačnosti, zmíněné v části~\ref{subsubsec:objekty_ve_scene} definující objekty.
+% A i zde platí to, že popis byl záměrně vytvořen tak, aby byl univerzální a volba atributů do referenčního závisí na expertovi a konkrétní aplikaci.
+
+\subsubsection*{Vazby mezi objekty}
 % TODO:
 % 1. mezi objekty existují vazby, které je taky potřeba popsat -> to je poslední kousek sémantické informace co můžeme chtít zachytit (?)
 % 2. k popisu informací týkajících se vzájemně dvou objektů jsem definoval "vazby" (triplety)
