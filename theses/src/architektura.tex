@@ -1,0 +1,46 @@
+\subsection{Obecná architektura systému}
+Obecná architektura celého systému vychází z jeho požadované funkčnosti,
+kterou je porovnání obrázku s jeho popisem v přirozené řeči, a to na sémantické úrovni.
+Z toho pak plyne, že celý systém se ve své podstatě skládá ze tří základních částí:
+\begin{enumerate}
+	\item referenční (vzorový) popis daného obrázku
+	\item sub-systém pro zpracování přirozené řeči ($\To$ testovaný popis)
+	\item porovnání referenčního a testovaného popisu
+\end{enumerate}
+
+% TODO: Vysvětlovat zkratky?
+Jednotlivé části spolu vzájemně fungují následujícím způsobem:
+Uživateli je prezentován obrázek a jeho úkolem je popsat, co na obrázku vidí.
+Získaný popis v přirozené řeči je převeden na text (ASR).
+Z tohoto přepisu je extrahována sémantická informace (SLU), ze které je vytvořen testovaný popis.
+Testovaný popis je porovnaný s referenčním (vzorovým) popisem daného obrázku.
+Výsledek tohoto porovnání lze pak považovat za finální výstup, ale také je možné jej použít jako vstup pro další zpracování (např.~vektor příznaků pro klasifikátor).
+Schématické znázornění je na Obrázku~\ref{fig:architecture_scheme}.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}[minimum width=2.5cm, minimum height=1cm]
+		\node[anchor=south, inner sep=4pt, minimum height=0cm] (img) at (0,0) {\texttt{obrázek}};
+		\node[draw] (user) at (-3,-1.5) {\texttt{UŽIVATEL}};
+		\node[draw] (exp) at (3,-3.5) {\texttt{EXPERT}};
+		\node[draw] (asr) at (-3,-3.5) {\texttt{ASR + SLU}};
+		\node[draw] (comp) at (0,-6) {\texttt{KOMPARÁTOR}};
+		\draw[-Stealth,rounded corners=2mm] (0,0) -- (0,-0.4) -| (exp.north);
+		\draw[-Stealth,rounded corners=2mm] (0,0) -- (0,-0.4) -| (user.north);
+		\draw[-Stealth] (user) -- node[minimum width=0cm,anchor=west,midway] {\texttt{řeč}} (asr);
+		\draw[-Stealth,rounded corners=2mm] (asr) |- node[minimum width=0cm,right, near start] {\parbox{2cm}{\texttt{testovaný}\\[-3mm] \texttt{popis}}} (comp.west);
+		\draw[-Stealth,rounded corners=2mm] (exp) |- node[minimum width=0cm,right, near start] {\parbox{2cm}{\texttt{referenční}\\[-3mm] \texttt{popis}}} (comp.east);
+		\draw[-Stealth] (comp.south) -- node[midway, right, minimum width=0cm]{\texttt{hodnocení}} ++(0, -1);
+	\end{tikzpicture}
+	\caption{Schéma obecné architektury systému}\label{fig:architecture_scheme}
+\end{figure}
+
+Pro tuto práci bylo rozhodnuto, že základem bude expertní přístup.
+Od toho se poté odvíjí konkrétní algoritmy, formáty a postupy navržené a implementované v této práci, které jsou podrobněji popsány v pozdějších kapitolách.
+Je ale vhodné zmínit, že během návrhu bylo dbáno na to, aby bylo možné pro reálná nasazení některé implementace v případě potřeby zaměnit nebo upravit,
+aby lépe vyhovovaly specifickým požadavkům pro dané použití.
+
+% TODO: zmínit, že součástí zpracování řeči je ASR, které ale já přímo neřeším a tak dále budu pracovat rovnou s textem
+
+% TODO: přidat zmínku o tom, že referenční popis stačí jeden pro jeden obrázek (1 reference pro více testovacích popisů)
+%       ale také, že může být víc referenčních popisů k jednomu obrázku, podle toho, co se zrovna chce hodnotit
