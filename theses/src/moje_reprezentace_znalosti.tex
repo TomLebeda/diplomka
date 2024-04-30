@@ -113,7 +113,7 @@ Atribut se skládá ze zvoleného \emph{názvu} a přiřazené \emph{hodnoty}, k
 Název atributu označuje jakou vlastnost daný atribut popisuje a přiřazená hodnota pak udává, jaké konkrétní hodnoty nabývá.
 Každý objekt může mít libovolné množství těchto atributů.
 
-Názvu atributu pod jedním objektem nemusí být unikátní, lze specifikovat stejný atribut vícekrát s různými hodnotami.
+Názvy atributů pod jedním objektem nemusí být unikátní, lze specifikovat víc stejnojmenných atributů s různými hodnotami.
 Typickým příkladem může být vícebarevný objekt, kde atribut s názvem \enquote{barva} bude vícekrát, pro různé konkrétní barvy.
 Příklad jednoho takového popisu je na Obrázku~\ref{fig:example_tshirt}, kde název objektu je \enquote{tričko}
 a definované jsou tři atributy: dvě barvy a vzor.
@@ -136,13 +136,13 @@ a definované jsou tři atributy: dvě barvy a vzor.
 			\end{scope}
 		\end{scope}
 		\matrix[draw, anchor=west] at (3, 0) {
-			\node (header) {\texttt{\textbf{tričko}}}; \\
+			\node  {\texttt{\textbf{tričko}}};  \\
 			\node {\texttt{barva:}}; &
-			\node {\texttt{modrá}};          \\
+			\node {\texttt{\textit{modrá}}};   \\
 			\node {\texttt{barva:}}; &
-			\node {\texttt{zelená}};          \\
+			\node {\texttt{\textit{zelená}}};   \\
 			\node {\texttt{vzor:}}; &
-			\node {\texttt{pruhy}};          \\
+			\node {\texttt{\textit{pruhy}}};   \\
 		};
 	\end{tikzpicture}
 	\caption{Příklad použití atributů pro popis objektu}\label{fig:example_tshirt}
@@ -152,8 +152,54 @@ a definované jsou tři atributy: dvě barvy a vzor.
 % Tato otázka je podobná problematice nejednoznačnosti, zmíněné v části~\ref{subsubsec:objekty_ve_scene} definující objekty.
 % A i zde platí to, že popis byl záměrně vytvořen tak, aby byl univerzální a volba atributů do referenčního závisí na expertovi a konkrétní aplikaci.
 
-\subsubsection*{Vazby mezi objekty}
-% TODO:
-% 1. mezi objekty existují vazby, které je taky potřeba popsat -> to je poslední kousek sémantické informace co můžeme chtít zachytit (?)
-% 2. k popisu informací týkajících se vzájemně dvou objektů jsem definoval "vazby" (triplety)
-% 3. příklad?
+\subsubsection{Vazby mezi objekty}
+Posledním typem informace, kterou by měl být referenční popis obrázku schopen zachytit, jsou vazby a vztahy mezi různými objekty.
+Může se jednat například o činnosti, které se týkají dvou objektů, nebo popis relativních vlastností, jako je velikost či pozice.
+
+Každý takový záznam je označen jako \emph{triplet} a skládá se ze \emph{zdrojového objektu},
+\emph{cílového objektu} a \emph{predikátu}, který popisuje danou vazbu nebo vztah.
+% WARN: doplnit reference!
+Tato struktura je inspirována běžným zápisem sémantických sítí a RDF standardem.
+Obecné schéma jednoho tripletu je na Obrázku~\ref{fig:schema_tripletu}.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}
+		\node[draw, ellipse] (n1) at (0,0) {\texttt{zdrojový objekt}};
+		\node[draw, ellipse] (n2) at (7,0) {\texttt{cílový objekt}};
+		\draw[-Stealth] (n1) to node[midway, above] {\texttt{predikát}} (n2);
+	\end{tikzpicture}
+	\caption{Obecné schéma tripletu}\label{fig:schema_tripletu}
+\end{figure}
+
+Každý objekt může být součástí libovolného počtu tripletů a to jak v pozici zdrojového, tak cílového objektu.
+Objekt také nemusí být součástí žádných vazeb a dokonce v celém popisu nemusí být žádné vazby definované.
+Například pokud bychom chtěli pouze testovat paměť uživatele, mohli bychom mu ukázat obrázek, pak jej skrýt a sledovat, jaké objekty si vybaví.
+V takové úloze nás vazby mezi objekty vůbec nemusejí zajímat a je tedy zbytečné, aby byly součástí referenčního popisu.
+
+Při vytváření referenčního popisu obrázku se opět naskýtá otázka, jaké vazby a vztahy mezi objekty do popisu zavést a které lze ignorovat.
+Například relativní velikost nebo pozice objektů může být pro některé úlohy klíčová, ale pro jiné zcela nepodstatná.
+Tato problematika byla opět ponechána na expertovi, který vytváří referenční popis pro danou konkrétní aplikaci,
+aby rozhodl, které informace je potřeba v referenčním popise zachytit.
+
+Konkrétní příklad několika tripletů je znázorněn na Obrázku~\ref{fig:triplety_priklad}.
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}
+		\node[draw] at (-5.5, 1) {\includegraphics[scale=0.4]{imgs/dog_squirrel_tree_mushroom.pdf}};
+		\node[draw, ellipse, minimum width=1.5cm, minimum height=1cm] (dog) at (0,0) {\texttt{pes}};
+		\node[draw, ellipse, minimum width=2cm, minimum height=1cm] (sq) at (5,0) {\texttt{veverka}};
+		\node[draw, ellipse, minimum width=2cm, minimum height=1cm] (tree) at (2,3) {\texttt{strom}};
+		\node[draw, ellipse, minimum width=2cm, minimum height=1cm] (mush) at (6,3) {\texttt{houba}};
+		\draw[-Stealth, bend left=25] (dog) to node[midway, above] {\footnotesize \texttt{běží za}} (sq);
+		\draw[-Stealth] (dog) to node[midway, above] {\footnotesize \texttt{větší než}} (sq);
+		\draw[-Stealth, bend left=25] (sq) to node[midway, below] {\footnotesize \texttt{utíká před}} (dog);
+		\draw[-Stealth] (sq) -- node[midway, above, sloped] {\footnotesize \texttt{šplhá na}} (tree);
+		\draw[-Stealth] (mush) -- node[midway, above, sloped] {\footnotesize \texttt{je pod}} (tree);
+		\draw[-Stealth, bend left=30] (mush) -- node[midway, above, sloped] {\footnotesize \texttt{větší než}} (sq);
+		\draw[-Stealth] (dog) to node[midway, above, sloped] {\footnotesize \texttt{je pod}} (tree);
+	\end{tikzpicture}
+	\caption{Příklad použití tripletů pro popis vztahů mezi objekty}\label{fig:triplety_priklad}
+\end{figure}
+
+% TODO: příklad s kompletním popisem atributy + hierarchie + triplety?
