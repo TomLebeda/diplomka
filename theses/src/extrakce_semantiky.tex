@@ -1,2 +1,40 @@
 \subsection{Extrakce sémantické informace}
+Dalším klíčovým bodem při návrhu systému pro hodnocení popisu obrázku bylo najít způsob, jak z přirozené řeči extrahovat požadovanou sémantickou informaci.
+Cílem je z přirozené lidské řeči získat informace v takové podobě, aby je bylo možné porovnat s naším referenčním popisem obrázku a
+následně vyhodnotit jejich podobnost.
 
+\todo{ozdrojovat?}
+Extrakce sémantiky z přirozené řeči se běžně dělá z textového přepisu dané promluvy.
+I v této práci tedy extrakce sémantických informací probíhá z textu.
+To znamená, že pokud uživatel popíše obrázek mluvenou řečí, tak je potřeba promluvu převést do textu pomocí nějakého systému pro rozpoznání řeči (ASR).
+\todo{existují metody co to dělají rovnou z audia?}
+\todo{změna času? (z minulého do přítomného)}
+Problematika rozpoznání řeči a převodu audia do textu je nad rámec této práce a předpokládá se, že bude v praxi řešena nějakou již existující implementací.
+Ve zbytku práce bude tedy pro zjednodušení rovnou předpokládaným vstupem text.
+\todo{doplnit, že jsem při vývoji používal ruční přepisy? Případně zmínit odkud jsem je vzal?}
+
+Otázka extrakce sémantické informace se tedy zužuje na extrakci sémantiky z přirozené řeči v textové podobě.
+Jako způsob řešení byl zvolen přístup založený na sémantickém parsování pomocí bezkontextových gramatik,
+který je v souladu s volnou expertního přístupu v celé této práci.
+
+Základní koncept celého sub-systému pro extrakci sémantiky byl navržen tak, že podle referenčního popisu obrázku bude expertem sestavena gramatika,
+podle které budou v textu detekované jednotlivé sémantické entity.
+Gramatika je v tomto kontextu sada pravidel, která definují, jaké promluvy jsou v textu očekávané.
+Dále tato pravidla také udávají informace o tom, jakou sémantickou entitu daná detekovaná promluva vyjadřuje.
+Konkrétní syntaxe, použití a funkčnost těchto gramatik bude popsán později spolu s implementací v části~\ref{subsec:moje_gramatiky}.
+
+Tyto sémantické entity pak budou porovnané s referenčním popisem
+
+\subsubsection{Sémantické entity}
+První otázkou, kterou bylo potřeba vyřešit pro získání sémantické informace z přirozeného popisu, byla její podoba.
+Jinými slovy, jak by měla extrahovaná sémantika vypadat, aby ji bylo možné porovnat s referenčním popisem obrázku.
+
+Vzhledem k tomu, že výše definovaný referenční popis (viz sekce~\ref{subsec:reprezentace_znalosti}) se skládá z objektů, jejich hierarchie, atributů a vazeb,
+tak se nabízí přímo tyto čtyři typy informací hledat v textu.
+
+Bylo tedy rozhodnuto, že z přepisu přirozené řeči budou extrahované:
+\begin{itemize}
+	\item objekty \to systém pro extrakci sémantiky byl měl být schopen v textu detekovat všechny zmíněné objekty, které jsou zároveň definované v referenčním popisu.
+	\item atributy/vlastnosti objektů
+	\item vazby/vztahy mezi objekty
+\end{itemize}

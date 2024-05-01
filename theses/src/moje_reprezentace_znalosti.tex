@@ -1,4 +1,4 @@
-\subsection{Reprezentace znalostí}
+\subsection{Reprezentace znalostí}\label{subsec:reprezentace_znalosti}
 Pro porovnání obrázku s jeho popisem v přirozené řeči bylo nutné zvolit či navrhnout nějakou formu reprezentace znalostí,
 která by umožnila zachytit sémantiku z obou zdrojů.
 Jak již bylo výše zmíněno, zvolen byl expertní přístup a to v tomto případě znamená, že referenční popis obrázku je vytvořen lidským expertem,
@@ -28,17 +28,16 @@ Při návrhu bylo tedy potřeba brát v úvahu následující požadavky a nají
 	      Dynamické formáty s volnou strukturou bývají složitější na strojové zpracování, než fixní formáty s přesně definovanou podobou.
 \end{itemize}
 
-% TODO: přidat info o tom, že expertní přístup k referenčním popisům dává absolutní kontrolu nad obsahem 
-%       a protože stačí referenční popis udělat jednou a pak se jenom používá, tak to tolik nevadí, že to musí psát člověk
-%       možná to formulovat stylem "protože referenční popis stačí udělat jednou, ale pořádně, tak je lepší aby ho udělal člověk-expert, než automat"
+\todo{zmínit, že expertní přístup umožňuje lepší kontrolu nad obsahem/kvalitou než automat/statistika?}
 
 S ohledem na tyto body byla navržena reprezentace znalostí založená na sémantických sítích, která definuje 4 základní aspekty popisu: objekty, jejich hierarchii,
 statické atributy a dynamické vazby.
-Detailnější popis těchto jednotlivých aspektů je v následujících částech, spolu s ukázkami na konkrétních příkladech a obrázcích.
-% TODO: Slibuji příklady, tak bych je měl přidat a nebo slib odstranit.
+Detailnější popis těchto jednotlivých aspektů je v následujících částech, konkrétní technická implementace je pak popsána v sekci~\ref{sec:implementace}.
 
-% TODO: jak s anglikanismy?
-% TODO: jak a kde použít \emph pro "objekt"? 
+\todo{jak s anglikanismy?}
+
+\todo{jak a kde použít emph?}
+
 \subsubsection{Objekty ve scéně}\label{subsubsec:objekty_ve_scene}
 \newcommand{\objekt}{{\color{red!70!black}\texttt{objekt}}}
 Cokoli, co lze v obrázku ohraničit rámečkem (angl.~bounding-box) a při separaci od zbytku scény (obrázku) neztratí nebo zásadně nezmění svůj význam,
@@ -47,7 +46,6 @@ lze považovat za \emph{objekt}.
 Jako \emph{objekt} v obrázku lze tedy označit zobrazené fyzické předměty, postavy, zvířata, ale také nehmotné pojmy jako \enquote{nebe},
 místa, lokace či místnosti (např.~\enquote{kuchyň} nebo \enquote{louka}) a části jiných objektů (např.~\enquote{obličej} jsou součást hlavy nebo celého člověka).
 
-% TODO: vyměnit dlouhé popisy za jeden ukázkový příklad? Ilustrace farmy se zvířaty a nářadím/stodolou by mohla fungovat dobře.
 Tato definice objekt u byla záměrně navržena velmi obecně, aby byl definovaný formát univerzální a šel použít i pro popis velmi odlišných obrázků s různými účely.
 Potenciální nevýhodou, která plyne z univerzálnosti formátu, může být v některých situacích problém nejednoznačnosti.
 
@@ -60,6 +58,8 @@ možné sestavit různé množiny objektů podle toho, pro jaké potřeby je zro
 Pro aplikaci, kde je podstatné zachycení živých objektů, může být množina objektů v referenčním popise tvořena lidmi či zvířaty.
 Pro jiné použití pak ale může být podstatné zachytit prostředí a neživé předměty,
 takže množina objektů by byla tvořena částmi prostředí (např.~stromy, křoví, voda, skály), budovami nebo obecnými předměty.
+
+\todo{vyměnit dlouhé popisy za jeden ukázkový příklad?}
 
 \subsubsection{Hierarchie objektů}
 Kromě množiny samotných objektů lze v obrázku také definovat jejich hierarchii.
@@ -96,7 +96,7 @@ Tato příslušnost objektu nějaké skupině je dalším typem sémantické inf
 
 Mohou však nastat situace, kdy je potřeba jeden objekt zařadit do několika různých skupin.
 Z tohoto důvodu bylo rozhodnuto, že každý objekt může mít libovolné množství rodičů a libovolné množství potomků.
-% TODO: zdůvodňovat? dávat příklad? přirovnávat k OOP dědičnost vs kompozice (případně zmínit flaws of inheritance)?
+\todo{zdůvodňovat? dávat příklad? přirovnávat k OOP dědičnost vs kompozice?}
 
 \subsubsection{Atributy objektů}
 Vedle pouhého výčtu samotných objektů ve scéně je dále přirozeným požadavkem, aby byla reprezentace znalostí schopna zachytit i jejich vlastnosti.
@@ -118,8 +118,10 @@ Typickým příkladem může být vícebarevný objekt, kde atribut s názvem \e
 Příklad jednoho takového popisu je na Obrázku~\ref{fig:example_tshirt}, kde název objektu je \enquote{tričko}
 a definované jsou tři atributy: dvě barvy a vzor.
 
-% TODO: hezčí tabulka pro popis objektu?
-% TODO: přidat popisky do tabulky co jsou atributy?
+\todo{hezčí tabulka pro popis objektu?}
+
+\todo{přidat šipky a popisky do tabulky co je co?}
+
 \begin{figure}[ht!]
 	\centering
 	\begin{tikzpicture}
@@ -158,8 +160,7 @@ Může se jednat například o činnosti, které se týkají dvou objektů, nebo
 
 Každý takový záznam je označen jako \emph{triplet} a skládá se ze \emph{zdrojového objektu},
 \emph{cílového objektu} a \emph{predikátu}, který popisuje danou vazbu nebo vztah.
-% WARN: doplnit reference!
-Tato struktura je inspirována běžným zápisem sémantických sítí a RDF standardem.
+Tato struktura je inspirována běžným zápisem sémantických sítí a RDF standardem. \todo{doplnit reference!}
 Obecné schéma jednoho tripletu je na Obrázku~\ref{fig:schema_tripletu}.
 
 \begin{figure}[ht!]
@@ -186,11 +187,11 @@ Konkrétní příklad několika tripletů je znázorněn na Obrázku~\ref{fig:tr
 \begin{figure}[ht!]
 	\centering
 	\begin{tikzpicture}
-		\node[draw] at (-5.5, 1) {\includegraphics[scale=0.4]{imgs/dog_squirrel_tree_mushroom.pdf}};
+		\node[draw] at (-5, 1) {\includegraphics[scale=0.35]{imgs/dog_squirrel_tree_mushroom.pdf}};
 		\node[draw, ellipse, minimum width=1.5cm, minimum height=1cm] (dog) at (0,0) {\texttt{pes}};
 		\node[draw, ellipse, minimum width=2cm, minimum height=1cm] (sq) at (5,0) {\texttt{veverka}};
 		\node[draw, ellipse, minimum width=2cm, minimum height=1cm] (tree) at (2,3) {\texttt{strom}};
-		\node[draw, ellipse, minimum width=2cm, minimum height=1cm] (mush) at (6,3) {\texttt{houba}};
+		\node[draw, ellipse, minimum width=2cm, minimum height=1cm] (mush) at (5.5,3) {\texttt{houba}};
 		\draw[-Stealth, bend left=25] (dog) to node[midway, above] {\footnotesize \texttt{běží za}} (sq);
 		\draw[-Stealth] (dog) to node[midway, above] {\footnotesize \texttt{větší než}} (sq);
 		\draw[-Stealth, bend left=25] (sq) to node[midway, below] {\footnotesize \texttt{utíká před}} (dog);
@@ -202,4 +203,4 @@ Konkrétní příklad několika tripletů je znázorněn na Obrázku~\ref{fig:tr
 	\caption{Příklad použití tripletů pro popis vztahů mezi objekty}\label{fig:triplety_priklad}
 \end{figure}
 
-% TODO: příklad s kompletním popisem atributy + hierarchie + triplety?
+\todo{příklad s kompletním popisem obrázku (všechno dohromady)?}

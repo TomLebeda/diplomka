@@ -1,6 +1,10 @@
 \documentclass[12pt,a4paper,oneside]{article}
 \input{/home/tom/Tools/TeX_tools/templates/protocol/src/_preamble.tex}
-\usepackage{refcount}
+\geometry{left=30mm,right=30mm,top=35mm,bottom=40mm}
+
+\newcommand{\todo}[1]{
+	{\color{red}\textsuperscript{\texttt{TODO}}\footnote{#1}}
+}
 
 \begin{document}
 \tableofcontents
@@ -9,7 +13,7 @@
 \section{Úvod}
 
 \clearpage
-\section{Problematika reprezentace znalostí a popisu obrázku}
+\section{Teorie k řešené problematice}
 \input{src/reprezentace_znalosti.tex}
 \input{src/popis_obrazku.tex}
 \input{src/semantika.tex}
@@ -22,7 +26,8 @@
 \input{src/validace.tex}
 
 \clearpage
-\section{Implementace a testování}
+\section{Implementace a testování}\label{sec:implementace}
+\input{src/moje_gramatika.tex}
 
 \section{Závěr}
 

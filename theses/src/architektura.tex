@@ -8,10 +8,10 @@ Z toho pak plyne, že celý systém se ve své podstatě skládá ze tří zákl
 	\item porovnání referenčního a testovaného popisu
 \end{enumerate}
 
-% TODO: Vysvětlovat zkratky?
 Jednotlivé části spolu vzájemně fungují následujícím způsobem:
 Uživateli je prezentován obrázek a jeho úkolem je popsat, co na obrázku vidí.
 Získaný popis v přirozené řeči je převeden na text (ASR).
+\todo{Jak/kde vysvětlit zkratky?}
 Z tohoto přepisu je extrahována sémantická informace (SLU), ze které je vytvořen testovaný popis.
 Testovaný popis je porovnaný s referenčním (vzorovým) popisem daného obrázku.
 Výsledek tohoto porovnání lze pak považovat za finální výstup, ale také je možné jej použít jako vstup pro další zpracování (např.~vektor příznaků pro klasifikátor).
@@ -40,7 +40,4 @@ Od toho se poté odvíjí konkrétní algoritmy, formáty a postupy navržené a
 Je ale vhodné zmínit, že během návrhu bylo dbáno na to, aby bylo možné pro reálná nasazení některé implementace v případě potřeby zaměnit nebo upravit,
 aby lépe vyhovovaly specifickým požadavkům pro dané použití.
 
-% TODO: zmínit, že součástí zpracování řeči je ASR, které ale já přímo neřeším a tak dále budu pracovat rovnou s textem
-
-% TODO: přidat zmínku o tom, že referenční popis stačí jeden pro jeden obrázek (1 reference pro více testovacích popisů)
-%       ale také, že může být víc referenčních popisů k jednomu obrázku, podle toho, co se zrovna chce hodnotit
+\todo{zmínit, že referenční popis není třeba pokaždé tvořit znovu, ale lze udělat \enquote{offline} předem?}
