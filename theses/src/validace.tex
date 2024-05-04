@@ -1,1 +1,352 @@
 \subsection{Hodnotící algoritmus}
+Za předpokladu, že je k dispozici referenční popis vytvořený expertem a testovaný popis získaný automaticky z přirozené řeči,
+je potřeba tyto dva popisy nějakým způsobem porovnat a určit, do jaké míry odpovídá testovaný popis referenčnímu.
+
+Právě to je předmětem této kapitoly: navrhnout algoritmus, který by zajišťoval porovnání testovaného popisu s referenčním a jehož výstupem by bylo nějaké hodnocení.
+
+Základ hodnotícího algoritmu vychází ze struktury referenčního a testovaného popisu.
+Oba typy se skládají z množiny objektů $\mathcal O$, množiny atributů $\mathcal A$ a množiny vazeb $\mathcal V$.
+Dolním indexem je značeno, zda se jedná o množinu z referenčního popisu ($R$), nebo testovaného popisu ($T$).
+Oba popisy obrázku lze tedy vyjádřit jako trojice:
+\todo{definovat symbol pro popis obrázku? použít pro definice jiný symbol než =?}
+\begin{align*}
+	\text{\emph{referenční popis obrázku}} & = \bigl( \mathcal{O}_{R}, \mathcal{A}_{R}, \mathcal{V}_{R} \bigr) \\
+	\text{\emph{testovaný popis obrázku}}  & = \bigl( \mathcal{O}_{T}, \mathcal{A}_{T}, \mathcal{V}_{T} \bigr)
+\end{align*}
+Porovnání a hodnocení podobnosti popisů by tak mohlo být převedeno na otázku porovnání podobnosti množin.
+Otázky teorie množin jsou ale nad rámec zadání a pro tuto práci byl definován hodnotící algoritmus,
+který je inspirován ztrátovými funkcemi.
+
+Na obecné úrovni by se dalo říci, že hodnotící algoritmus počítá celkové ztráty pro chybějící objekty,
+chybějící atributy, atributy s chybnou hodnotou, chybějící vazby mezi objekty.
+
+Vstupem hodnotícího algoritmu jsou tedy oba popisy (referenční a testovaný) a k tomu ještě ztrátová tabulka, která určuje, jaký typ chyby způsobí jak velkou ztrátu.
+Tuto ztrátovou tabulku také sestavuje expert, společně s referenčním popisem.
+
+Výstupem hodnotícího algoritmu je pak množina označených číselných hodnot, které reprezentují celkové ztráty pro různé druhy chyb.
+
+\newpage
+\subsubsection{Chybějící objekty}
+Pokud byl v referenčním popise expertem označený nějaký objekt,
+který chybí v testovaném popise, předpokládá se, že expert považoval daný objekt za důležitý a uživatel jej nezmínil.
+
+Uživatel si třeba nemusel objektu všimnout, nebo jej nepovažoval za dostatečně důležitý.
+V obou případech se však jedná o nějaký rozpor se vzorovým popisem, který je třeba penalizovat.
+
+Například pro situaci:
+\begin{align*}
+	\mathcal{O}_{R} & = \bigl\{\, \texttt{pes}, \texttt{veverka}, \texttt{houba}, \texttt{strom}\, \bigr\} \\
+	\mathcal{O}_{T} & = \bigl\{\, \texttt{pes}, \texttt{veverka}\, \bigr\}
+\end{align*}
+je zřejmé, že v testovaném popisu chybí dva objekty: \texttt{houba} a \texttt{strom}.
+
+Lze očekávat, že různé objekty budou ve scéně různě důležité a bylo by vhodné, aby byl tento fakt zohledněn při výpočtu ztráty.
+Proto lze přiřadit objektům \emph{tagy}.
+Jako \emph{tag} je v tomto kontextu chápána nějaká značka, která říká, že objekt patří do dané skupiny.
+Například objekt \enquote{\texttt{tričko}} může mít přiřazen tag \enquote{\emph{oblečení}} a objekt \enquote{\texttt{pes}}
+může mít přiřazen tag \enquote{\emph{zvíře}}.
+
+Pro větší variabilitu systému bylo dále rozhodnuto, že každý objekt může mít přiřazený libovolný počet tagů.
+Název tagů a jejich přiřazení objektům je volbou experta a je součástí tvorby referenčního popisu.
+Ve ztrátové tabulce pak může expert definovat ztrátové hodnoty pro jednotlivé tagy a tím tak přepsat hodnotu ztráty na daném objektu.
+
+Pokud má objekt přiřazeno více tagů, na jejich pořadí záleží.
+Při určování ztrátové hodnoty pro daný objekt algoritmus postupně prochází jeden tag po druhém a kontroluje, zda je tento tag uvedený ve ztrátové tabulce.
+Pokud ano, je ztráta na daném jednom chybějícím objektu rovna této hodnotě a další tagy na tomto objektu již nejsou kontrolované.
+Pokud žádný z tagů není nalezen ve ztrátové tabulce, je použita výchozí hodnota ztráty pro jakýkoli chybějící objekt.
+
+Pro názornost je schéma jednoho ukázkového případu na Obrázku~\ref{fig:example_missing_objects}.\todo{vyměnit obecné názvy za konkrétní?}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\node[draw, minimum width=4cm, minimum height=2cm] (comp) at (0, 0) {\parbox{3cm}{\small \centering výpočet ztráty pro chybějící objekty}};
+		\node[anchor=west, inner sep=0mm] (out) at ($(comp.east) + (2.5, 0)$) {
+			\small
+			\centering
+			\begin{tblr}{
+					colspec={|c|c|},
+					stretch={0.5},
+					row{1}={abovesep={2mm},belowsep={2mm}},
+					row{2}={abovesep={2mm}},
+					row{9}={belowsep={2mm}},
+				}
+				\hline
+				\textbf{Objekt} & \textbf{Ztráta} \\
+				\hline
+				\texttt{obj\_1} & 1.0             \\
+				\texttt{obj\_2} & 0.5             \\
+				\texttt{obj\_3} & 1.0             \\
+				\texttt{obj\_4} & 0.0             \\
+				\texttt{obj\_5} & 0.5             \\
+				\texttt{obj\_6} & 0.5             \\
+				\texttt{obj\_7} & 3.0             \\
+				\texttt{obj\_8} & 0.0             \\
+				\hline
+			\end{tblr}
+		};
+		\node[anchor=south, inner sep=0mm] (ztr) at ($(comp.north) + (0, 1)$) {
+			\small
+			\centering
+			\begin{tblr}{
+					colspec={|c|c|},
+					stretch={0.5},
+					row{1}={abovesep={2mm},belowsep={2mm}},
+					row{2}={abovesep={2mm}},
+					row{4}={belowsep={2mm}},
+				}
+				\hline
+				\textbf{Typ}    & \textbf{Ztráta} \\
+				\hline
+				\emph{výchozí}  & 1.0             \\
+				\texttt{tag\_1} & 0.5             \\
+				\texttt{tag\_3} & 3.0             \\
+				\hline
+			\end{tblr}
+		};
+		\node[anchor=south east, inner sep=0mm] (ref) at ($(comp.west) + (-1, 1)$) {
+			\small
+			\centering
+			\begin{tblr}{
+					colspec={|c|c|},
+					stretch={0.5},
+					row{1}={abovesep={2mm},belowsep={2mm}},
+					row{2}={abovesep={2mm}},
+					row{9}={belowsep={2mm}},
+				}
+				\hline
+				\textbf{Objekt} & \textbf{Tagy}                    \\
+				\hline
+				\texttt{obj\_1} & ---                              \\
+				\texttt{obj\_2} & \texttt{tag\_1}                  \\
+				\texttt{obj\_3} & \texttt{tag\_2}                  \\
+				\texttt{obj\_4} & \texttt{tag\_3}                  \\
+				\texttt{obj\_5} & \texttt{tag\_1}, \texttt{tag\_2} \\
+				\texttt{obj\_6} & \texttt{tag\_1}, \texttt{tag\_3} \\
+				\texttt{obj\_7} & \texttt{tag\_3}, \texttt{tag\_1} \\
+				\texttt{obj\_8} & \texttt{tag\_2}, \texttt{tag\_1} \\
+				\hline
+			\end{tblr}
+		};
+		\draw[-Stealth, rounded corners=2mm] (ref.south) |- node[near end, above] {\scriptsize referenční popis} ($(comp.west) + (0, 0.2)$);
+		\draw[-Stealth] (ztr.south) -- node[midway, right] {\scriptsize ztrátová tabulka} (comp.north);
+		\draw[-Stealth] (comp) -- node[midway, above] {\scriptsize vypočtené ztráty} (out);
+		\node[draw] (in2) at ($(ref.south) + (0, -2.5)$) {$\mathcal{O}_{T} = \bigl\{ \, \texttt{obj\_{4}, \texttt{obj\_8}} \, \bigr\}$};
+		\draw[-Stealth, rounded corners=2mm] (in2.north) |- node[near end, below] {\scriptsize testovaný popis} ($(comp.west) + (0, -0.2)$);
+	\end{tikzpicture}
+	\caption{Jednoduchá ukázka ztráty na chybějících objektech}\label{fig:example_missing_objects}
+\end{figure}
+Na příkladu zobrazeném na Obrázku~\ref{fig:example_missing_objects} je možné vidět, že objekt \texttt{obj\_4},
+který byl nalezený v testovaném popisu, nezpůsobil žádnou ztrátu.
+Ostatní objekty, které v testovaném popise chybí, způsobily ztrátu odpovídající hodnotě ze ztrátové tabulky.
+Dále je možné si všimnout, že objekty \texttt{obj\_6} a \texttt{obj\_7} mají stejné tagy, ale v jiném pořadí, proto jsou jimi způsobené ztráty rozdílné.
+
+Pro větší kompaktnost výstupu nejsou vypočtené ztráty prezentované pro každý objekt samostatně, ale jsou sečtené do finálního výsledku.
+Tento proces sčítání ztrátových hodnot je přes všechny objekty, ale také jsou počítané hodnoty přes jednotlivé tagy.
+Pokud bychom vzali tabulku vypočtených ztrát pro jednotlivé objekty z příkladu na Obrázku~\ref{fig:example_missing_objects},
+šel by tento finální krok znázornit Obrázkem~\ref{fig:example_missing_objects_final_sum}.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}
+		\node[anchor=west, inner sep=0mm] (in) at (0, 0) {
+			\small
+			\centering
+			\begin{tblr}{
+					colspec={|c|c|c|},
+					stretch={0.5},
+					row{1}={abovesep={2mm},belowsep={2mm}},
+					row{2}={abovesep={2mm}},
+					row{9}={belowsep={2mm}},
+				}
+				\hline
+				\textbf{Objekt} & \textbf{Tagy}                    & \textbf{Ztráta} \\
+				\hline
+				\texttt{obj\_1} & ---                              & 1.0             \\
+				\texttt{obj\_2} & \texttt{tag\_1}                  & 0.5             \\
+				\texttt{obj\_3} & \texttt{tag\_2}                  & 1.0             \\
+				\texttt{obj\_4} & \texttt{tag\_3}                  & 0.0             \\
+				\texttt{obj\_5} & \texttt{tag\_1}, \texttt{tag\_2} & 0.5             \\
+				\texttt{obj\_6} & \texttt{tag\_1}, \texttt{tag\_3} & 0.5             \\
+				\texttt{obj\_7} & \texttt{tag\_3}, \texttt{tag\_1} & 3.0             \\
+				\texttt{obj\_8} & \texttt{tag\_2}, \texttt{tag\_1} & 0.0             \\
+				\hline
+			\end{tblr}
+		};
+		\node[anchor=west, inner sep=0mm] (out) at (7, 0) {
+			\small
+			\centering
+			\begin{tblr}{
+					colspec={|l|c|},
+					stretch={0.8},
+					row{1}={abovesep={2mm},belowsep={2mm}},
+					row{2}={abovesep={2mm}},
+					row{5}={belowsep={2mm}},
+				}
+				\hline
+				\textbf{Chybějící objekty} & \textbf{Ztráta} \\
+				\hline
+				všechny                    & 6.5             \\[-1mm]
+				objekty s \texttt{tag\_1}  & 4.5             \\[-1mm]
+				objekty s \texttt{tag\_2}  & 1.5             \\[-1mm]
+				objekty s \texttt{tag\_3}  & 3.5             \\
+				\hline
+			\end{tblr}
+		};
+		\draw[-Stealth] ($(in.east) + (0.3, 0)$) -- ($(out.west) + (-0.3, 0)$);
+	\end{tikzpicture}
+	\caption{Finálního krok při počítání ztrát na chybějících objektech}\label{fig:example_missing_objects_final_sum}
+\end{figure}
+
+Zde je vhodné zmínit, že popsaný algoritmus výpočtu ztráty je pouze jednou z možností.
+Pro konkrétní nasazení by mohla být vhodnější jiná forma počítání ztrátových hodnot,
+například vypočítat průměr, sumu nebo maximum či minimum.
+Tento způsob počítání ztráty byl zvolen proto, že poskytuje expertovi další stupeň volnosti,
+jak vyjádřit důležitost objektů.
+
+\subsubsection{Chybějící atributy}
+Pokud expert popsal na daném objektu nějakou vlastnost a odpovídající atribut chybí v testovaném popise,
+je zde stejný předpoklad jako u chybějících objektů a také se jedná o chybu, která způsobí navýšení ztrátové hodnoty.
+
+Způsob hodnocení je obdobný jako pro chybějící objekty, pouze s tím rozdílem, že atributům nejsou přiřazovány žádné tagy.
+Tagy u objektů sloužily k detailnějšímu určení důležitosti objektu a později ke sčítání ztrátových hodnot,
+v případě atributů tuto funkci zastává samotný název atributu.
+
+Například pokud by byl libovolný chybějící atributu penalizován ztrátou $1.0$, pak by bylo možné
+specifikovat, že vynechání atributu \emph{\enquote{barva}} je méně závažné než všechny ostatní a penalizovat pouze ztrátou $0.5$.
+Naopak vynechání atributu \emph{\enquote{výraz v obličeji}} (např.~úsměv nebo zamračení) by mohl být považován za důležitý a expert by
+mohl ve ztrátové tabulce definovat, že jeho vynechání bude penalizováno ztrátou $2.0$.
+\todo{dát konkrétní příklad včetně tabulek, výpočtů \ldots ?}
+
+\subsubsection{Chybějící vazby mezi objekty}
+Posledním typem entity, která může chybět při porovnávání referenčního a testovaného popisu, jsou vazby mezi objekty popsané \emph{triplety}.
+
+Zde je hodnotící algoritmus velmi podobný jako při počítání ztráty pro chybějící objekty.
+Rozdíl zde spočívá v tom, že místo tagů jsou zde použité samotné názvy vazeb, podobně jako u chybějících atributů jsou použité názvy atributů.
+
+Expert ve ztrátové tabulce opět specifikuje, jaká je výchozí hodnota ztráty, pokud v testovaném popise bude chybět libovolná vazba mezi objekty.
+Následně může také specifikovat, že některé konkrétní typy vazeb (podle jejich názvu) mají větší či menší důležitost a tak jimi způsobená ztráta může být větší nebo menší.
+Algoritmus pak při výpočtu použije přednostně takovou hodnotu, která je více specifická.
+\todo{dát konkrétní příklad včetně tabulek, výpočtů \ldots ?}
+
+\subsubsection{Atributy s chybnou hodnotou}
+Pokud v byl v testovém popise nalezen atribut, který odpovídá objektem a názvem nějakému atributu z referenčního popisu,
+ale neodpovídá svou hodnotou žádnému referenčnímu atributu, pak se předpokládá, že uživatel udělal chybu při popisu a řekl špatnou hodnotu.
+
+Příkladem takové neshody by mohlo být:
+\begin{align*}
+	\mathcal{A}_{R} & = \bigl\{ \, \texttt{tričko: barva = modrá } \, \bigr\} \\
+	\mathcal{A}_{T} & = \bigl\{ \, \texttt{tričko: barva = zelená} \, \bigr\}
+\end{align*}
+pak je možné předpokládat, že uživatel udělal při popisu chybu a řekl špatnou barvu.
+
+Způsob počítání ztrátové hodnoty z těchto chybných hodnot je v principu stejný jako u chybějících objektů a atributů.
+Expert ve ztrátové tabulce definuje výchozí hodnotu a k tomu případně specifické případy, kdy je tato ztrátová hodnota jiná.
+
+% Expert ve ztrátové tabulce definuje, jaká je výchozí ztráta pro chybně určenou hodnotu atributu a případně jaké konkrétní situace tuto hodnotu přepisují na jinou.
+Rozdíl oproti předchozím výpočtům ovšem spočívá v tom, že různé hodnoty si mohou být různě blízko.
+Například pokud uživatel zamění hnědou a oranžovou barvu veverky, tak se pravděpodobně ve většině případů bude jednat o menší chybu,
+než kdyby oranžovou zaměnil třeba za zelenou.
+
+Z toho důvodu je ztrátová tabulka navržena tak, aby expert mohl definovat výchozí ztrátu pro všechny chybné atributy,
+výchozí ztrátu pro konkrétní atribut bez ohledu na hodnoty, ztrátu pro konkrétní atribut a zároveň množinu konkrétních hodnot, jejichž záměna tuto ztrátu způsobí
+
+Pro lepší názornost následuje příklad, který předpokládá, že expert definoval ztrátovou tabulku shodnou s Tabulkou~\ref{tab:example_wrong_attrs_values}.
+Tu je možné číst následujícím způsobem:
+\begin{enumerate}
+	\item Libovolný chybný atribut způsobí ztrátu 1.0, pokud není ve zbytku tabulky definována více specifická alternativa.
+	\item Pokud je chybná hodnota v atributu \enquote{\texttt{barva}}, pak je způsobená ztráta rovna 0.5, pokud se nejedná o záměnu některých konkrétních hodnot:
+	      \begin{itemize}
+		      \item Pokud je zaměněna barva \enquote{\texttt{žlutá}} a \enquote{\texttt{oranžová}}, pak je ztráta 0.3.
+		      \item Pokud je zaměněna barva \enquote{\texttt{červená}}, \enquote{\texttt{modrá}} nebo \enquote{\texttt{zelená}} (libovolná dvojice), pak je ztráta rovna 0.8.
+	      \end{itemize}
+	\item Pokud je chybná hodnota v atributu \enquote{\texttt{tvar}}, pak je ztráta 1.5.
+\end{enumerate}
+Ukázka některých konkrétních atributů s chybnými hodnotami a k nim vypočtených ztrát je zobrazena v Tabulce~\ref{tab:example_wrong_attrs_table}.
+
+\begin{table}[H]
+	\centering
+	\begin{tblr}{
+			colspec={|c|l|},
+			row{3}={abovesep={2.5mm},belowsep={2.5mm}},
+			row{4}={abovesep={2.5mm},belowsep={2.5mm}}
+		}
+		\hline
+		\textbf{Atribut} & \textbf{Ztráta}                                                         \\
+		\hline
+		\emph{výchozí}   & 1.0                                                                     \\
+		\hline
+		\texttt{barva}   &
+		\begin{tblr}{colspec={|l|l|}, stretch=0.7, row{2}={abovesep={1mm}}}
+			\hline
+			\textbf{Hodnoty}                                  & \textbf{Ztráta} \\
+			\hline
+			\emph{výchozí}                                    & 0.5             \\
+			\texttt{žlutá}, \texttt{oranžová}                 & 0.3             \\
+			\texttt{červená}, \texttt{modrá}, \texttt{zelená} & 0.8             \\
+			\hline
+		\end{tblr} \\
+		\hline
+		\texttt{tvar}    &
+		{
+				\centering
+				\begin{tblr}{colspec={|l|l|}, stretch=0.7, row{2}={abovesep={1mm}}}
+					\hline
+					\textbf{Hodnoty} & \textbf{Ztráta} \\
+					\hline
+					\emph{výchozí}   & 1.5             \\
+					% \texttt{žlutá}, \texttt{oranžová}                 & 0.3             \\
+					% \texttt{červená}, \texttt{modrá}, \texttt{zelená} & 0.8             \\
+					\hline
+				\end{tblr}
+		}                                                                                          \\
+		\hline
+	\end{tblr}
+	\caption{Část ukázkové ztrátové tabulky}\label{tab:example_wrong_attrs_table}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tblr}{colspec={|l|l|l|}, stretch={0.7}, row{1}={abovesep={2mm},belowsep={1mm}}, row{2}={abovesep={1mm}}}
+		\hline
+		\textbf{Referenční atribut}      & \textbf{Testovaný atribut}      & \textbf{Ztráta} \\
+		\hline
+		\texttt{pes: barva = hnědá}      & \texttt{pes: barva = hnědá}     & 0.0             \\
+		\texttt{oheň: barva = žlutá}     & \texttt{oheň: barva = oranžová} & 0.3             \\
+		\texttt{jablko: barva = červená} & \texttt{jablko: barva = modrá}  & 0.8             \\
+		\texttt{tričko: barva = modrá}   & \texttt{tričko: barva = zelená} & 0.8             \\
+		\texttt{čepice: barva = modrá}   & \texttt{čepice: barva = žlutá}  & 0.5             \\
+		\texttt{penál: tvar = válec}     & \texttt{penál: tvar = kvádr }   & 1.5             \\
+		\texttt{pes: činnost = leží}     & \texttt{pes: činnost = leží }   & 1.0             \\
+		\hline
+	\end{tblr}
+	\caption{Výpočtu ukázkových ztrát chybných hodnot atributů podle Tabulky~\ref{tab:example_wrong_attrs_table}}\label{tab:example_wrong_attrs_values}
+\end{table}
+
+Přirozeně se naskýtá otázka toho, jak počítat ztrátu při konfliktu objektů se stejnými atributy a nebo objekty s více atributy.
+Pro řešení těchto konfliktů bylo rozhodnuto, že hodnotící algoritmus bude optimistický a bude uvažovat nejmenší možnou chybu,
+pokud je podle ztrátové tabulky k dispozici více možných interpretací.
+
+\subsubsection{Výstup hodnotícího algoritmu}
+Finálním výstupem hodnotícího algoritmu je množina označených číselných hodnot, které jsou akumulované ztráty pro různé druhy chyb.
+Přirozenou datovou strukturou, která by odpovídala formátu, by bylo asociativní pole (někdy také označované jako hash-tabulka).
+
+Výstup hodnotícího algoritmu, jak byl popsán v předchozích částech, obsahuje vždy celkovou ztrátu pro daný typ chyby
+a poté akumulované ztrátové hodnoty stejného typu, ale rozdělené ještě podle jednotlivých kategorií.
+\todo{příklad?}
+Konkrétně bude výstupní struktura obsahovat:
+\begin{itemize}
+	\item celkovou ztrátu způsobenou všemi chybějícími objekty
+	\item celkovou ztrátu způsobenou všemi chybějícími atributy
+	\item celkovou ztrátu způsobenou všemi chybějícími vazbami mezi objekty
+	\item celkovou ztrátu způsobenou všemi atributy s chybnými hodnotami
+	\item ztráty způsobené chybějícími objekty s konkrétním tagem
+	\item ztráty způsobené chybějícími atributy s konkrétním názvem/typem atributu
+	\item ztráty způsobené chybějícími vazbami s konkrétním názvem/typem vazby
+	\item ztráty způsobené atributy s chybnými hodnotami, rozdělené podle názvu/typu atributu
+\end{itemize}
+
+Je vhodné zmínit, že při návrhu hodnotícího algoritmu bylo předpokládáno, že pro různé konkrétní nasazení mohou být různé požadavky na formu výstupu.
+V rámci implementace popsané později existuje proto \enquote{skrytý} mezi-krok, ve kterém jsou k dispozici všechny jednotlivé ztráty pro konkrétní objekty, atributy a vazby,
+ze kterých je poté počítána právě popsaná výsledná struktura.
+Tento mezi-výsledek by bylo možné výhodně použít pro implementaci alternativních způsobů hodnocení, nebo případně rovnou použít jako výstup,
+pokud by daná aplikace benefitovala z podrobnější analýzy výsledků.

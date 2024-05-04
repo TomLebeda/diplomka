@@ -1,9 +1,11 @@
 \documentclass[12pt,a4paper,oneside]{article}
 \input{/home/tom/Tools/TeX_tools/templates/protocol/src/_preamble.tex}
 \geometry{left=30mm,right=30mm,top=35mm,bottom=40mm}
+\usepackage{float}
+\usepackage{tabularray}
 
 \newcommand{\todo}[1]{
-	{\color{red}\textsuperscript{\texttt{TODO}}\footnote{#1}}
+	{\color{red}\textsuperscript{\tiny \texttt{TODO}}\footnotemark\footnotetext{\scriptsize{}#1}}
 }
 
 \begin{document}
@@ -22,7 +24,9 @@
 \section{Návrh a architektura systému}
 \input{src/architektura.tex}
 \input{src/moje_reprezentace_znalosti.tex}
+\newpage
 \input{src/extrakce_semantiky.tex}
+\newpage
 \input{src/validace.tex}
 
 \clearpage

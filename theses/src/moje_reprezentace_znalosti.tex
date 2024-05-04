@@ -3,6 +3,7 @@ Pro porovnání obrázku s jeho popisem v přirozené řeči bylo nutné zvolit 
 která by umožnila zachytit sémantiku z obou zdrojů.
 Jak již bylo výše zmíněno, zvolen byl expertní přístup a to v tomto případě znamená, že referenční popis obrázku je vytvořen lidským expertem,
 což klade další omezení na formát reprezentace znalostí.
+\todo{zmínit, že expertní přístup umožňuje lepší kontrolu nad obsahem/kvalitou než automat/statistika?}
 
 Při návrhu bylo tedy potřeba brát v úvahu následující požadavky a najít nějaký formát, který by představoval vhodný kompromis mezi nimi.
 \begin{itemize}
@@ -28,25 +29,22 @@ Při návrhu bylo tedy potřeba brát v úvahu následující požadavky a nají
 	      Dynamické formáty s volnou strukturou bývají složitější na strojové zpracování, než fixní formáty s přesně definovanou podobou.
 \end{itemize}
 
-\todo{zmínit, že expertní přístup umožňuje lepší kontrolu nad obsahem/kvalitou než automat/statistika?}
-
-S ohledem na tyto body byla navržena reprezentace znalostí založená na sémantických sítích, která definuje 4 základní aspekty popisu: objekty, jejich hierarchii,
+S ohledem na tyto body byla navržena reprezentace znalostí založená na sémantických sítích, která definuje 4 základní \emph{aspekty popisu}: objekty, jejich hierarchii,
 statické atributy a dynamické vazby.
 Detailnější popis těchto jednotlivých aspektů je v následujících částech, konkrétní technická implementace je pak popsána v sekci~\ref{sec:implementace}.
-
-\todo{jak s anglikanismy?}
-
-\todo{jak a kde použít emph?}
+\todo{jak a kde se správně používá emph pro zdůraznění pojmu/termínu?}
 
 \subsubsection{Objekty ve scéně}\label{subsubsec:objekty_ve_scene}
 \newcommand{\objekt}{{\color{red!70!black}\texttt{objekt}}}
-Cokoli, co lze v obrázku ohraničit rámečkem (angl.~bounding-box) a při separaci od zbytku scény (obrázku) neztratí nebo zásadně nezmění svůj význam,
+Cokoli, co lze v obrázku ohraničit rámečkem (angl.~bounding-box)
+\todo{jak s anglikanismy?}
+a při separaci od zbytku scény (obrázku) neztratí nebo zásadně nezmění svůj význam,
 lze považovat za \emph{objekt}.
 
 Jako \emph{objekt} v obrázku lze tedy označit zobrazené fyzické předměty, postavy, zvířata, ale také nehmotné pojmy jako \enquote{nebe},
 místa, lokace či místnosti (např.~\enquote{kuchyň} nebo \enquote{louka}) a části jiných objektů (např.~\enquote{obličej} jsou součást hlavy nebo celého člověka).
 
-Tato definice objekt u byla záměrně navržena velmi obecně, aby byl definovaný formát univerzální a šel použít i pro popis velmi odlišných obrázků s různými účely.
+Tato definice objektu byla záměrně navržena velmi obecně, aby byl definovaný formát univerzální a šel použít i pro popis velmi odlišných obrázků s různými účely.
 Potenciální nevýhodou, která plyne z univerzálnosti formátu, může být v některých situacích problém nejednoznačnosti.
 
 V jednom obrázku lze definovat různé množiny objektů, podle toho, jak moc detailní popis expert vytvoří.
@@ -58,7 +56,6 @@ možné sestavit různé množiny objektů podle toho, pro jaké potřeby je zro
 Pro aplikaci, kde je podstatné zachycení živých objektů, může být množina objektů v referenčním popise tvořena lidmi či zvířaty.
 Pro jiné použití pak ale může být podstatné zachytit prostředí a neživé předměty,
 takže množina objektů by byla tvořena částmi prostředí (např.~stromy, křoví, voda, skály), budovami nebo obecnými předměty.
-
 \todo{vyměnit dlouhé popisy za jeden ukázkový příklad?}
 
 \subsubsection{Hierarchie objektů}
@@ -68,7 +65,7 @@ To přirozeně plyne z výše zmíněné definice \emph{objektu}, která umožň
 Příkladem takového popisu může být například situace, kdy je na obrázku strom.
 Strom je možné rozdělit na korunu a kmen, korunu pak je možné dále dělit na větve.
 Schématicky lze tento popis znázornit jako stromovou strukturu, viz Obrázek~\ref{fig:schema_hierarchie_objektu}.
-\begin{figure}[ht!]
+\begin{figure}[H]
 	\centering
 	\begin{tikzpicture}[sibling distance=20mm]
 		\node[draw, rectangle] {\texttt{strom}}
@@ -117,12 +114,10 @@ Názvy atributů pod jedním objektem nemusí být unikátní, lze specifikovat 
 Typickým příkladem může být vícebarevný objekt, kde atribut s názvem \enquote{barva} bude vícekrát, pro různé konkrétní barvy.
 Příklad jednoho takového popisu je na Obrázku~\ref{fig:example_tshirt}, kde název objektu je \enquote{tričko}
 a definované jsou tři atributy: dvě barvy a vzor.
-
 \todo{hezčí tabulka pro popis objektu?}
-
 \todo{přidat šipky a popisky do tabulky co je co?}
 
-\begin{figure}[ht!]
+\begin{figure}[H]
 	\centering
 	\begin{tikzpicture}
 		\definecolor{green1}{HTML}{A6E3A1}
@@ -150,9 +145,10 @@ a definované jsou tři atributy: dvě barvy a vzor.
 	\caption{Příklad použití atributů pro popis objektu}\label{fig:example_tshirt}
 \end{figure}
 
-% Pro složitější objekty se opět naskýtá problém toho, jaké vlastnosti vybrat a zapsat do referenčního popisu, a které je možné naopak zanedbat.
-% Tato otázka je podobná problematice nejednoznačnosti, zmíněné v části~\ref{subsubsec:objekty_ve_scene} definující objekty.
-% A i zde platí to, že popis byl záměrně vytvořen tak, aby byl univerzální a volba atributů do referenčního závisí na expertovi a konkrétní aplikaci.
+Pro složitější objekty se opět naskýtá problém toho, jaké vlastnosti vybrat a zapsat do referenčního popisu, a které je možné naopak zanedbat.
+Tato otázka je podobná problematice nejednoznačnosti, zmíněné v části~\ref{subsubsec:objekty_ve_scene} definující objekty.
+A i zde platí to, že popis byl záměrně vytvořen tak, aby byl univerzální a volba atributů do referenčního závisí na expertovi a konkrétní aplikaci.
+
 
 \subsubsection{Vazby mezi objekty}
 Posledním typem informace, kterou by měl být referenční popis obrázku schopen zachytit, jsou vazby a vztahy mezi různými objekty.
@@ -160,10 +156,11 @@ Může se jednat například o činnosti, které se týkají dvou objektů, nebo
 
 Každý takový záznam je označen jako \emph{triplet} a skládá se ze \emph{zdrojového objektu},
 \emph{cílového objektu} a \emph{predikátu}, který popisuje danou vazbu nebo vztah.
-Tato struktura je inspirována běžným zápisem sémantických sítí a RDF standardem. \todo{doplnit reference!}
+Tato struktura je inspirována běžným zápisem sémantických sítí a RDF standardem.
+\todo{doplnit reference!}
 Obecné schéma jednoho tripletu je na Obrázku~\ref{fig:schema_tripletu}.
 
-\begin{figure}[ht!]
+\begin{figure}[H]
 	\centering
 	\begin{tikzpicture}
 		\node[draw, ellipse] (n1) at (0,0) {\texttt{zdrojový objekt}};
@@ -184,7 +181,7 @@ Tato problematika byla opět ponechána na expertovi, který vytváří referen�
 aby rozhodl, které informace je potřeba v referenčním popise zachytit.
 
 Konkrétní příklad několika tripletů je znázorněn na Obrázku~\ref{fig:triplety_priklad}.
-\begin{figure}[ht!]
+\begin{figure}[H]
 	\centering
 	\begin{tikzpicture}
 		\node[draw] at (-5, 1) {\includegraphics[scale=0.35]{imgs/dog_squirrel_tree_mushroom.pdf}};
@@ -202,5 +199,4 @@ Konkrétní příklad několika tripletů je znázorněn na Obrázku~\ref{fig:tr
 	\end{tikzpicture}
 	\caption{Příklad použití tripletů pro popis vztahů mezi objekty}\label{fig:triplety_priklad}
 \end{figure}
-
 \todo{příklad s kompletním popisem obrázku (všechno dohromady)?}
