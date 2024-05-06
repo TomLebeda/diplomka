@@ -1,0 +1,80 @@
+{
+  "width": 2002,
+  "height": 1123,
+  "image_path": "./data/imgs/summer.png",
+  "objects": [
+    {
+      "name": "tree #1",
+      "tags": ["environment"],
+      "top_left_corner": [1194, 146],
+      "size": [264, 220],
+      "parents": [],
+      "children": ["branch"],
+      "attributes": [
+        ["color", "green"],
+        ["color", "brown"]
+      ]
+    },
+    {
+      "name": "bird",
+      "tags": ["animal"],
+      "top_left_corner": [1095, 193],
+      "size": [93, 47],
+      "parents": [],
+      "children": [],
+      "attributes": [["color", "white"]]
+    },
+    {
+      "name": "squirrel",
+      "tags": ["animal"],
+      "top_left_corner": [1655, 286],
+      "size": [116, 76],
+      "parents": [],
+      "children": [],
+      "attributes": [
+        ["color", "orange"],
+        ["color", "brown"]
+      ]
+    },
+    {
+      "name": "bird",
+      "tags": ["animal"],
+      "top_left_corner": [1095, 193],
+      "size": [93, 47],
+      "parents": [],
+      "children": [],
+      "attributes": [["color", "white"]]
+    },
+    {
+      "name": "branch",
+      "tags": ["environment", "background"],
+      "top_left_corner": [1130, 233],
+      "size": [138, 41],
+      "parents": ["tree #1"],
+      "children": [],
+      "attributes": []
+    }
+  ],
+  "triplets": [
+    {
+      "from": "bird",
+      "predicate": "sitting on",
+      "to": "branch"
+    },
+    {
+      "from": "bird",
+      "predicate": "sitting on",
+      "to": "tree #1"
+    },
+    {
+      "from": "squirrel",
+      "predicate": "climbing",
+      "to": "tree #1"
+    },
+    {
+      "from": "squirrel",
+      "predicate": "under",
+      "to": "bird"
+    }
+  ]
+}

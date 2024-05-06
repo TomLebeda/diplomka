@@ -37,7 +37,7 @@
 - bylo potřeba udělat lazy matching (vs greedy), jinak by $GARBAGE sežral moc 
 	- -> např: z věty "hnědý pes honí malou oranžovou veverku" by našel "hnědá veverka"
 - pak jsem ale zjistil, že zase lazy taky není ideální, protože má tendenci vynechávat úplně volitelné části pravidla
-	-> přidal jsem tedy možnost přepínat mezy Lazy a Greedy stylem parsování
+	-> přidal jsem tedy možnost přepínat mezi Lazy a Greedy stylem parsování
 	-> problém je, jak poznat kdy který použít? 
 
 # ASPEKTY POPISU:

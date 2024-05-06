@@ -1,4 +1,4 @@
-\subsection{Hodnotící algoritmus}
+\subsection{Hodnotící algoritmus}\label{subsec:hodnoceni}
 Za předpokladu, že je k dispozici referenční popis vytvořený expertem a testovaný popis získaný automaticky z přirozené řeči,
 je potřeba tyto dva popisy nějakým způsobem porovnat a určit, do jaké míry odpovídá testovaný popis referenčnímu.
 
@@ -63,13 +63,7 @@ Pro názornost je schéma jednoho ukázkového případu na Obrázku~\ref{fig:ex
 		\node[anchor=west, inner sep=0mm] (out) at ($(comp.east) + (2.5, 0)$) {
 			\small
 			\centering
-			\begin{tblr}{
-					colspec={|c|c|},
-					stretch={0.5},
-					row{1}={abovesep={2mm},belowsep={2mm}},
-					row{2}={abovesep={2mm}},
-					row{9}={belowsep={2mm}},
-				}
+			\begin{tabular}{|c|c|}
 				\hline
 				\textbf{Objekt} & \textbf{Ztráta} \\
 				\hline
@@ -82,18 +76,12 @@ Pro názornost je schéma jednoho ukázkového případu na Obrázku~\ref{fig:ex
 				\texttt{obj\_7} & 3.0             \\
 				\texttt{obj\_8} & 0.0             \\
 				\hline
-			\end{tblr}
+			\end{tabular}
 		};
 		\node[anchor=south, inner sep=0mm] (ztr) at ($(comp.north) + (0, 1)$) {
 			\small
 			\centering
-			\begin{tblr}{
-					colspec={|c|c|},
-					stretch={0.5},
-					row{1}={abovesep={2mm},belowsep={2mm}},
-					row{2}={abovesep={2mm}},
-					row{4}={belowsep={2mm}},
-				}
+			\begin{tabular}{|c|c|}
 				\hline
 				\textbf{Typ}    & \textbf{Ztráta} \\
 				\hline
@@ -101,18 +89,12 @@ Pro názornost je schéma jednoho ukázkového případu na Obrázku~\ref{fig:ex
 				\texttt{tag\_1} & 0.5             \\
 				\texttt{tag\_3} & 3.0             \\
 				\hline
-			\end{tblr}
+			\end{tabular}
 		};
 		\node[anchor=south east, inner sep=0mm] (ref) at ($(comp.west) + (-1, 1)$) {
 			\small
 			\centering
-			\begin{tblr}{
-					colspec={|c|c|},
-					stretch={0.5},
-					row{1}={abovesep={2mm},belowsep={2mm}},
-					row{2}={abovesep={2mm}},
-					row{9}={belowsep={2mm}},
-				}
+			\begin{tabular}{|c|c|}
 				\hline
 				\textbf{Objekt} & \textbf{Tagy}                    \\
 				\hline
@@ -125,7 +107,7 @@ Pro názornost je schéma jednoho ukázkového případu na Obrázku~\ref{fig:ex
 				\texttt{obj\_7} & \texttt{tag\_3}, \texttt{tag\_1} \\
 				\texttt{obj\_8} & \texttt{tag\_2}, \texttt{tag\_1} \\
 				\hline
-			\end{tblr}
+			\end{tabular}
 		};
 		\draw[-Stealth, rounded corners=2mm] (ref.south) |- node[near end, above] {\scriptsize referenční popis} ($(comp.west) + (0, 0.2)$);
 		\draw[-Stealth] (ztr.south) -- node[midway, right] {\scriptsize ztrátová tabulka} (comp.north);
@@ -151,13 +133,7 @@ Pokud bychom vzali tabulku vypočtených ztrát pro jednotlivé objekty z přík
 		\node[anchor=west, inner sep=0mm] (in) at (0, 0) {
 			\small
 			\centering
-			\begin{tblr}{
-					colspec={|c|c|c|},
-					stretch={0.5},
-					row{1}={abovesep={2mm},belowsep={2mm}},
-					row{2}={abovesep={2mm}},
-					row{9}={belowsep={2mm}},
-				}
+			\begin{tabular}{|c|c|c|}
 				\hline
 				\textbf{Objekt} & \textbf{Tagy}                    & \textbf{Ztráta} \\
 				\hline
@@ -170,27 +146,21 @@ Pokud bychom vzali tabulku vypočtených ztrát pro jednotlivé objekty z přík
 				\texttt{obj\_7} & \texttt{tag\_3}, \texttt{tag\_1} & 3.0             \\
 				\texttt{obj\_8} & \texttt{tag\_2}, \texttt{tag\_1} & 0.0             \\
 				\hline
-			\end{tblr}
+			\end{tabular}
 		};
 		\node[anchor=west, inner sep=0mm] (out) at (7, 0) {
 			\small
 			\centering
-			\begin{tblr}{
-					colspec={|l|c|},
-					stretch={0.8},
-					row{1}={abovesep={2mm},belowsep={2mm}},
-					row{2}={abovesep={2mm}},
-					row{5}={belowsep={2mm}},
-				}
+			\begin{tabular}{|l|c|}
 				\hline
 				\textbf{Chybějící objekty} & \textbf{Ztráta} \\
 				\hline
-				všechny                    & 6.5             \\[-1mm]
-				objekty s \texttt{tag\_1}  & 4.5             \\[-1mm]
-				objekty s \texttt{tag\_2}  & 1.5             \\[-1mm]
+				všechny                    & 6.5             \\
+				objekty s \texttt{tag\_1}  & 4.5             \\
+				objekty s \texttt{tag\_2}  & 1.5             \\
 				objekty s \texttt{tag\_3}  & 3.5             \\
 				\hline
-			\end{tblr}
+			\end{tabular}
 		};
 		\draw[-Stealth] ($(in.east) + (0.3, 0)$) -- ($(out.west) + (-0.3, 0)$);
 	\end{tikzpicture}
@@ -215,7 +185,7 @@ Například pokud by byl libovolný chybějící atributu penalizován ztrátou 
 specifikovat, že vynechání atributu \emph{\enquote{barva}} je méně závažné než všechny ostatní a penalizovat pouze ztrátou $0.5$.
 Naopak vynechání atributu \emph{\enquote{výraz v obličeji}} (např.~úsměv nebo zamračení) by mohl být považován za důležitý a expert by
 mohl ve ztrátové tabulce definovat, že jeho vynechání bude penalizováno ztrátou $2.0$.
-\todo{dát konkrétní příklad včetně tabulek, výpočtů \ldots ?}
+\todo{dát konkrétní příklad včetně tabulek, výpočtů \ldots?}
 
 \subsubsection{Chybějící vazby mezi objekty}
 Posledním typem entity, která může chybět při porovnávání referenčního a testovaného popisu, jsou vazby mezi objekty popsané \emph{triplety}.
@@ -226,7 +196,7 @@ Rozdíl zde spočívá v tom, že místo tagů jsou zde použité samotné názv
 Expert ve ztrátové tabulce opět specifikuje, jaká je výchozí hodnota ztráty, pokud v testovaném popise bude chybět libovolná vazba mezi objekty.
 Následně může také specifikovat, že některé konkrétní typy vazeb (podle jejich názvu) mají větší či menší důležitost a tak jimi způsobená ztráta může být větší nebo menší.
 Algoritmus pak při výpočtu použije přednostně takovou hodnotu, která je více specifická.
-\todo{dát konkrétní příklad včetně tabulek, výpočtů \ldots ?}
+\todo{dát konkrétní příklad včetně tabulek, výpočtů \ldots?}
 
 \subsubsection{Atributy s chybnou hodnotou}
 Pokud v byl v testovém popise nalezen atribut, který odpovídá objektem a názvem nějakému atributu z referenčního popisu,
@@ -265,48 +235,51 @@ Ukázka některých konkrétních atributů s chybnými hodnotami a k nim vypoč
 
 \begin{table}[H]
 	\centering
-	\begin{tblr}{
-			colspec={|c|l|},
-			row{3}={abovesep={2.5mm},belowsep={2.5mm}},
-			row{4}={abovesep={2.5mm},belowsep={2.5mm}}
-		}
-		\hline
-		\textbf{Atribut} & \textbf{Ztráta}                                                         \\
-		\hline
-		\emph{výchozí}   & 1.0                                                                     \\
-		\hline
-		\texttt{barva}   &
-		\begin{tblr}{colspec={|l|l|}, stretch=0.7, row{2}={abovesep={1mm}}}
-			\hline
-			\textbf{Hodnoty}                                  & \textbf{Ztráta} \\
-			\hline
-			\emph{výchozí}                                    & 0.5             \\
-			\texttt{žlutá}, \texttt{oranžová}                 & 0.3             \\
-			\texttt{červená}, \texttt{modrá}, \texttt{zelená} & 0.8             \\
-			\hline
-		\end{tblr} \\
-		\hline
-		\texttt{tvar}    &
-		{
-				\centering
-				\begin{tblr}{colspec={|l|l|}, stretch=0.7, row{2}={abovesep={1mm}}}
-					\hline
-					\textbf{Hodnoty} & \textbf{Ztráta} \\
-					\hline
-					\emph{výchozí}   & 1.5             \\
-					% \texttt{žlutá}, \texttt{oranžová}                 & 0.3             \\
-					% \texttt{červená}, \texttt{modrá}, \texttt{zelená} & 0.8             \\
-					\hline
-				\end{tblr}
-		}                                                                                          \\
-		\hline
-	\end{tblr}
+	\begin{tikzpicture}[remember picture]
+		\node[] (base) at (0, 0) {
+			\begin{tabular}{|c|c|}
+				\hline
+				\textbf{Atribut} & \textbf{Ztráta} \\
+				\hline
+				\emph{výchozí}   & 1.0             \\
+				\hline
+				\texttt{barva}   &                 \\
+				\hline
+				\texttt{tvar}    &                 \\
+				\hline
+			\end{tabular}
+		};
+		\node[circle, fill=black, scale=0.4] (n1) at ($(base.south east) + (-0.95, 0.47)$) {};
+		\node[circle, fill=black, scale=0.4] (n2) at ($(base.south east) + (-0.95, 1.15)$) {};
+		\node[anchor=north west] (t1) at ($(base.north east) + (1.5, 0)$) {
+			\begin{tabular}{|l|l|}
+				\hline
+				\textbf{Hodnoty}                                  & \textbf{Ztráta} \\
+				\hline
+				\emph{výchozí}                                    & 0.5             \\
+				\texttt{žlutá}, \texttt{oranžová}                 & 0.3             \\
+				\texttt{červená}, \texttt{modrá}, \texttt{zelená} & 0.8             \\
+				\hline
+			\end{tabular}
+		};
+		\node[anchor=north west] (t2) at ($(t1.south west) + (0, -0.5)$) {
+			\begin{tabular}{|l|l|}
+				\hline
+				\textbf{Hodnoty} & \textbf{Ztráta} \\
+				\hline
+				\emph{výchozí}   & 1.5             \\
+				\hline
+			\end{tabular}
+		};
+		\draw[-Stealth] (n2) to (t1.west|-n2);
+		\draw[-Stealth] (n1) |- (t2.west);
+	\end{tikzpicture}
 	\caption{Část ukázkové ztrátové tabulky}\label{tab:example_wrong_attrs_table}
 \end{table}
 
 \begin{table}[H]
 	\centering
-	\begin{tblr}{colspec={|l|l|l|}, stretch={0.7}, row{1}={abovesep={2mm},belowsep={1mm}}, row{2}={abovesep={1mm}}}
+	\begin{tabular}{|l|l|c|}
 		\hline
 		\textbf{Referenční atribut}      & \textbf{Testovaný atribut}      & \textbf{Ztráta} \\
 		\hline
@@ -318,7 +291,7 @@ Ukázka některých konkrétních atributů s chybnými hodnotami a k nim vypoč
 		\texttt{penál: tvar = válec}     & \texttt{penál: tvar = kvádr }   & 1.5             \\
 		\texttt{pes: činnost = leží}     & \texttt{pes: činnost = leží }   & 1.0             \\
 		\hline
-	\end{tblr}
+	\end{tabular}
 	\caption{Výpočtu ukázkových ztrát chybných hodnot atributů podle Tabulky~\ref{tab:example_wrong_attrs_table}}\label{tab:example_wrong_attrs_values}
 \end{table}
 
@@ -327,12 +300,13 @@ Pro řešení těchto konfliktů bylo rozhodnuto, že hodnotící algoritmus bud
 pokud je podle ztrátové tabulky k dispozici více možných interpretací.
 
 \subsubsection{Výstup hodnotícího algoritmu}
-Finálním výstupem hodnotícího algoritmu je množina označených číselných hodnot, které jsou akumulované ztráty pro různé druhy chyb.
-Přirozenou datovou strukturou, která by odpovídala formátu, by bylo asociativní pole (někdy také označované jako hash-tabulka).
+Finálním výstupem hodnotícího algoritmu je množina označených číselných hodnot, získaných akumulací ztrát pro různé druhy chyb.
+Přirozenou datovou strukturou, která by odpovídala tomuto formátu, by bylo asociativní pole (někdy také označované jako hash-tabulka, nebo slovník).
 
 Výstup hodnotícího algoritmu, jak byl popsán v předchozích částech, obsahuje vždy celkovou ztrátu pro daný typ chyby
-a poté akumulované ztrátové hodnoty stejného typu, ale rozdělené ještě podle jednotlivých kategorií.
+a poté ještě akumulované ztrátové hodnoty stejného typu, ale rozdělené podle jednotlivých kategorií.
 \todo{příklad?}
+
 Konkrétně bude výstupní struktura obsahovat:
 \begin{itemize}
 	\item celkovou ztrátu způsobenou všemi chybějícími objekty
@@ -345,8 +319,8 @@ Konkrétně bude výstupní struktura obsahovat:
 	\item ztráty způsobené atributy s chybnými hodnotami, rozdělené podle názvu/typu atributu
 \end{itemize}
 
-Je vhodné zmínit, že při návrhu hodnotícího algoritmu bylo předpokládáno, že pro různé konkrétní nasazení mohou být různé požadavky na formu výstupu.
+Je vhodné zmínit, že při návrhu hodnotícího algoritmu bylo předpokládáno, že pro různá konkrétní nasazení mohou být rozdílné požadavky na formu výstupu.
 V rámci implementace popsané později existuje proto \enquote{skrytý} mezi-krok, ve kterém jsou k dispozici všechny jednotlivé ztráty pro konkrétní objekty, atributy a vazby,
 ze kterých je poté počítána právě popsaná výsledná struktura.
-Tento mezi-výsledek by bylo možné výhodně použít pro implementaci alternativních způsobů hodnocení, nebo případně rovnou použít jako výstup,
+Tento mezi-výsledek by bylo možné výhodně využít pro implementaci alternativních způsobů hodnocení, nebo případně rovnou použít jako výstup,
 pokud by daná aplikace benefitovala z podrobnější analýzy výsledků.

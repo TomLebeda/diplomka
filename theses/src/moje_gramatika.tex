@@ -1,1 +1,15 @@
 \subsection{Sémantické parsování pomocí gramatik}\label{subsec:moje_gramatiky}
+Extrakce sémantické informace byla jedním z hlavních problémů řešených v této práci.
+Jak již bylo řečeno dříve, byl zvolen přístup založený na parsování textu pomocí sémantických bezkontextových gramatik.
+
+Při prvotních experimentech byla použita již existující implementace tohoto konceptu,
+\todo{referovat na SpeechCloud}
+používající standard \texttt{SRGS}
+\todo{referovat SRGS}
+Během prvních experimentů ale bylo zjištěno, že funkčnost, kterou nabízí existující implementace, nebude postačovat.
+Proto byl navržen a implementován nový formát odvozený právě ze \texttt{SRGS} standardu, který byl označen jako \texttt{SPGF} (Semantic Parsing Grammar Format).
+
+Důvodem pro návrh a implementaci vlastního formátu gramatiky a k němu příslušejícímu systému byly
+% chybí GARBAGE
+% pouze greedy matching 
+% -> přidal jsem 
