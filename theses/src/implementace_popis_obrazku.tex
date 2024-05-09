@@ -72,15 +72,15 @@ Zdrojový kód je pak možné si prohlédnout
 		\node[inner sep=0] (ref) at (0, 0) {
 			\begin{tabular}{|l|l|l|}
 				\hline
-				\multicolumn{2}{|c|}{\large \texttt{Scene}}                    \\
+				\multicolumn{2}{|c|}{\large \texttt{Scene}}             \\
 				\hline
-				\textbf{\textit{Pole}} & \textbf{\textit{Datový typ}}          \\
+				\textbf{\textit{Pole}} & \textbf{\textit{Datový typ}}   \\
 				\hline
-				\texttt{width}         & \texttt{u32}                          \\
-				\texttt{height}        & \texttt{u32}                          \\
-				\texttt{image\_path}   & \texttt{String}                       \\
-				\texttt{objects}       & \texttt{Vec<\phantom{ SceneObject }>} \\
-				\texttt{triplets}      & \texttt{Vec<\phantom{ Triplet }>}     \\
+				{width}                & {u32}                          \\
+				{height}               & {u32}                          \\
+				{image\_path}          & {String}                       \\
+				{objects}              & {Vec<\phantom{ SceneObject }>} \\
+				{triplets}             & {Vec<\phantom{ Triplet }>}     \\
 				\hline
 			\end{tabular}
 		};
@@ -91,9 +91,9 @@ Zdrojový kód je pak možné si prohlédnout
 				\hline
 				\textbf{\textit{Pole}} & \textbf{\textit{Datový typ}} \\
 				\hline
-				\texttt{from}          & \texttt{String}              \\
-				\texttt{predicate}     & \texttt{String}              \\
-				\texttt{to}            & \texttt{String}              \\
+				{from}                 & {String}                     \\
+				{predicate}            & {String}                     \\
+				{to}                   & {String}                     \\
 				\hline
 			\end{tabular}
 		};
@@ -101,24 +101,24 @@ Zdrojový kód je pak možné si prohlédnout
 		\node[anchor=south west, inner sep=1pt] (so) at ($(ref.east|-trip.south) + (1, 0)$) {
 			\begin{tabular}{|l|l|l|}
 				\hline
-				\multicolumn{2}{|c|}{\large \texttt{SceneObject}}           \\
+				\multicolumn{2}{|c|}{\large \texttt{SceneObject}}     \\
 				\hline
-				\textbf{\textit{Pole}}     & \textbf{\textit{Datový typ}}   \\
+				\textbf{\textit{Pole}} & \textbf{\textit{Datový typ}} \\
 				\hline
-				\texttt{name}              & \texttt{String}                \\
-				\texttt{tags}              & \texttt{Vec<String>}           \\
-				\texttt{top\_left\_corner} & \texttt{(u32, u32)}            \\
-				\texttt{size}              & \texttt{(u32, u32)}            \\
-				\texttt{parents}           & \texttt{Vec<String>}           \\
-				\texttt{children}          & \texttt{Vec<String>}           \\
-				\texttt{attributes}        & \texttt{Vec<(String, String)>} \\
+				{name}                 & {String}                     \\
+				{tags}                 & {Vec<String>}                \\
+				{top\_left\_corner}    & {(u32, u32)}                 \\
+				{size}                 & {(u32, u32)}                 \\
+				{parents}              & {Vec<String>}                \\
+				{children}             & {Vec<String>}                \\
+				{attributes}           & {Vec<(String, String)>}      \\
 				\hline
 			\end{tabular}
 		};
-		\node[anchor=south east] (trmark) at ($(ref.south east) + (-32pt, 0)$) {\texttt{Triplet}};
-		\node[anchor=south east] (somark) at ($(ref.south east) + (-12pt, \baselineskip)$) {\texttt{SceneObject}};
-		\node[draw=blue, rounded corners=2mm, inner sep=3pt] (trborder) at ($(trmark) + (0, 0.5pt)$) {\texttt{\phantom{Triplet}}};
-		\node[draw=blue, rounded corners=2mm, inner sep=3pt] (soborder) at ($(somark) + (0, 0.5pt)$) {\texttt{\phantom{SceneObject}}};
+		\node[anchor=south east] (trmark) at ($(ref.south east) + (-38.5pt, 0)$) {{Triplet}};
+		\node[anchor=south east] (somark) at ($(ref.south east) + (-11.5pt, \baselineskip)$) {{SceneObject}};
+		\node[draw=blue, rounded corners=2mm, inner sep=3pt] (trborder) at ($(trmark) + (0, 0.5pt)$) {{\phantom{Triplet}}};
+		\node[draw=blue, rounded corners=2mm, inner sep=3pt] (soborder) at ($(somark) + (0, 0.5pt)$) {{\phantom{SceneObject}}};
 		\draw[blue, -Stealth] (trborder.south) to (trmark|-trip.north);
 		\draw[blue, rounded corners=2mm, -Stealth] (soborder.north) -- ++(0, 1.0) -| (so.north);
 		% \draw[blue, rounded corners=2mm, -Stealth] (soborder.north) |- ($(0, 0.2) + (so.west)$);
@@ -229,7 +229,7 @@ Tyto příkazy slouží obecně k prohlížení a porovnávání referenčních 
 	      \todo{reference na graphviz}
 	      jehož DOT-engine je použitý pro vytvoření grafické reprezentace.
 	      Výhodou grafické prezentace je přehlednost pro člověka, nicméně pro velmi komplexní scény s mnoha vazbami ani grafická reprezentace nemusí být optimální.
-	      Je vhodné zmínit, že jedním z problémů takto implementované vizualizace je to, že pro scény s mnoha objekty tvoří velmi dlouhé a úzké obrázky,
+	      Je vhodné zmínit, že jedním z problémů takto implementované vizualizace je to, že pro scény s mnoha objekty tvoří Graphviz velmi dlouhé a úzké obrázky,
 	      protože sázecí mechanismus skládá jednotlivé uzly pod sebe.
 
 	      Grafická prezentace a metody vizualizace jsou nad rámec zadání této práce, proto bylo rozhodnuto, že pro ilustraci tato implementace dostačuje a případné komplexnější

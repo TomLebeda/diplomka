@@ -1,0 +1,3 @@
+public $věta = $zvíře {podmět} $činnost {přísudek};
+$zvíře = (pes {nohy=4} | delfín {nohy=0}) {savec} | kapr {nohy=0} {ryba};
+$činnost = spí {v klidu} | plave {pohyb};

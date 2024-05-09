@@ -687,8 +687,7 @@ fn rules(s: &str) -> Result<Vec<Rule>, Vec<String>> {
 fn rule(s: &str) -> Result<Rule, String> {
     let input = s.trim_start();
     match tuple((
-        opt(tag("public")),
-        whitespace,
+        opt(tag("public ")),
         rule_name,
         whitespace,
         tag("="),
@@ -702,7 +701,7 @@ fn rule(s: &str) -> Result<Rule, String> {
             if !rest.trim().is_empty() {
                 return Err(format!("rule parsing left non-empty remainder: {rest}"));
             }
-            let (maybe_public, _, name, _, _, _, body, _, _) = matched;
+            let (maybe_public, name, _, _, _, body, _, _) = matched;
             let rule = Rule {
                 public: maybe_public.is_some(),
                 name: name.to_string(),

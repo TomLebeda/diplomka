@@ -1,0 +1,4 @@
+public $sentence = $color $object $action;
+$color = modrý | zelený | hnědý;
+$object = pes | míč | autobus;
+$action = utíká | jede | [se] kutálí;
