@@ -501,6 +501,7 @@ fn print_parse(args: ParseArgs) {
                 &parser::ParsingStyle::Thorough,
                 false,
             ));
+            trace!("number of parsing results: {}", results.len());
             for result in results {
                 if args.verbose {
                     let mut tags = result.node.tags_dfpo();

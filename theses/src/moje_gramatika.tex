@@ -78,7 +78,7 @@ K němu byly samozřejmě vytvořené i základní softwarové nástroje, které
 	\item parser přirozeného textu, který využívá právě SPGF gramatiky
 \end{itemize}
 
-\subsubsection{Semantic Parsing Grammar Format (SPGF)}
+\subsubsection{Semantic Parsing Grammar Format (SPGF)}\label{subsubsec:spgf_def}
 Základním a nejvyšším prvkem SPGF je \emph{gramatika}.
 Na rozdíl od SRGS definice, SPGF gramatika nevyžaduje žádnou hlavičku a nepodporuje dodatečné prvky,
 jako deklaraci jazyka nebo meta-dat.
@@ -317,101 +317,6 @@ je pak na Obrázku~\ref{fig:climbing_rule_scheme}.
 	\caption{Pravidlo \texttt{\$climbing} ve formátu SPGF a v podobě konečného automatu}\label{fig:climbing_rule_scheme}
 \end{figure}
 
-\subsubsection{Tagy v SPGF}
-K elementům je možné přiřadit \emph{tagy}.
-Každý tag je libovolný text ohraničený složenými závorkami \enquote{\texttt{\{\}}}.
-Za každý element (s výjimkou speciálního pravidla \texttt{\$VOID}) je možné připsat libovolný počet těchto tagů,
-oddělených mezerami.
-
-Tagy v SPGF nijak neovlivňují parsovací proces, slouží pouze jako dodatečná informace,
-kterou je možné k tokenům nebo jiným elementům přidružit.
-
-V této práci jsou použité k tomu, aby obsahovaly dodatečnou sémantickou informaci.
-V definice tagů se SPGF liší od SRGS v tom, že tagy nejsou považované za samostatné elementy a není tak možné mít například
-pravidlo sestávající pouze z tagů nebo začínající tagem.
-Pro situace, kdy je žádoucí začít pravidlo nějakým tagem,
-je možné použít speciální pravidlo \texttt{\$NULL} a k němu přiřadit dané tagy.
-
-Příklad gramatiky obsahující tagy je na Listing~\ref{lst:example_grammar_with_tags}.
-K této ukázkové gramatice jsou pak na Obrázku~\ref{fig:derivacni_stromy_tagy} zobrazené tři derivační stromy pro promluvy
-\enquote{\emph{pes spí}},
-\enquote{\emph{kapr plave}}
-a
-\enquote{\emph{delfín plave}}.
-Tagy jsou v derivačních stromech znázorněné zelenou barvou.
-
-V tomto příkladu tagy přidávají informace o počtu nohou jednotlivých zvířat a jejich biologickou třídu.
-Dále je pomocí tagů označeno, která činnost je klidová a která v pohybu, a která část textu je podmět a která přísudek.
-
-\input{src/listings/tag_examples.tex}
-\begin{figure}[ht!]
-	\centering
-	\begin{tikzpicture}[inner sep=2pt]
-		\node (pes) at (0, 0) {\strut\emph{pes}};
-		\node (spí) at (2.2, 0) {\strut\emph{spí}};
-		\node (zvíře) at (0, 2.5) {\texttt{\$zvíře}};
-		\node (činnost) at (2.2, 2.5) {\texttt{\$činnost}};
-		\node (věta) at (1.1, 4) {\texttt{\$věta}};
-		\draw[->] (pes.north) --
-		node[pos=0.35, green!60!black,fill=white] {\scriptsize \texttt{nohy=4}}
-		node[pos=0.65, green!60!black,fill=white] {\scriptsize \texttt{savec}}
-		(zvíře.south);
-		\draw[->] (spí.north) -- node[midway,green!60!black, fill=white] {\scriptsize \texttt{v klidu}} (činnost.south);
-		\draw[->] (zvíře.north) -- node[midway, green!60!black,fill=white] {\scriptsize \texttt{podmět}} (věta);
-		\draw[->] (činnost.north) -- node[midway, green!60!black, fill=white] {\scriptsize \texttt{přísudek}} (věta);
-	\end{tikzpicture}
-	\hspace{1cm}
-	\begin{tikzpicture}
-		\node (kapr) at (0, 0) {\strut\emph{kapr}};
-		\node (plave) at (2.2, 0) {\strut\emph{plave}};
-		\node (zvíře) at (0, 2.5) {\texttt{\$zvíře}};
-		\node (činnost) at (2.2, 2.5) {\texttt{\$činnost}};
-		\node (věta) at (1.1, 4) {\texttt{\$věta}};
-		\draw[->] (kapr.north) --
-		node[pos=0.35, green!60!black,fill=white] {\scriptsize \texttt{nohy=0}}
-		node[pos=0.65, green!60!black,fill=white] {\scriptsize \texttt{ryba}}
-		(zvíře.south);
-		\draw[->] (plave.north) -- node[midway,green!60!black, fill=white] {\scriptsize \texttt{pohyb}} (činnost.south);
-		\draw[->] (zvíře.north) -- node[midway, green!60!black,fill=white] {\scriptsize \texttt{podmět}} (věta);
-		\draw[->] (činnost.north) -- node[midway, green!60!black, fill=white] {\scriptsize \texttt{přísudek}} (věta);
-	\end{tikzpicture}
-	\hspace{1cm}
-	\begin{tikzpicture}
-		\node (delfín) at (0, 0) {\strut\emph{delfín}};
-		\node (plave) at (2.2, 0) {\strut\emph{plave}};
-		\node (zvíře) at (0, 2.5) {\texttt{\$zvíře}};
-		\node (činnost) at (2.2, 2.5) {\texttt{\$činnost}};
-		\node (věta) at (1.1, 4) {\texttt{\$věta}};
-		\draw[->] (delfín.north) --
-		node[pos=0.35, green!60!black,fill=white] {\scriptsize \texttt{nohy=0}}
-		node[pos=0.65, green!60!black,fill=white] {\scriptsize \texttt{savec}}
-		(zvíře.south);
-		\draw[->] (plave.north) -- node[midway,green!60!black, fill=white] {\scriptsize \texttt{pohyb}} (činnost.south);
-		\draw[->] (zvíře.north) -- node[midway, green!60!black,fill=white] {\scriptsize \texttt{podmět}} (věta);
-		\draw[->] (činnost.north) -- node[midway, green!60!black, fill=white] {\scriptsize \texttt{přísudek}} (věta);
-	\end{tikzpicture}
-	\caption{Derivační stromy s tagy}\label{fig:derivacni_stromy_tagy}
-\end{figure}
-
-\todo{doplnit (někam) formální definici syntaxe, případně jako přílohu?}
-% Formální definice syntaxe ve formátu ABNF je dána takto:
-% \todo{doplnit referenci na ABNF způsob zadávání syntaxe + zkontrolovat, že to odpovídá}
-% \todo{doplnit zbytek formální definici syntaxe v ABNF formátu}
-% \todo{dát formální definici jako přílohu?}
-% \todo{vyměnit za poctivý listing}
-% \begin{verbatim}
-%     grammar ::= rule+
-%     rule ::= ('public' ' ')? ruleName '=' ruleBody ';'
-%     ruleName ::= '$' unicodeAlphanumerical+
-%     ruleBody ::= ruleAlternative ('|' ruleAlternative)*
-%     ruleAlternative ::= element (' ' element)*
-%     element ::= token | ruleRef | sequence
-%     sequence ::= bracedSequence | optionalSequence
-%     bracedSequence ::= '(' bareSequence ')'
-%     optionalSequence ::= '[' bareSequence ']'
-%     bareSequence ::= ruleAlternative ('|' ruleAlternative)*
-% \end{verbatim}
-
 \subsubsection{Vstupní a výstupní body SPGF gramatiky}
 \todo{lepší název kapitoly}
 Základní rozdíl v parsovací strategii SPGF oproti SRGS spočívá v tom, co je považováno za úspěšný konec parsování.
@@ -529,4 +434,347 @@ protože parsovací pravidlo \texttt{\$sentence} jej nedokáže pokrýt.
 V případě SRGS by tento derivační strom byl považovaný za neúspěch, zatímco SPGF vrátí zobrazený parsovací strom
 jako úspěšný výsledek.
 
-\subsubsection{Parsovací strategie SPGF}
+\subsubsection{Tagy v SPGF}
+K elementům je možné přiřadit \emph{tagy}.
+Každý tag je libovolný text ohraničený složenými závorkami \enquote{\texttt{\{\}}}.
+Za každý element (s výjimkou speciálního pravidla \texttt{\$VOID}) je možné připsat libovolný počet těchto tagů,
+oddělených mezerami.
+
+Tagy v SPGF nijak neovlivňují parsovací proces, slouží pouze jako dodatečná informace,
+kterou je možné k tokenům nebo jiným elementům přidružit.
+
+V této práci jsou použité k tomu, aby obsahovaly dodatečnou sémantickou informaci.
+V definice tagů se SPGF liší od SRGS v tom, že tagy nejsou považované za samostatné elementy a není tak možné mít například
+pravidlo sestávající pouze z tagů nebo začínající tagem.
+Pro situace, kdy je žádoucí začít pravidlo nějakým tagem,
+je možné použít speciální pravidlo \texttt{\$NULL} a k němu přiřadit dané tagy.
+
+Příklad gramatiky obsahující tagy je na Listing~\ref{lst:example_grammar_with_tags}.
+K této ukázkové gramatice jsou pak na Obrázku~\ref{fig:derivacni_stromy_tagy} zobrazené tři derivační stromy pro promluvy
+\enquote{\emph{pes spí}},
+\enquote{\emph{kapr plave}}
+a
+\enquote{\emph{delfín plave}}.
+Tagy jsou v derivačních stromech znázorněné zelenou barvou.
+
+V tomto příkladu tagy přidávají informace o počtu nohou jednotlivých zvířat a jejich biologickou třídu.
+Dále je pomocí tagů označeno, která činnost je klidová a která v pohybu, a která část textu je podmět a která přísudek.
+
+\input{src/listings/tag_examples.tex}
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}[inner sep=2pt]
+		\node (pes) at (0, 0) {\strut\emph{pes}};
+		\node (spí) at (2.2, 0) {\strut\emph{spí}};
+		\node (zvíře) at (0, 2.5) {\texttt{\$zvíře}};
+		\node (činnost) at (2.2, 2.5) {\texttt{\$činnost}};
+		\node (věta) at (1.1, 4) {\texttt{\$věta}};
+		\draw[->] (pes.north) --
+		node[pos=0.35, green!60!black,fill=white] {\scriptsize \texttt{nohy=4}}
+		node[pos=0.65, green!60!black,fill=white] {\scriptsize \texttt{savec}}
+		(zvíře.south);
+		\draw[->] (spí.north) -- node[midway,green!60!black, fill=white] {\scriptsize \texttt{v klidu}} (činnost.south);
+		\draw[->] (zvíře.north) -- node[midway, green!60!black,fill=white] {\scriptsize \texttt{podmět}} (věta);
+		\draw[->] (činnost.north) -- node[midway, green!60!black, fill=white] {\scriptsize \texttt{přísudek}} (věta);
+	\end{tikzpicture}
+	\hspace{1cm}
+	\begin{tikzpicture}[inner sep=2pt]
+		\node (kapr) at (0, 0) {\strut\emph{kapr}};
+		\node (plave) at (2.2, 0) {\strut\emph{plave}};
+		\node (zvíře) at (0, 2.5) {\texttt{\$zvíře}};
+		\node (činnost) at (2.2, 2.5) {\texttt{\$činnost}};
+		\node (věta) at (1.1, 4) {\texttt{\$věta}};
+		\draw[->] (kapr.north) --
+		node[pos=0.35, green!60!black,fill=white] {\scriptsize \texttt{nohy=0}}
+		node[pos=0.65, green!60!black,fill=white] {\scriptsize \texttt{ryba}}
+		(zvíře.south);
+		\draw[->] (plave.north) -- node[midway,green!60!black, fill=white] {\scriptsize \texttt{pohyb}} (činnost.south);
+		\draw[->] (zvíře.north) -- node[midway, green!60!black,fill=white] {\scriptsize \texttt{podmět}} (věta);
+		\draw[->] (činnost.north) -- node[midway, green!60!black, fill=white] {\scriptsize \texttt{přísudek}} (věta);
+	\end{tikzpicture}
+	\hspace{1cm}
+	\begin{tikzpicture}[inner sep=2pt]
+		\node (delfín) at (0, 0) {\strut\emph{delfín}};
+		\node (plave) at (2.2, 0) {\strut\emph{plave}};
+		\node (zvíře) at (0, 2.5) {\texttt{\$zvíře}};
+		\node (činnost) at (2.2, 2.5) {\texttt{\$činnost}};
+		\node (věta) at (1.1, 4) {\texttt{\$věta}};
+		\draw[->] (delfín.north) --
+		node[pos=0.35, green!60!black,fill=white] {\scriptsize \texttt{nohy=0}}
+		node[pos=0.65, green!60!black,fill=white] {\scriptsize \texttt{savec}}
+		(zvíře.south);
+		\draw[->] (plave.north) -- node[midway,green!60!black, fill=white] {\scriptsize \texttt{pohyb}} (činnost.south);
+		\draw[->] (zvíře.north) -- node[midway, green!60!black,fill=white] {\scriptsize \texttt{podmět}} (věta);
+		\draw[->] (činnost.north) -- node[midway, green!60!black, fill=white] {\scriptsize \texttt{přísudek}} (věta);
+	\end{tikzpicture}
+	\caption{Derivační stromy s tagy}\label{fig:derivacni_stromy_tagy}
+\end{figure}
+
+\todo{doplnit (někam) formální definici syntaxe, případně jako přílohu?}
+% Formální definice syntaxe ve formátu ABNF je dána takto:
+% \todo{doplnit referenci na ABNF způsob zadávání syntaxe + zkontrolovat, že to odpovídá}
+% \todo{doplnit zbytek formální definici syntaxe v ABNF formátu}
+% \todo{dát formální definici jako přílohu?}
+% \todo{vyměnit za poctivý listing}
+% \begin{verbatim}
+%     grammar ::= rule+
+%     rule ::= ('public' ' ')? ruleName '=' ruleBody ';'
+%     ruleName ::= '$' unicodeAlphanumerical+
+%     ruleBody ::= ruleAlternative ('|' ruleAlternative)*
+%     ruleAlternative ::= element (' ' element)*
+%     element ::= token | ruleRef | sequence
+%     sequence ::= bracedSequence | optionalSequence
+%     bracedSequence ::= '(' bareSequence ')'
+%     optionalSequence ::= '[' bareSequence ']'
+%     bareSequence ::= ruleAlternative ('|' ruleAlternative)*
+% \end{verbatim}
+
+\subsubsection{Parsovací strategie a opakování v SPGF}
+Jak bylo zmíněno v sekci~\ref{subsubsec:spgf_def}, v gramatice je možné ke každému elementu,
+s výjimkou speciálních pravidel \texttt{\$END}, \texttt{\$BEGIN}, \texttt{\$VOID} a \texttt{\$NULL},
+přiřadit definici opakování.
+
+Toto opakování udává, jaký je maximální a minimální počet bezprostředních opakování daného elementu během zpracování textu.
+Například pokud má daný token specifikováno, že jeho minimální počet opakování je 2 a maximální 3,
+tak v analyzovaném textu bude odpovídající slovo očekáváno dvakrát nebo třikrát po sobě.
+
+Základní syntaxe je převzata ze standardu SRGS,
+tedy dvě přirozená čísla oddělená pomlčkou (bez mezer) a ohraničené špičatými závorkami: \enquote{\texttt{<min-max>}}.
+Pro pohodlnější zápis bylo definováno několik dalších alternativních
+způsobů zápisu, viz Tabulka~\ref{tab:repeat_syntax}.
+Pokud element žádné opakování nemá specifikované, implicitní hodnota je 1.
+\todo{příklad}
+
+\begin{table}[ht!]
+	\centering
+	\def\width{14mm}
+	\begin{tabular}{|l|p{\width}|p{\width}|l|}
+		\hline
+		\multirow{2}{*}{\textbf{Syntax}} & \multicolumn{2}{c|}{\textbf{Počet opakování}} & \multirow{2}{*}{\textbf{Poznámka}}                                               \\
+		\cline{2-3}
+		                                 & \textbf{min}                                  & \textbf{max}                       &                                             \\
+		\hline
+		\texttt{<m-n>}                   & $m$                                           & $n$                                & $m,n \in \mathbb{N}^{0} \ \wedge \ m\geq n$ \\
+		\hline
+		\texttt{<m->}                    & $m$                                           & $\infty$                           & v implementaci $\textbf{max} = 2^{32}-1$    \\
+		\hline
+		\texttt{<m>}                     & $m$                                           & $m$                                & ekvivalentní s \enquote{\texttt{<m-m>}}     \\
+		\hline
+		\texttt{<*>}                     & $0$                                           & $\infty$                           & ekvivalentní s \enquote{\texttt{<0->}}      \\
+		\hline
+		\texttt{<+>}                     & $1$                                           & $\infty$                           & ekvivalentní s \enquote{\texttt{<1->}}      \\
+		\hline
+		\texttt{<?>}                     & $0$                                           & $1$                                & ekvivalentní s \enquote{\texttt{<0-1>}}     \\
+		\hline
+	\end{tabular}
+	\caption{Možné způsoby zápisu opakování v SPGF}\label{tab:repeat_syntax}
+\end{table}
+
+S opakovaným použitím stejného elementu je úzce spojena i strategie parsování.
+Jedná se o způsob, jakým jsou řešené neurčité situace, kde je možné postupovat vícero způsoby.
+Tyto situace mohou vznikat právě v místech opakování elementů, nebo tam, kde je k dispozici vícero aplikovatelných alternativ.
+\todo{příklad pro oba způsoby}
+
+V existující implementaci SRGS, se kterou byly prováděné první experimenty, byl implementován pouze takzvaný \enquote{hladový algoritmus}
+\todo{ověřit}
+, běžněji označovaný pod anglickým názvem \emph{greedy matching}.
+Pro potřeby sémantické analýzy textu v této práci bylo ovšem zjištěno, že pouze greedy
+\todo{můžu takhle použít anglické názvy? přijdou mi lepší než české \enquote{hladový} (greedy), \enquote{líný} (lazy) nebo \enquote{důsledný} (thorough) }
+algoritmus nebude zcela postačovat.
+
+Příkladem takové situace by mohla být analýza textu
+\begin{center}
+	\emph{hnědý pes honí oranžovou malou veverku}
+\end{center}
+s cílem zjistit vlastnosti objektů (v tomto případě zvířat), zde konkrétně jejich barvy.
+Pravidlo pro zachycení barvy zvířete by mohlo vypadat takto:
+\todo{vyměnit za poctivý listing s celou gramatikou?}
+\begin{center}
+	\texttt{public \$has\_color = \$color \$GARBAGE<*> \$animal;}
+\end{center}
+kde \texttt{\$color} a \texttt{\$animal} jsou reference na pravidla akceptující konkrétní slova pro barvy a zvířata.
+Speciální pravidlo \texttt{\$GARBAGE} je zde definováno s operátorem opakování \enquote{\texttt{<*>}},
+což lze chápat tak, že mezi samotnou barvou a zvířetem může být libovolný počet dalších slov, která nejsou podstatná.
+Při zpracování textu pak ale dochází k problému, že greedy algoritmus vrátí derivační strom zakreslený na Obrázku~\ref{fig:parsing_tree_greedy}:
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}[inner sep=2pt]
+		\def\dist{70pt}
+		\foreach \w [count=\wi] in {hnědý, pes, honí, oranžovou, malou, veverku}
+		\node (\w) at (\wi*\dist, 0) {\emph{\strut \w}};
+
+		\def\dist{30pt}
+		\node (r1) at ($(hnědý.north) + (0, \dist)$) {\strut\texttt{\$color}};
+		\node (r2) at ($(pes.north) + (0, \dist)$) {\strut\texttt{\$GARBAGE}};
+		\node (r3) at ($(honí.north) + (0, \dist)$) {\strut\texttt{\$GARBAGE}};
+		\node (r4) at ($(oranžovou.north) + (0, \dist)$) {\strut\texttt{\$GARBAGE}};
+		\node (r5) at ($(malou.north) + (0, \dist)$) {\strut\texttt{\$GARBAGE}};
+		\node (r6) at ($(veverku.north) + (0, \dist)$) {\strut\texttt{\$animal}};
+
+		\foreach \w [count=\wi] in {hnědý, pes, honí, oranžovou, malou, veverku}
+		\draw[->] (\w.north) -- (r\wi.south);
+
+		\node (color) at ($0.5*(r1.north west) + 0.5*(r6.north east) + (0, 1.5*\dist)$) {\strut \texttt{\$has\_color}};
+		\foreach \n in {1,...,6}
+		\draw[->] (r\n.north) -- (color);
+	\end{tikzpicture}
+	\caption{Derivační strom znázorňující problém s greedy algoritmem}\label{fig:parsing_tree_greedy}
+\end{figure}
+
+Jak je na derivačním stromu na Obrázku~\ref{fig:parsing_tree_greedy} vidět, následující sémantická analýza by došla pravděpodobně k závěru,
+že v textu byla informace o hnědé veverce - což je chyba.
+Zde speciální pravidlo \texttt{\$GARBAGE} s neomezeným počtem opakování v kombinaci s greedy algoritmem způsobilo,
+že toto speciální pravidlo bylo \enquote{příliš agresivní} a aktivovalo se i v případech, kdy by již bylo možné použít následující element.
+
+Z tohoto důvody byla do systému implementována druhá strategie, která se běžně označuje jako \emph{lazy matching}.
+\todo{zkusit překládat?}
+Zatímco greedy matching se v každém okamžiku snaží posunout parsování co nejdále, tato lazy strategie se naopak snaží
+použít element co nejméněkrát
+\todo{je \enquote{nejméněkrát} česky správně?}
+
+Také by se dalo říci, že pokud parsovací algoritmus narazí na element $e_{1}$ následovaný elementem $e_{2}$, pak:
+\begin{itemize}
+	\item greedy strategie se vždy nejdříve pokusí $e_{1}$ použít (opakovaně po sobě) a postoupí na $e_{2}$ až v moment, kdy
+	      již není možné dále opakovat $e_{1}$,
+	\item lazy strategie se vždy pokusí nejdříve postoupit na element $e_{2}$ a vrátí se k $e_{1}$ pro opakované použití až v moment,
+	      kdy $e_{2}$ není možné použít
+\end{itemize}
+\todo{zmínit že to je obdoba prohledávání do šířky/hloubky?}
+
+Implementace lazy strategie umožnila zachytit sémantiku, kterou by bylo obtížné získat pomocí greedy algoritmu.
+Po několika dalších experimentech ovšem bylo zjištěno, že ani tato strategie nebude sama o sobě postačovat pro všechny potřeby sémantické analýzy.
+Hlavním problémem s lazy strategií bylo to, že v textech, kde bylo více možných vyjádření stejného typu, byla detekována vždy jen ta nejkratší.
+
+\newpage
+Například předchozí úloha určování barev zvířat se vstupním textem
+\begin{center}
+	\emph{velký hnědý pes honí oranžovou malou veverku}
+\end{center}
+by mohla být zpracována SPGF pravidlem:
+\begin{center}
+	\texttt{public \$has\_color = \$GARBAGE<*> \$color \$GARBAGE<*> \$animal;}
+\end{center}
+V tomto případě bylo přidáno na začátek pravidla další \texttt{\$GARBAGE<*>}, které při použití lazy algoritmu způsobí,
+že text nemusí začínat přímo barvou, ale je možné hledat barvy a zvířata až později v textu.
+Derivační strom tohoto příkladu je zakreslen na Obrázku~\ref{fig:parsing_tree_lazy}.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}[inner sep=2pt]
+		\def\dist{55pt}
+		\foreach \w [count=\wi] in {velký, hnědý, pes, honí, oranžovou, malou, veverku}
+		\node (\w) at (\wi*\dist, 0) {\emph{\strut \w}};
+
+		\def\dist{30pt}
+		\node (r1) at ($(velký.north) + (0, \dist)$) {\strut\texttt{\$GARBAGE}};
+		\node (r2) at ($(hnědý.north) + (0, \dist)$) {\strut\texttt{\$color}};
+		\node (r3) at ($(pes.north) + (0, \dist)$) {\strut\texttt{\$animal}};
+
+		\foreach \w [count=\wi] in {velký, hnědý, pes}
+		\draw[->] (\w.north) -- (r\wi.south);
+
+		\node (color) at ($0.5*(r1.north west) + 0.5*(r3.north east) + (0, 1.5*\dist)$) {\strut \texttt{\$has\_color}};
+		\foreach \n in {1,...,3}
+		\draw[->] (r\n.north) -- (color);
+
+		\draw[thick, decorate, decoration={calligraphic brace, amplitude=5}]
+		($(honí.north west) + (0, 0)$) -- ($(veverku.north east) + (0, 0)$)
+		node[pos=0.5, above=4pt] {\scriptsize zbytek textu (není součástí derivačního stromu)};
+	\end{tikzpicture}
+	\caption{Derivační strom znázorňující problém s lazy algoritmem}\label{fig:parsing_tree_lazy}
+\end{figure}
+Z derivačního stromu na Obrázku~\ref{fig:parsing_tree_lazy} je možné usoudit, že následující sémantická analýza by pravděpodobně detekovala,
+že v textu se nacházela informace o hnědém psovi - to je správně.
+Nicméně je dále možné pozorovat, že v textu se vyskytovala také informace o oranžové veverce, kterou by systém nedokázal takto zachytit.
+
+Z toho důvodu byl implementována ještě třetí strategie, která byla označena jako \enquote{\emph{thorough matching}}.
+Myšlenka byla taková, že by bylo vhodné, aby algoritmus v místě nejednoznačnosti nemusel rozhodovat o tom,
+který postup je nejlepší, ale aby místo toho uvažoval všechny možnosti.
+Tento přístup se tedy od předchozích dvou liší v tom, že může vrátit pro jeden vstup více výstupů.
+
+Základní koncept thorough strategie spočívá v tom, že v místě, kde by bylo možné postupovat vícero způsoby,
+je řešení rozděleno do více paralelních větví (jedna pro každou možnost) a každá větev je dále zpracovávána nezávisle.
+Tímto způsobem se rekurzivně vytváří strom možných řešení, jehož listy odpovídají finálním derivačním stromům.
+Po ukončení všech těchto paralelních parsování jsou úspěšné výsledky vráceny jako seznam derivačních stromů.
+
+Na výstupu tedy bude množina všech možných způsobů, jakým bylo možné derivační strom pro dané pravidlo a vstupní text sestavit.
+To následně zaručí, že během zpracování textu nebyla opomenuta žádná sémantika
+(za předpokladu, že jsou expertem správně sestavena parsovací pravidla).
+
+Například pro předchozí úlohu určování barev zvířat se vstupním textem
+\begin{center}
+	\emph{velký hnědý pes honí oranžovou malou veverku}
+\end{center}
+a SPGF pravidlem:
+\begin{center}
+	\texttt{public \$has\_color = \$GARBAGE<*> \$color \$GARBAGE<*> \$animal;}
+\end{center}
+by výstupem byly 3 derivační stromy.
+Dva z nich by byly shodné s výstupem greedy a lazy strategie (viz Obrázky~\ref{fig:parsing_tree_greedy} a~\ref{fig:parsing_tree_lazy}),
+třetí (nový) derivační strom je na Obrázku~\ref{fig:parsing_tree_thorough}.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}[inner sep=2pt]
+		\def\dist{62pt}
+		\foreach \w [count=\wi] in {velký, hnědý, pes, honí, oranžovou, malou, veverku}
+		\node (\w) at (\wi*\dist, 0) {\emph{\strut \w}};
+
+		\def\dist{30pt}
+		\node (r1) at ($(velký.north) + (0, \dist)$) {\strut\texttt{\$GARBAGE}};
+		\node (r2) at ($(hnědý.north) + (0, \dist)$) {\strut\texttt{\$GARBAGE}};
+		\node (r3) at ($(pes.north) + (0, \dist)$) {\strut\texttt{\$GARBAGE}};
+		\node (r4) at ($(honí.north) + (0, \dist)$) {\strut\texttt{\$GARBAGE}};
+		\node (r5) at ($(oranžovou.north) + (0, \dist)$) {\strut\texttt{\$color}};
+		\node (r6) at ($(malou.north) + (0, \dist)$) {\strut\texttt{\$GARBAGE}};
+		\node (r7) at ($(veverku.north) + (0, \dist)$) {\strut\texttt{\$animal}};
+
+		\foreach \w [count=\wi] in {velký, hnědý, pes, honí, oranžovou, malou, veverku}
+		\draw[->] (\w.north) -- (r\wi.south);
+
+		\node[ellipse] (color) at ($0.5*(r1.north west) + 0.5*(r7.north east) + (0, 1.5*\dist)$) {\strut \texttt{\$has\_color}};
+		\foreach \n in {1,...,7}
+		\draw[->] (r\n.north) -- (color);
+	\end{tikzpicture}
+	\caption{Derivační stromy z thorough algoritmu}\label{fig:parsing_tree_thorough}
+\end{figure}
+
+Celkově by tedy z tohoto výstupu bylo možné získat informace o tom, že v textu byla hnědá veverka, hnědý pes a oranžová veverka.
+Dvě z těchto informací jsou správně, pouze informace o hnědé veverce je chybná, ta se v textu nevyskytla.
+
+Jedná se o jednu z nevýhod thorough přístupu, že bude v textu hledat i takové informace, které z něj neplynou.
+\todo{zmínit, že to je \enquote{false positive} typ chyby? Případně psát typy chyb pak do teorie?}
+Tento problém byl vyřešen tak, že získané sémantické informace jsou porovnané s referenčním popisem obrázku a ty,
+které se v referenčním popise nevyskytují, jsou považované za falešně detekované a jsou z výstupu odstraněné
+(s výjimkou hodnot atributů, řešení chybných hodnot je popsáno v kapitole~\ref{subsec:hodnoceni}).
+
+Tímto způsobem je pak v testovaném popisu pouze podmnožina referenčního popisu.
+Jedná se o jednoduchý a efektivní způsob řešení falešně detekovaných sémantických informací.
+Také ale bohužel představuje omezení v tom smyslu, že neumožňuje detekovat sémantiku, která se v textu skutečně nacházela,
+ale nebyla zanesena do referenčního popisu - to klade očekávání na kvalitu referenčního popisu od experta.
+Sestavení nějakého složitějšího algoritmu pro detekci falešně extrahované sémantiky představuje jedno z možných rozšíření do budoucna.
+
+Další nevýhodou thorough strategie je její výpočetní náročnost.
+Vzhledem k rekurzivnímu charakteru algoritmu a způsobu vytváření nových paralelních větví
+se naskýtá riziko kombinatorické exploze počtu paralelních větví.
+Během testování se však ukázalo, že pro moderní výpočetní techniku nepředstavují vstupy o velikosti desítek až stovek tokenů žádný problém.
+Detailnější analýza výpočetní a paměťové náročnosti pro větší vstupy je nad rámec zadání a byla ponechána pro budoucí práce.
+
+Posledním problémem, který bylo potřeba vyřešit v rámci parsovacích strategií, byl způsob, jakým strategie volit a přepínat.
+V první verzi parseru se jednalo o globální přepínač, kdy bylo možné před samotným parsováním zvolit, jaká strategie má být použita.
+Bylo ale zjištěno, že pro některé situace by bylo výhodné, aby bylo možné změnit výchozí strategii pro konkrétní pravidla nebo jejich části.
+
+Například při zpracovávání číselných údajů je vhodná greedy strategie.
+Je totiž potřeba, aby posloupnost sobě jdoucí slov, které reprezentující číselný údaj, byla brána jako jeden celek.
+
+Jiný příklad pak může být již výše zmíněný začátek pravidla \texttt{\$GARBAGE<*>},
+který libovolný počet prvních slov považovat za výplň a hledat tak význam až později v textu.
+Pro tuto situaci je naopak greedy algoritmus zcela nevhodný, protože by celý text byl zpracován hned tímto počátkem.
+Zde je vhodná lazy strategie, která ve své podstatě bude dávat přednost následujícím elementům v pravidle a tento počátek bude používat až
+když zbytek pravidla selže.
+
+Z těchto důvodů byla rozšířena syntaxe pro operátor definující opakování.
+Před samotné hodnoty opakování (tedy hned za otevírací špičatou závorku \enquote{\texttt{<}}) je možné napsat
+jedno z písmen \texttt{L}, \texttt{G}, \texttt{T} následované dvojtečkou a poté zbytek definice opakování.
+Tato písmena odpovídají jednotlivým strategiím (lazy, greedy, thorough) a umožňují tak vynutit danou strategii pro dané pravidlo nebo jeho část.
+Ve výsledku tak operátor opakování může vypadat například \enquote{\texttt{<G:1-3>}}, \enquote{\texttt{<L:*>}}, nebo \enquote{\texttt{<T:2->}}.

@@ -16,7 +16,8 @@
 - během testování jsem zjistil, že původní greedy matching nebude stačit
 	- např text `hnědý pes honí oranžovou malou veverku` a pravidlo na chytání barev `$color $GARBAGE<0-> $object` chytilo "brown squirrel" a "orange squirrel"
 		- greedy matching přes $GARBAGE zachytil nejvzdálenější objekt, což je vždy veverka
-	=> musel jsem přidat i lazy matching => vypadalo slibně, ale to zase pro změnu vezme vždy nejbližší možnost -> pro případy kde je v jedné větě více možností vezme ale jen tu nejkratší
+	=> musel jsem přidat i lazy matching => vypadalo slibně, ale to zase pro změnu vezme vždy nejbližší možnost 
+        -> pro případy kde je v jedné větě více možností vezme ale jen tu nejkratší
 - jinými slovy: pro různé případy jsou vhodné různé matching strategie, ale ani tyto dvě nepokryjí vše
 	- mám nápad na matching strategii která by měla pokrýt všechny možnosti, ale má dva problémy:
 		1. kombinatorická exploze pro delší pravidla/věty (pro ručně psané pravidla pravděpodobně ještě zvládnutelné)
