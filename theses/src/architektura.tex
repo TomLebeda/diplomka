@@ -10,11 +10,11 @@ Z toho pak plyne, že celý systém se ve své podstatě skládá ze tří zákl
 
 Jednotlivé části spolu vzájemně fungují následujícím způsobem:
 Uživateli je prezentován obrázek a jeho úkolem je popsat, co na obrázku vidí.
-Získaný popis v přirozené řeči je převeden na text (ASR).
-\todo{Jak/kde vysvětlit zkratky?}
-Z tohoto přepisu je extrahována sémantická informace (SLU), ze které je vytvořen testovaný popis.
+Získaný popis v přirozené řeči je převeden na text pomocí systému pro rozpoznání řeči (angl.~automatic speech recognition, ASR).
+Z tohoto přepisu je extrahována sémantická informace, ze které je vytvořen testovaný popis.
 Testovaný popis je porovnaný s referenčním (vzorovým) popisem daného obrázku.
-Výsledek tohoto porovnání lze pak považovat za finální výstup, ale také je možné jej použít jako vstup pro další zpracování (např.~vektor příznaků pro klasifikátor).
+Výsledek tohoto porovnání lze pak považovat za finální výstup, ale také je možné jej použít jako vstup pro další zpracování
+(např.~vektor příznaků pro klasifikátor).
 Schématické znázornění je na Obrázku~\ref{fig:architecture_scheme}.
 
 \begin{figure}[H]
@@ -35,8 +35,13 @@ Schématické znázornění je na Obrázku~\ref{fig:architecture_scheme}.
 	\caption{Schéma obecné architektury systému}\label{fig:architecture_scheme}
 \end{figure}
 
-Pro tuto práci bylo rozhodnuto, že základem bude expertní přístup.
-Od toho se poté odvíjí konkrétní algoritmy, formáty a postupy navržené a implementované v této práci, které jsou podrobněji popsány v pozdějších kapitolách.
+Tato práce řeší problematiku srovnání obrázku s jeho popisem v přirozeném jazyce na sémantické úrovni expertním přístupem.
+Od toho se poté odvíjí konkrétní algoritmy, formáty a postupy navržené a implementované v této práci,
+které jsou podrobněji popsány v pozdějších kapitolách.
 Je ale vhodné zmínit, že během návrhu bylo dbáno na to, aby bylo možné pro reálná nasazení některé implementace v případě potřeby zaměnit nebo upravit,
 aby lépe vyhovovaly specifickým požadavkům pro dané použití.
-\todo{zmínit, že referenční popis není třeba pokaždé tvořit znovu, ale lze udělat \enquote{offline} předem?}
+
+Jak je možné ze schématu na Obrázku~\ref{fig:architecture_scheme} vidět, lidský expert je potřebný pro vytvoření referenčního popisu obrázku
+(a také pro další vstupní data pro komparátor, popsáno později).
+Všechna tato data, která jsou závislá na lidském expertovi, je ovšem možné vytvořit pouze jednou v rámci přípravy
+a poté je lze již bez nutnosti přítomnosti experta opakovaně používat.

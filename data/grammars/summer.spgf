@@ -50,8 +50,8 @@ $has_parent_object = $object {part=obj} $GARBAGE<L:*> (je (součástí|částí)
 // the garbages are neede because of adjectives could be injected pretty much anywhere
 $catching = $object {part=obj} $GARBAGE<L:*> chytá $GARBAGE<L:*> $object {part=subj};
 $chasing = $object {part=obj} $GARBAGE<L:*> (honí | následuje | prohání | ((běží|utíká) $GARBAGE<L:*> za)) $GARBAGE<L:*> $object {part=subj};
-$climbing = $object {part=obj} $GARBAGE<L:*> šplhá na $GARBAGE<L:*> $object {part=subj};
-$falling_into = $object {part=obj} $GARBAGE<L:*> padá do $GARBAGE<L:*> $object {part=subj};
+$climbing = $object {part=obj} $GARBAGE<L:*> (šplhá | leze) $GARBAGE<L:*> na $GARBAGE<L:*> $object {part=subj};
+$falling_into = $object {part=obj} $GARBAGE<L:*> padá $GARBAGE<L:*> do $GARBAGE<L:*> $object {part=subj};
 $following = $object {part=obj} $GARBAGE<L:*> následuje $GARBAGE<L:*> $object {part=subj};
 $holding = $object {part=obj} $GARBAGE<L:*> drží $GARBAGE<L:*> $object {part=subj};
 $jumping_from = $object {part=obj} $GARBAGE<L:*> skáče z $GARBAGE<L:*> $object {part=subj};
@@ -83,7 +83,7 @@ $teens = $eleven {11} | $twelve {12} | $thirteen {13} | $fourteen {14} | $fiftee
 
 $basket = ($koš | $košík | $košíček) {basket};
 $blanket = ($deka | $dečka) {blanket};
-$woman = ($choť | $manželka | $paní | $žena | $ženská) {woman};
+$woman = ($choť | $manželka | $paní | $žena | $ženská | $mom) {woman};
 $tree = ($strom | $stromek | $stromeček) {tree};
 $bird = ($opeřenec | $pták | $ptáče | $ptáček) {bird};
 $branch = ($větev | $větvička | $větvoví) {branch};
@@ -157,7 +157,7 @@ $deka = dece | dek | deka | dekami | deko | dekou | deku | deky | dekách | dek�
 $dečka = dečce | deček | dečka | dečkami | dečko | dečkou | dečku | dečky | dečkách | dečkám;
 $choť = choti | chotí | chotích | chotím | chotě | chotěm | chotěmi | choť | choťovi | choťové | choťů | choťům;
 $manželka = manželce | manželek | manželka | manželkami | manželko | manželkou | manželku | manželky | manželkách | manželkám;
-$paní = paní | paních | paním | paními;
+$paní = pani | paní | paních | paním | paními;
 $žena = žen | žena | ženami | ženo | ženou | ženu | ženy | ženách | ženám | ženě;
 $ženská = ženskou | ženská | ženské | ženských | ženským | ženskými;
 $strom = strom | strome | stromech | stromem | stromu | stromy | stromě | stromů | stromům;
@@ -349,7 +349,7 @@ $one = jedna | jeden;
 $two = dva | dvě;
 $three = tři | tří;
 $four = čtyři | štyry | čtyř | štyř;
-$five = pět;
+$five = pět | pěti;
 $six = šest;
 $seven = sedm | sedum;
 $eight = osm | osum;
@@ -373,7 +373,6 @@ $seventeen = sedmnáct | sedumnáct;
 $eighteen = osmnáct | osumnáct;
 $nineteen = devatenáct;
 
-
 $striped = ($proužkovaný | $pruhovaný) {striped};
 $pruhovaný = (pruhovanou | pruhovaná | pruhované | pruhovaného | pruhovaném | pruhovanému | pruhovaní | pruhovaný | pruhovaných | pruhovaným | pruhovanym | pruhovanými);
 $proužkovaný = (proužkovanou | proužkovaná | proužkované | proužkovaného | proužkovaném | proužkovanému | proužkovaní | proužkovaný | proužkovaných | proužkovaným | proužkovanými);
@@ -391,7 +390,7 @@ $flying = ($let | $letící | $létání) {flying};
 $letící = (letící | letících | letícího | letícím | letícími | letícímu);
 $létání = (létání);
 $let = (let | lete | letech | letem | letu | lety | letů | letům);
-$fishing = ($rybaření | $rybařit | chytá ryby | loví ryby) {fishing};
+$fishing = ($rybaření | $rybařit | (chytá | loví | lovit | chytat ) $GARBAGE<L:*> ryby) {fishing};
 $rybaření = (rybaření | rybařeních | rybařením | rybařeními);
 $rybařit = (rybaří);
 $smiling = ($usmívající) {smiling};
@@ -415,3 +414,6 @@ $oranžový = (oranžovou | oranžová | oranžové | oranžového | oranžovém
 $pomeranč = (pomeranč | pomeranče | pomerančem | pomeranči | pomerančích | pomerančů | pomerančům);
 $shining = ($svítí) {shining};
 $svítí = (svítí);
+$mom = $máma | $maminka;
+$máma = máma | mámě | mámo | mámu;
+$maminka = maminka | maminky | mamince | maminko | maminkou;

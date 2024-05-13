@@ -1,0 +1,43 @@
+\begin{lstlisting}[
+	% there are many more options of styling, see the official documentation, these are just the defaults I like
+	frame=single, % make single-line frame around the verbatim
+	framesep=2mm, % put some more spacing between the frame and text
+	aboveskip=5mm, % put some more space above the box
+	basicstyle={\linespread{1.0}\small\ttfamily}, % use typewriter (monospace) font
+	caption={Syntaxe SPGF}, % set the caption text
+	captionpos=b, % put the caption at the bottom (b) or top (t) or both (bt)
+	label={lst:spgf_syntax}, % label to be referenced via \ref{}
+	numbers=left, % line numbers on the left
+	numberstyle={\scriptsize\ttfamily\color{black!60}}, % the style for line numbers
+	escapeinside={<@}{@>} % between those sequences are command evaluated
+]
+grammar ::= rule+
+
+rule ::= ('public' ' ')? ruleName '=' ruleBody ';'
+
+ruleName ::= '$' unicodeAlphanumerical+
+
+ruleBody ::= ruleAlternative ('|' ruleAlternative)*
+
+ruleAlternative ::= element (' ' element)*
+
+element ::= token | ruleRef | sequence
+
+sequence ::= bracedSequence | optionalSequence
+
+bracedSequence ::= '(' bareSequence ')'
+
+optionalSequence ::= '[' bareSequence ']'
+
+bareSequence ::= ruleAlternative ('|' ruleAlternative)*
+
+token ::= (unicodeAlphanumerical | '.' | '-' | '_' | ':')+ 
+          repeatOperator? tag*
+
+repeatOperator ::=  '<' (('L' | 'G' | 'T') ':')? 
+             (( digit+ '-' digit* ) | '*' | '+' | '?') '>'
+
+ruleRef ::= '$' ruleName repeatOperator? tag*
+
+tag ::= '{' [^}]+ '}'
+\end{lstlisting}

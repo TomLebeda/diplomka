@@ -4,10 +4,9 @@ Jak již bylo řečeno dříve, byl zvolen přístup založený na parsování t
 
 Při prvotních experimentech byla použita již existující implementace tohoto konceptu,
 \todo{referovat na SpeechCloud}
-používající standard SRGS
-\todo{referovat SRGS}
+používající standard SRGS~\cite{srgs}.
 
-Během těchto prvních pokusů ale bylo zjištěno, že funkčnost, kterou nabízí existující implementace,
+Během těchto prvních pokusů ale bylo zjištěno, že funkcionalita, kterou nabízí existující implementace,
 nebude pro potřeby této práce postačovat.
 Kvůli tomu byla navržena, implementována a otestována vlastní realizace stejného konceptu
 analýzy textu pomocí bezkontextových gramatik, která lépe vyhovovala ostatním zde navrženým,
@@ -18,7 +17,6 @@ Detaily této vlastní implementace a rozdíly oproti existujícím variantám j
 \subsubsection{Problémy s existující implementací a SRGS}
 Při práci s existující implementací SRGS standardu (SpeechCloud)
 \todo{referovat SC správně formálně}
-\todo{zmínit, že SC neměl danou funkčnost proto, že to prostě nebylo potřeba}
 vyvstaly následující problémy:
 \begin{enumerate}
 	\item \textbf{Speciální pravidlo \texttt{\$GARBAGE}}\\
@@ -33,7 +31,6 @@ vyvstaly následující problémy:
 	      na kterém byl celý navržený koncept sémantické analýzy postaven.
 	\item \textbf{Návratová datová struktura}\\
 	      Existující implementace nevracela ze svého API celý derivační strom, ale pouze list tagů, které se v derivačním stromu nacházely.
-	      \todo{ověřit?}
 	      To znamená, že byla ztracena hierarchická informace derivačního stromu spolu s informací o konkrétních pravidlech,
 	      které byly během zpracování textu použité.
 
@@ -44,14 +41,12 @@ vyvstaly následující problémy:
 	      Dostupnost celých derivačních stromů by tedy byla výhodná ve smyslu zjednodušení dalšího postupu.
 	\item \textbf{Řešení nejednoznačných situací}\\
 	      Třetí problém vycházel z toho, že SRGS standard umožňuje existenci některých situací,
-	      \todo{referovat přímo do SRGS specifikace kde to tam je?}
 	      kde není jednoznačně dáno, jak má parsování probíhat,
 	      a teoreticky je možné získat z jednoho vstupu více různých derivačních stromů.
-	      \todo{příklad}
+
 
 	      Existující implementace tyto situace dokázala zpracovat, avšak vrátila pouze jeden výsledek,
-	      který byl považovaný podle nějakého kritéria za nejlepší.
-	      \todo{doplnit podle jakého kritéria (délka textu)?}
+	      který byl považovaný za nejlepší podle daného kritéria - v tomto případě podle délky zpracovaného textu.
 
 	      Pro sémantickou analýzu textu potřebnou pro získání testovaného popisu by ale bylo výhodné,
 	      kdyby bylo možné toto kritérium změnit, a nebo ještě lépe, získat všechna možná řešení.
@@ -60,8 +55,7 @@ vyvstaly následující problémy:
 Po důkladném zvážení těchto problémů bylo rozhodnuto,
 že jako nejlepší způsob řešení bude implementace vlastního parseru.
 
-Během reimplementace vlastního parseru byla jako základní reference využita specifikace SRGS,
-\todo{přidat odkaz}
+Během reimplementace vlastního parseru byla jako základní reference využita specifikace SRGS~\cite{srgs},
 která přesně popisuje chování, funkčnost i syntax gramatik.
 
 V průběhu reimplementace byly ovšem za účelem zjednodušení vynechány některé části SRGS standardu,
@@ -69,13 +63,12 @@ které by pro sémantickou analýzu textu v této práci nebyly nijak užitečn�
 které byly pak využity ve zbytku práce.
 
 Výsledkem tak byl nový formát, označený \enquote{Semantic Parsing Grammar Format} (SPGF).
-K němu byly samozřejmě vytvořené i základní softwarové nástroje, které nabízí
+K němu byly samozřejmě vytvořené i základní softwarové nástroje, které nabízí:
 \begin{itemize}
-	\item kontrolu syntaxe a případné hlášení o syntaktických chybách
-	\item TreeSitter modul pro obarvení SPGF kódu v textových editorech
-	      \todo{referenci na TreeSitter, případně ukázka?}
-	\item parser SPGF syntaxe s validací obsahu gramatiky i jednotlivých pravidel
-	\item parser přirozeného textu, který využívá právě SPGF gramatiky
+	\item kontrolu syntaxe a případné hlášení o syntaktických chybách,
+	\item TreeSitter~\cite{treesitter} modul pro obarvení SPGF kódu v textových editorech,
+	\item parser SPGF syntaxe s validací obsahu gramatiky i jednotlivých pravidel,
+	\item parser přirozeného textu, který využívá právě SPGF gramatiky.
 \end{itemize}
 
 \subsubsection{Semantic Parsing Grammar Format (SPGF)}\label{subsubsec:spgf_def}
@@ -84,7 +77,7 @@ Na rozdíl od SRGS definice, SPGF gramatika nevyžaduje žádnou hlavičku a nep
 jako deklaraci jazyka nebo meta-dat.
 Gramatika má podobu textového souboru, ve kterém je definována množina parsovacích pravidel.
 
-Každé pravidlo se skládá ze svého názvu, který je uvozený symbolem dolaru \enquote{\texttt{\$}}.
+Každé pravidlo se skládá ze svého názvu, který je uvozený symbolem \enquote{\texttt{\$}}.
 Název pravidla slouží jako identifikátor, musí být tedy unikátní v dané gramatice.
 Druhou částí pravidla je expanze, která reprezentuje tělo pravidla.
 Mezi názvem a expanzí pravidla je znak rovnítka \enquote{=}.
@@ -110,6 +103,7 @@ Například:
 
 Tělo pravidla se skládá z takzvaných \emph{alternativ}, které jsou oddělené znakem \enquote{\texttt{|}}.
 Tato \emph{alternativa} je pak dále definována jako posloupnost \emph{elementů}.
+V zápise má přednost mezera před \enquote{\texttt{|}}, takže několik tokenů po sobě je bráno jako jeden celek.
 Element má tři varianty, může jím být \emph{token, reference} nebo \emph{sekvence}.
 Například:
 
@@ -186,23 +180,24 @@ Token je možné chápat jako konkrétní slovo, které je v dané pozici v text
 Může se skládat z jednoho nebo více znaků, která mohou být písmena, číslice, tečka, pomlčka, podtržítko nebo dvojtečka.
 Součástí definice tokenu může také být (volitelně) definice opakování a případně libovolný počet tagů.
 Opakování elementů a tagy budou detailněji popsány později.
-\todo{doplnit referenci na pozdější popis}
 
 Druhou variantou elementu je \emph{reference}.
 Tímto pojmem se rozumí odkaz na jiné pravidlo, a nebo odkaz na nějaké speciální pravidlo s vyhrazeným názvem.
-Reference začíná symbolem dolaru \enquote{\texttt{\$}} po kterém následuje okamžitě (bez mezery) jméno referovaného
+Reference začíná symbolem \enquote{\texttt{\$}} po kterém následuje okamžitě (bez mezery) jméno referovaného
 pravidla definovaného ve stejné gramatice, nebo speciálního pravidla.
-SPGF umožňuje referovat pravidla rekurzivně a to jak přímo (pravidlo obsahuje referenci na samo sebe), tak v cyklu.
-\todo{příklad?}
+SPGF umožňuje referovat pravidla rekurzivně, a to jak přímo (pravidlo obsahuje referenci na samo sebe), tak v cyklu.
 
-% Na rozdíl od SRGS, SPGF zatím neumožňuje odkazovat na externí pravidla definovaná mimo gramatiku (v jiném souboru).
-% Pro tuto práci to nebylo potřeba a tak nebylo nutné implementaci dále komplikovat.
-% Jedná se ovšem o jedno z potenciálních rozšíření do budoucna.
+Například jednoduchá gramatika pro (fiktivní) zápis vybraných matematických operací obsahuje rekurzivní pravidlo \texttt{\$expr}:
+\begin{verbatim}
+	public $expr = $numer | $expr $operator $expr;
+	public $number = $digit<+>;
+	public $digit = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+	public $operator = plus | minus | dot | frac ;
+\end{verbatim}
 
 Formát SPGF definuje 5 speciálních pravidel s vyhraněnými jmény.
 Tři z nich jsou převzaté ze SRGS standardu, zbylé dvě byly přidány navíc, aby bylo možné vynutit jistá chování parsovacího algoritmu,
 která jsou v SRGS automaticky, ale v SPGF nikoli, kvůli odlišné strategii prohledávání (viz později).
-\todo{doplnit referenci na pozdější kapitolu}.
 \begin{enumerate}
 	\item \textbf{Speciální pravidlo} \texttt{\$GARBAGE}:\\
 	      Akceptuje libovolný jeden token a posune parsování o akceptovaný token dále.
@@ -213,8 +208,7 @@ která jsou v SRGS automaticky, ale v SPGF nikoli, kvůli odlišné strategii pr
 	      Akceptuje prázdný řetězec.
 	      To znamená, že je vždy úspěšně aktivováno a nikdy neposune parsování o žádný znak dále.
 
-	      Lze využít například pro situace, kde je žádoucí přidat do derivačního stromu nějaké tagy,
-	      \todo{podle wiki: parsing tree = derivační strom?}
+	      Lze využít například pro situace, kde je žádoucí přidat do derivačního stromu (angl.~parsing tree) nějaké tagy,
 	      aniž by byl učiněn postup v parsovaném textu.
 	\item \textbf{Speciální pravidlo} \texttt{\$VOID}:\\
 	      Vždy selže, bez ohledu na parsovaný text.
@@ -238,7 +232,6 @@ která jsou v SRGS automaticky, ale v SPGF nikoli, kvůli odlišné strategii pr
 
 Poslední podobu, kterou \emph{element} může mít, je \emph{sekvence}.
 Sekvence může být \enquote{obyčejná} nebo \enquote{volitelná}.
-\todo{přidat referenci na místo, kde je popsáno opakování}.
 V~obou případech se jedná o \emph{alternativy} oddělené znakem \enquote{\texttt{|}},
 list alternativ je ohraničený kulatými, respektive hranatými, závorkami.
 
@@ -318,29 +311,22 @@ je pak na Obrázku~\ref{fig:climbing_rule_scheme}.
 \end{figure}
 
 \subsubsection{Vstupní a výstupní body SPGF gramatiky}
-\todo{lepší název kapitoly}
 Základní rozdíl v parsovací strategii SPGF oproti SRGS spočívá v tom, co je považováno za úspěšný konec parsování.
-SRGS implementace
-\todo{referovat konkrétně na SC?\@+ ověřit faktickou správnost}
-jako úspěšně dokončené parsování považuje takové situace, kde poskytnutý text byl
+SRGS implementace jako úspěšně dokončené parsování považuje takové situace, kde poskytnutý text byl
 pokryt daným pravidlem, obojí (pravidlo i text) vyčerpané (využité) beze zbytku od začátku do konce.
 Naproti tomu SPGF parser nekontroluje využití celého textu, pouze celého pravidla.
 Pokud tedy pravidlo pokryje pouze prvních několik slov a zbytek textu nebude \enquote{pasovat},
 SRGS bude tuto situaci brát jako za neúspěch, zatímco SPGF to bude považovat za úspěch.
 
 Dalším rozdílem mezi SRGS a SPGF je ten, že SRGS gramatiky poskytují pouze jeden vstupní bod (pravidlo označené klíčovým slovem \texttt{root}).
-Z toho pak plyne, že implementace SRGS mohou pro jeden vstupní text vrátit nejvýše jeden parsovací strom.
-\todo{ověřit?}
-
 SPGF oproti tomu umožňuje specifikovat více pravidel jako \enquote{veřejná} klíčovým slovem \texttt{public} a tím tak gramatika bude mít více vstupních bodů.
 Parser po načtení SPGF gramatiky vezme všechna pravidla označená jako \texttt{public} a pokusí se pomocí nich zpracovat poskytnutý text.
 Výsledky úspěšných parsování jsou pak vrácené jako výstupy v podobě derivačních stromů, se kterými je možné dále pracovat.
 
-Pro příklad uvažujme vstupní text: \enquote{\emph{hnědý pes utíká pryč}} a gramatiku na Listing~\ref{lst:simple_grammar_1}.
-\todo{zlepšit barvy}
+Pro příklad uvažujme vstupní text: \enquote{\emph{hnědý pes utíká pryč}} a gramatiku na Výpisu~\ref{lst:simple_grammar_1}.
 \input{src/listings/simple_grammar_1.tex}
 
-Tuto gramatiku z Listing~\ref{lst:simple_grammar_1} lze zakreslit jako konečný automat
+Tuto gramatiku z Výpisu~\ref{lst:simple_grammar_1} lze zakreslit jako konečný automat
 na Obrázku~\ref{fig:scheme_grammar_final_automata}.
 \begin{figure}[H]
 	\centering
@@ -449,7 +435,7 @@ pravidlo sestávající pouze z tagů nebo začínající tagem.
 Pro situace, kdy je žádoucí začít pravidlo nějakým tagem,
 je možné použít speciální pravidlo \texttt{\$NULL} a k němu přiřadit dané tagy.
 
-Příklad gramatiky obsahující tagy je na Listing~\ref{lst:example_grammar_with_tags}.
+Příklad gramatiky obsahující tagy je na Výpisu~\ref{lst:example_grammar_with_tags}.
 K této ukázkové gramatice jsou pak na Obrázku~\ref{fig:derivacni_stromy_tagy} zobrazené tři derivační stromy pro promluvy
 \enquote{\emph{pes spí}},
 \enquote{\emph{kapr plave}}
@@ -510,24 +496,9 @@ Dále je pomocí tagů označeno, která činnost je klidová a která v pohybu,
 	\caption{Derivační stromy s tagy}\label{fig:derivacni_stromy_tagy}
 \end{figure}
 
-\todo{doplnit (někam) formální definici syntaxe, případně jako přílohu?}
-% Formální definice syntaxe ve formátu ABNF je dána takto:
-% \todo{doplnit referenci na ABNF způsob zadávání syntaxe + zkontrolovat, že to odpovídá}
-% \todo{doplnit zbytek formální definici syntaxe v ABNF formátu}
-% \todo{dát formální definici jako přílohu?}
-% \todo{vyměnit za poctivý listing}
-% \begin{verbatim}
-%     grammar ::= rule+
-%     rule ::= ('public' ' ')? ruleName '=' ruleBody ';'
-%     ruleName ::= '$' unicodeAlphanumerical+
-%     ruleBody ::= ruleAlternative ('|' ruleAlternative)*
-%     ruleAlternative ::= element (' ' element)*
-%     element ::= token | ruleRef | sequence
-%     sequence ::= bracedSequence | optionalSequence
-%     bracedSequence ::= '(' bareSequence ')'
-%     optionalSequence ::= '[' bareSequence ']'
-%     bareSequence ::= ruleAlternative ('|' ruleAlternative)*
-% \end{verbatim}
+Syntaxe SPGF je na Výpise~\ref{lst:spgf_syntax}, detaily implementace je možné
+prozkoumat ve zdrojových kódech.
+\input{src/listings/spgf_syntax.tex}
 
 \subsubsection{Parsovací strategie a opakování v SPGF}
 Jak bylo zmíněno v sekci~\ref{subsubsec:spgf_def}, v gramatice je možné ke každému elementu,
@@ -543,7 +514,6 @@ tedy dvě přirozená čísla oddělená pomlčkou (bez mezer) a ohraničené š
 Pro pohodlnější zápis bylo definováno několik dalších alternativních
 způsobů zápisu, viz Tabulka~\ref{tab:repeat_syntax}.
 Pokud element žádné opakování nemá specifikované, implicitní hodnota je 1.
-\todo{příklad}
 
 \begin{table}[ht!]
 	\centering
@@ -573,14 +543,25 @@ Pokud element žádné opakování nemá specifikované, implicitní hodnota je 
 S opakovaným použitím stejného elementu je úzce spojena i strategie parsování.
 Jedná se o způsob, jakým jsou řešené neurčité situace, kde je možné postupovat vícero způsoby.
 Tyto situace mohou vznikat právě v místech opakování elementů, nebo tam, kde je k dispozici vícero aplikovatelných alternativ.
-\todo{příklad pro oba způsoby}
 
-V existující implementaci SRGS, se kterou byly prováděné první experimenty, byl implementován pouze takzvaný \enquote{hladový algoritmus}
-\todo{ověřit}
-, běžněji označovaný pod anglickým názvem \emph{greedy matching}.
-Pro potřeby sémantické analýzy textu v této práci bylo ovšem zjištěno, že pouze greedy
-\todo{můžu takhle použít anglické názvy? přijdou mi lepší než české \enquote{hladový} (greedy), \enquote{líný} (lazy) nebo \enquote{důsledný} (thorough) }
-algoritmus nebude zcela postačovat.
+Konkrétní příklad jedné z možných nejednoznačných situací (přímo převzatý ze SRGS specifikace~\cite{srgs}) je v Tabulace~\ref{tab:ambiguity_example}.
+Představuje situaci, kdy dvě alternativy mají různé tagy, ale stejné tokeny a tudíž není jasné, kterou z nich použít.
+\begin{table}[ht!]
+	\centering
+	\begin{tabular}{|l|l|}
+		\hline
+		Expanze            & \texttt{t1 \{tag1\} | t1 \{tag2\} | t2} \\
+		Vstupní řetězec    & \texttt{t1}                             \\
+		Výstup (možnost 1) & \texttt{[{t1}, \{tag1\}]}               \\
+		Výstup (možnost 2) & \texttt{[{t1}, \{tag2\}]}               \\
+		\hline
+	\end{tabular}
+	\caption{Ukázka nejednoznačnosti SRGS}\label{tab:ambiguity_example}
+\end{table}
+
+V existující implementaci SRGS, se kterou byly prováděné první experimenty, byl implementován pouze takzvaný \enquote{hladový algoritmus}, běžněji označovaný pod anglickým názvem \emph{greedy matching}.
+Pro potřeby sémantické analýzy textu v této práci bylo ovšem zjištěno, že pouze greedy algoritmus nebude zcela postačovat.
+\todo{můžu takhle použít rovnou anglické názvy? přijdou mi lepší než české \enquote{hladový} \enquote{líný} nebo \enquote{důsledný}}
 
 Příkladem takové situace by mohla být analýza textu
 \begin{center}
@@ -588,7 +569,6 @@ Příkladem takové situace by mohla být analýza textu
 \end{center}
 s cílem zjistit vlastnosti objektů (v tomto případě zvířat), zde konkrétně jejich barvy.
 Pravidlo pro zachycení barvy zvířete by mohlo vypadat takto:
-\todo{vyměnit za poctivý listing s celou gramatikou?}
 \begin{center}
 	\texttt{public \$has\_color = \$color \$GARBAGE<*> \$animal;}
 \end{center}
@@ -627,10 +607,7 @@ Zde speciální pravidlo \texttt{\$GARBAGE} s neomezeným počtem opakování v 
 že toto speciální pravidlo bylo \enquote{příliš agresivní} a aktivovalo se i v případech, kdy by již bylo možné použít následující element.
 
 Z tohoto důvody byla do systému implementována druhá strategie, která se běžně označuje jako \emph{lazy matching}.
-\todo{zkusit překládat?}
-Zatímco greedy matching se v každém okamžiku snaží posunout parsování co nejdále, tato lazy strategie se naopak snaží
-použít element co nejméněkrát
-\todo{je \enquote{nejméněkrát} česky správně?}
+Zatímco greedy matching se v každém okamžiku snaží posunout parsování co nejdále, tato lazy strategie se naopak snaží použít element co nejméněkrát.
 
 Také by se dalo říci, že pokud parsovací algoritmus narazí na element $e_{1}$ následovaný elementem $e_{2}$, pak:
 \begin{itemize}
@@ -639,7 +616,6 @@ Také by se dalo říci, že pokud parsovací algoritmus narazí na element $e_{
 	\item lazy strategie se vždy pokusí nejdříve postoupit na element $e_{2}$ a vrátí se k $e_{1}$ pro opakované použití až v moment,
 	      kdy $e_{2}$ není možné použít
 \end{itemize}
-\todo{zmínit že to je obdoba prohledávání do šířky/hloubky?}
 
 Implementace lazy strategie umožnila zachytit sémantiku, kterou by bylo obtížné získat pomocí greedy algoritmu.
 Po několika dalších experimentech ovšem bylo zjištěno, že ani tato strategie nebude sama o sobě postačovat pro všechny potřeby sémantické analýzy.
@@ -743,10 +719,11 @@ Celkově by tedy z tohoto výstupu bylo možné získat informace o tom, že v t
 Dvě z těchto informací jsou správně, pouze informace o hnědé veverce je chybná, ta se v textu nevyskytla.
 
 Jedná se o jednu z nevýhod thorough přístupu, že bude v textu hledat i takové informace, které z něj neplynou.
-\todo{zmínit, že to je \enquote{false positive} typ chyby? Případně psát typy chyb pak do teorie?}
-Tento problém byl vyřešen tak, že získané sémantické informace jsou porovnané s referenčním popisem obrázku a ty,
-které se v referenčním popise nevyskytují, jsou považované za falešně detekované a jsou z výstupu odstraněné
-(s výjimkou hodnot atributů, řešení chybných hodnot je popsáno v kapitole~\ref{subsec:hodnoceni}).
+Tento problém byl vyřešen následnou filtrací získaných entit oproti referenčnímu popisu.
+Detailní popis tohoto filtrování bude popsán v kapitole~\ref{subsubsec:algoritmus_zpracovani_stromu}.
+% tak, že získané sémantické informace jsou porovnané s referenčním popisem obrázku a ty,
+% které se v referenčním popise nevyskytují, jsou považované za falešně detekované a jsou z výstupu odstraněné
+% (s výjimkou hodnot atributů, řešení chybných hodnot je popsáno v kapitole~\ref{subsec:hodnoceni}).
 
 Tímto způsobem je pak v testovaném popisu pouze podmnožina referenčního popisu.
 Jedná se o jednoduchý a efektivní způsob řešení falešně detekovaných sémantických informací.
@@ -770,8 +747,8 @@ Je totiž potřeba, aby posloupnost sobě jdoucí slov, které reprezentující 
 Jiný příklad pak může být již výše zmíněný začátek pravidla \texttt{\$GARBAGE<*>},
 který libovolný počet prvních slov považovat za výplň a hledat tak význam až později v textu.
 Pro tuto situaci je naopak greedy algoritmus zcela nevhodný, protože by celý text byl zpracován hned tímto počátkem.
-Zde je vhodná lazy strategie, která ve své podstatě bude dávat přednost následujícím elementům v pravidle a tento počátek bude používat až
-když zbytek pravidla selže.
+Zde je vhodná lazy strategie, která ve své podstatě bude dávat přednost následujícím elementům
+v pravidle a tento počátek bude používat až když zbytek pravidla selže.
 
 Z těchto důvodů byla rozšířena syntaxe pro operátor definující opakování.
 Před samotné hodnoty opakování (tedy hned za otevírací špičatou závorku \enquote{\texttt{<}}) je možné napsat

@@ -829,7 +829,7 @@ fn rule_ref(s: &str) -> IResult<&str, Element> {
         many0(grammar_tag),
     ))(input)?;
     let name = rule_name.to_string();
-    if ["$NULL", "$VOID", "$GARBAGE"].contains(&name.as_str()) {
+    if ["$NULL", "$VOID", "$GARBAGE", "$BEGIN", "$END"].contains(&name.as_str()) {
         // we don't want special rules to be parsed as regular rule refs
         return Err(nom::Err::Error(error_position!(
             input,

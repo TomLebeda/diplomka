@@ -1,0 +1,35 @@
+{
+  "missing_objects": 3,
+  "missing_attributes": 1,
+  "missing_triplets": 2,
+  "numberless_penalty": 0.5,
+  "wrong_values": 2,
+  "missing_objects_override": [
+    ["person", 5],
+    ["animal", 4],
+    ["environment", 1]
+  ],
+  "missing_attributes_override": [
+    ["action", 1.5],
+    ["state", 0.5]
+  ],
+  "missing_triplets_override": [["falling into", 5]],
+  "wrong_values_override": [
+    {
+      "attribute": "color",
+      "default": 0.5,
+      "overrides": [
+        [["white", "yellow", "pink"], 0.3],
+        [["red", "blue", "green", "yellow"], 0.8]
+      ]
+    },
+    {
+      "attribute": "action",
+      "default": 1.5,
+      "overrides": [
+        [["sitting", "reading"], 0.8],
+        [["fishing", "sitting"], 0.7]
+      ]
+    }
+  ]
+}

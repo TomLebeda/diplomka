@@ -69,7 +69,7 @@ pub struct ParseArgs {
 }
 
 #[derive(Args, Debug)]
-/// Arguments for the "parse" CLI command
+/// Arguments for the "extract" CLI command
 pub struct ExtractArgs {
     /// Path to the scene file (JSON)
     pub scene_file: PathBuf,

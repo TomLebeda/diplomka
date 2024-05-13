@@ -1,7 +1,198 @@
 [
   {
     "timestamp": null,
-    "sentence": "na břehu rybníka je 5 osob a několik zvířat",
+    "sentence": "na břehu rybníka je pět osob a několik zvířat",
+    "data": {
+      "Attribute": {
+        "object": "people",
+        "attribute": "count",
+        "value": "5"
+      }
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 6,
+        "rule_name": "out_attr",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "na"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "břehu"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    2,
+                    "rybníka"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 3,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    3,
+                    "je"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 4,
+              "shift": 2,
+              "rule_name": "attribute",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 4,
+                    "shift": 1,
+                    "rule_name": "attr_VALS",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 4,
+                          "shift": 1,
+                          "rule_name": "count_VALS",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 4,
+                                "shift": 1,
+                                "rule_name": "number",
+                                "expansion": [
+                                  {
+                                    "Rule": {
+                                      "start": 4,
+                                      "shift": 1,
+                                      "rule_name": "digits",
+                                      "expansion": [
+                                        {
+                                          "Rule": {
+                                            "start": 4,
+                                            "shift": 1,
+                                            "rule_name": "five",
+                                            "expansion": [
+                                              {
+                                                "Token": [
+                                                  4,
+                                                  "pět"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "Tag": "5"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "Tag": "attr=count"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Tag": "part=attr"
+                },
+                {
+                  "Rule": {
+                    "start": 5,
+                    "shift": 1,
+                    "rule_name": "object",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 5,
+                          "shift": 1,
+                          "rule_name": "people",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 5,
+                                "shift": 1,
+                                "rule_name": "osoby",
+                                "expansion": [
+                                  {
+                                    "Token": [
+                                      5,
+                                      "osob"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "Tag": "people"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Tag": "part=obj"
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=attribute"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": "na břehu rybníka je pět osob a několik zvířat",
     "data": {
       "Object": "water"
     },
@@ -86,7 +277,7 @@
   },
   {
     "timestamp": null,
-    "sentence": "na břehu rybníka je 5 osob a několik zvířat",
+    "sentence": "na břehu rybníka je pět osob a několik zvířat",
     "data": {
       "Object": "people"
     },
@@ -165,7 +356,7 @@
                 {
                   "Token": [
                     4,
-                    "5"
+                    "pět"
                   ]
                 }
               ]
@@ -216,7 +407,7 @@
   },
   {
     "timestamp": null,
-    "sentence": "na břehu rybníka je 5 osob a několik zvířat",
+    "sentence": "na břehu rybníka je pět osob a několik zvířat",
     "data": {
       "Object": "animals"
     },
@@ -295,7 +486,7 @@
                 {
                   "Token": [
                     4,
-                    "5"
+                    "pět"
                   ]
                 }
               ]

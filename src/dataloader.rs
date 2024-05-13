@@ -485,7 +485,8 @@ impl Scene {
                         remove_number_from_obj(&t.from) == remove_number_from_obj(&triplet.from);
                     let to_matches =
                         remove_number_from_obj(&t.to) == remove_number_from_obj(&triplet.to);
-                    return from_matches && to_matches;
+                    let predicate_matches = t.predicate == triplet.predicate;
+                    return from_matches && to_matches && predicate_matches;
                 });
             } else {
                 return self.triplets.contains(triplet);

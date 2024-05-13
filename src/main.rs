@@ -104,10 +104,11 @@ fn print_eval(args: EvalArgs) {
         );
         std::process::exit(1);
     };
-    eval(scene, extracts, loss_table);
+    let score = eval(scene, extracts, loss_table, true);
+    println!("{:#?}", score);
 }
 
-/// Print the process of 'compare' command
+/// Print the process of 'extract' command
 fn print_extract(args: ExtractArgs) {
     trace!("executing 'extract' command");
     let scene = match Scene::from_file(&args.scene_file) {

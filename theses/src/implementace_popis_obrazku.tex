@@ -1,16 +1,15 @@
-\subsection{Referenční popis obrázku}
+\subsection{Referenční popis obrázku}\label{subsec:referencni_popis}
 Jako první byl implementován systém pro práci s referenčním popisem obrázku.
 Aby bylo možné vytvořenou implementaci rovnou testovat, bylo nutné zvolit nějaký konkrétní obrázek,
 na kterém by bylo možné jednotlivé části zkoušet.
 Pro tento účel byla zvolena kresba
 \todo{doplnit odkud obrázek je + správě ozdrojovat},
 která je zobrazena na Obrázku~\ref{fig:summer}.
-\todo{doplnit nebo odebrat bílý okraj obrázku}
 
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{./src/imgs/summer.png}
-	\caption{Kresba použitá při implementaci pro testování}\label{fig:summer}
+	\caption{Kresba použitá pro testování}\label{fig:summer}
 \end{figure}
 
 Jak bylo definováno v kapitole~\ref{subsec:reprezentace_znalosti}, referenční popis obrázku se skládá z
@@ -28,59 +27,24 @@ Další strukturou, která byla definována jako součást referenčního popisu
 Tato struktura slouží k popisu vazeb mezi objekty, obsahuje názvy dvou objektů a k nim název vazby.
 
 Schéma implementovaných struktur a jejich provázání je na Obrázku~\ref{fig:schema_impl_ref_popis}.
-Zdrojový kód je pak možné si prohlédnout
-\todo{doplnit odkaz na zdrojáky}
-\todo{vyměnit tabulky za pseudo-kód?}
-\todo{vysvětlit u32 a Vec<>?}
+Zkratka pro datový typ \texttt{u32} znamená \enquote{unsigned 32-bit int} a je to nezáporné celé číslo na 32 bitech,
+druhý typ \texttt{Vec<T>} pak značí vektor (list) objektů typu \texttt{T}.
 
-% \todo{vyměnit za tabulku? Nechat jako Rust kód a obarvit, nebo se tvářit že to je pseudo-kód?}
-% \todo{přidat nějaký popisek a označení (listing?)}
-% \todo{vysvětlovat zkratky datových typů? Nebo nahradit slovy?}
-% 
-% \begin{verbatim}
-% struct Scene {
-%     width: u32,                 // šířka obrázku v pixelech
-%     height: u32,                // výška obrázku v pixelech
-%     image_path: String,         // cesta na disku k souboru s obrázkem
-%     objects: Vec<SceneObject>,  // list objektů ve scéne
-%     triplets: Vec<Triplet>,     // list vazeb mezi objekty
-% }
-% \end{verbatim}
-
-% \begin{verbatim}
-% struct SceneObject {
-%     name: String,                       // název tohoto objektu
-%     tags: Vec<String>,                  // list tagů přiřazených k tomuto objektu
-%     top_left_corner: (u32, u32),        // pozice levého horního okraje bounding-boxu
-%     size: (u32, u32),                   // velikost objektu v pixelech ve formátu (šířka, výška)
-%     parents: Vec<String>,               // list (názvů) objektů, které jsou rodiče tohoto objektu
-%     children: Vec<String>,              // list (názvů) objektů, které jsou potomci tohoto objektu
-%     attributes: Vec<(String, String)>,  // list atributů jako dvojic "(název, hodnota)"
-% }
-% \end{verbatim}
-
-% \begin{verbatim}
-% pub struct Triplet {
-%     pub from: String,       // název zdrojového objektu
-%     pub predicate: String,  // název vazby
-%     pub to: String,         // název cílového objektu
-% }
-% \end{verbatim}
 \begin{figure}[ht!]
 	\centering
 	\begin{tikzpicture}
 		\node[inner sep=0] (ref) at (0, 0) {
 			\begin{tabular}{|l|l|l|}
 				\hline
-				\multicolumn{2}{|c|}{\large \texttt{Scene}}             \\
+				\multicolumn{2}{|c|}{\large \texttt{Scene}}                    \\
 				\hline
-				\textbf{\textit{Pole}} & \textbf{\textit{Datový typ}}   \\
+				\textbf{\textit{Pole}} & \textbf{\textit{Datový typ}}          \\
 				\hline
-				{width}                & {u32}                          \\
-				{height}               & {u32}                          \\
-				{image\_path}          & {String}                       \\
-				{objects}              & {Vec<\phantom{ SceneObject }>} \\
-				{triplets}             & {Vec<\phantom{ Triplet }>}     \\
+				{width}                & \texttt{u32}                          \\
+				{height}               & \texttt{u32}                          \\
+				{image\_path}          & \texttt{String}                       \\
+				{objects}              & \texttt{Vec<\phantom{ SceneObject }>} \\
+				{triplets}             & \texttt{Vec<\phantom{ Triplet }>}     \\
 				\hline
 			\end{tabular}
 		};
@@ -91,37 +55,36 @@ Zdrojový kód je pak možné si prohlédnout
 				\hline
 				\textbf{\textit{Pole}} & \textbf{\textit{Datový typ}} \\
 				\hline
-				{from}                 & {String}                     \\
-				{predicate}            & {String}                     \\
-				{to}                   & {String}                     \\
+				{from}                 & \texttt{String}              \\
+				{predicate}            & \texttt{String}              \\
+				{to}                   & \texttt{String}              \\
 				\hline
 			\end{tabular}
 		};
-		% \node[anchor=south west, inner sep=1pt] (so) at ($(trip.south east) + (2.0, 0)$) {
-		\node[anchor=south west, inner sep=1pt] (so) at ($(ref.east|-trip.south) + (1, 0)$) {
+		\node[anchor=north west, inner sep=1pt] (so) at ($(trip.north east) + (1, 0)$) {
 			\begin{tabular}{|l|l|l|}
 				\hline
-				\multicolumn{2}{|c|}{\large \texttt{SceneObject}}     \\
+				\multicolumn{2}{|c|}{\large \texttt{SceneObject}}       \\
 				\hline
-				\textbf{\textit{Pole}} & \textbf{\textit{Datový typ}} \\
+				\textbf{\textit{Pole}} & \textbf{\textit{Datový typ}}   \\
 				\hline
-				{name}                 & {String}                     \\
-				{tags}                 & {Vec<String>}                \\
-				{top\_left\_corner}    & {(u32, u32)}                 \\
-				{size}                 & {(u32, u32)}                 \\
-				{parents}              & {Vec<String>}                \\
-				{children}             & {Vec<String>}                \\
-				{attributes}           & {Vec<(String, String)>}      \\
+				{name}                 & \texttt{String}                \\
+				{tags}                 & \texttt{Vec<String>}           \\
+				{top\_left\_corner}    & \texttt{(u32, u32)}            \\
+				{size}                 & \texttt{(u32, u32)}            \\
+				{parents}              & \texttt{Vec<String>}           \\
+				{children}             & \texttt{Vec<String>}           \\
+				{attributes}           & \texttt{Vec<(String, String)>} \\
 				\hline
 			\end{tabular}
 		};
-		\node[anchor=south east] (trmark) at ($(ref.south east) + (-38.5pt, 0)$) {{Triplet}};
-		\node[anchor=south east] (somark) at ($(ref.south east) + (-11.5pt, \baselineskip)$) {{SceneObject}};
-		\node[draw=blue, rounded corners=2mm, inner sep=3pt] (trborder) at ($(trmark) + (0, 0.5pt)$) {{\phantom{Triplet}}};
-		\node[draw=blue, rounded corners=2mm, inner sep=3pt] (soborder) at ($(somark) + (0, 0.5pt)$) {{\phantom{SceneObject}}};
-		\draw[blue, -Stealth] (trborder.south) to (trmark|-trip.north);
-		\draw[blue, rounded corners=2mm, -Stealth] (soborder.north) -- ++(0, 1.0) -| (so.north);
-		% \draw[blue, rounded corners=2mm, -Stealth] (soborder.north) |- ($(0, 0.2) + (so.west)$);
+		\node[anchor=south east] (somark) at ($(ref.south east) + (-14.5pt, \baselineskip)$) {\texttt{SceneObject}};
+		\node[anchor=south east] (trmark) at ($(ref.south east) + (-39.5pt, 0)$) {\texttt{Triplet}};
+		\node[draw=blue, thick,rounded corners=2mm, inner sep=3pt] (trborder) at ($(trmark) + (0, 0.5pt)$) {{\phantom{\texttt{Triplet}}}};
+		\node[draw=blue,thick, rounded corners=2mm, inner sep=3pt] (soborder) at ($(somark) + (0, 0.5pt)$) {{\phantom{\texttt{SceneObject}}}};
+		\draw[blue,thick, -Stealth] (trborder.south) to (trmark|-trip.north);
+		\draw[blue,thick, rounded corners=2mm, -Stealth] (soborder.north) -- ++(0, 0.5) -| (so.north);
+		% \draw[blue, rounded corners=3mm, -Stealth] (soborder.north) |- ($(0, 0.2) + (so.west)$);
 	\end{tikzpicture}
 	\caption{Schéma implementace referenčního popisu}\label{fig:schema_impl_ref_popis}
 \end{figure}
@@ -144,8 +107,7 @@ Například \enquote{\texttt{strom \#1}} a \enquote{\texttt{strom \#2}}.
 Dvojice polí \texttt{top\_left\_corner} a \texttt{size} udávají velikost a pozici objektu zdrojovém obrázku.
 Jedná se o souřadnice levého horního rohu ohraničujícího rámce (bounding-boxu) a velikost tohoto rámce v pixelech.
 Obě pole mají jako uvedený datový typ \texttt{(u32, u32)}, který reprezentuje souřadnice $(i, j)$ kde $i,j \in \mathbb{N}^{0}$.
-V obrázku je dle konvence jako počátek souřadnic uvažován levý horní roh.
-\todo{zdrojovat kde jsem vzal \enquote{konvenci}?}
+V obrázku je jako počátek souřadnic uvažován levý horní roh.
 
 Pole \texttt{tags} reprezentuje list tagů, které expert obrázku přiřadil.
 Jejich účel byl popsán v kapitole~\ref{subsec:hodnoceni}.
@@ -155,17 +117,13 @@ Po formální definice formátů a datový typů bylo potřeba určit, jakým zp
 Pro tuto práci bylo rozhodnuto, že tvorba referenčního popisu bude spočívat v napsání strukturovaného textového souboru.
 Zvolen byl textový formát \texttt{JSON}, který představuje dobrý kompromis mezi čitelností člověkem a strojovou zpracovatelností.
 
-Ukázka části referenčního popisu je na Listing~\ref{lst:ref_popis_real_example}.
-\todo{jak se česky skloňuje a překládá Listing?}
-\todo{ukázat stejný popis graficky jako schéma + obrázek?}
+Ukázka části referenčního popisu je na Výpisu~\ref{lst:ref_popis_real_example}.
 \input{src/listings/summer_ref_example.tex}
 
 \subsubsection{Validace referenčního popisu}
 Jak bylo právě ukázáno, tvorba referenčního popisu je ve své podstatě psaní JSON souboru podle nějaké definované struktury a pravidel.
 Program při zpracovávání referenčního popisu předpokládá, že data budou validní a odmítne referenční popis, který by obsahoval chyby.
 Pro komplexnější scénu však může být náročné pro lidského experta neudělat v popise žádnou chybu a udržet celý referenční popis validní.
-\todo{někam na začátek implementace zmínit, že jsem to dělal jako CLI nástroj}
-\todo{dávat příklady použití těch příkazů a jejich výpisy?}
 
 Z toho důvodu byl implementován v rámci celého programu příkaz \texttt{check}, který zajišťuje kontrolu všech dříve definovaných pravidel, které musí referenční popis splňovat:
 \begin{enumerate}
@@ -205,8 +163,7 @@ Tyto příkazy slouží obecně k prohlížení a porovnávání referenčních 
 	      Tento příkaz má několik pod-příkazů, které určují, jaký typ informace má být vypsán v podobě seznamu.
 	      Může se jednat o objekty, tagy, triplety, atributy, samotné názvy nebo hodnoty atributů,
 	      názvy vazeb mezi objekty a další.
-	      Seznam všech implementovaných pod-příkazů je možné si prohlédnout ve zdrojovém kódu
-	      \todo{přidat odkaz na zdrojáky}
+	      Seznam všech implementovaných pod-příkazů je možné si prohlédnout ve zdrojovém kódu.
 
 	      Cílem tohoto příkazu je poskytnout rychlý a pohodlný způsob, jak získat seznam všech prvků daného typu ve scéně, aniž by bylo potřeba přímo pracovat se složitější strukturou JSON souboru.
 	      Výstup je formátován tak, aby jej bylo možné snadno dále strojově zpracovat a integrovat do komplexnějších sekvencí příkazů.
@@ -221,18 +178,54 @@ Tyto příkazy slouží obecně k prohlížení a porovnávání referenčních 
 	      že by pro lidského experta bylo velmi obtížné se v datech orientovat.
 	      Pro strojové zpracování a případné vizualizace by ale mohlo být prospěšné, aby byly všechny typy informací prezentované v jednoduchém formátu.
 	      Právě k tomu slouží příkaz \texttt{crumble}, který, jak již název napovídá, daný referenční popis \enquote{rozdrobí} a převede všechny informace do množiny prostých trojic.
-	      \todo{přidat příklad?}
+
+	      Schématická ukázka procesu \enquote{rozdrobení} je na Obrázku~\ref{fig:crumble_example}.
+	      % malý kluk v modrém tričku chytá červený míč
+	      \begin{figure}[ht!]
+		      \centering
+		      \begin{tikzpicture}
+			      \footnotesize
+			      \matrix[draw, anchor=west] (boy) at (0, 0) {
+				      \node {{\textbf{kluk}}}; \\
+				      \node {\texttt{stáří:}}; &
+				      \node {\texttt{\textit{mladý}}};                 \\
+				      \node {\texttt{výraz:}}; &
+				      \node {\texttt{\textit{úsměv}}};                 \\
+			      };
+			      \matrix[draw, anchor=west] (tshirt) at (1.75, -3) {
+				      \node  {{\textbf{tričko}}}; \\
+				      \node {\texttt{barva:}}; &
+				      \node {\texttt{\textit{zelená}}};                  \\
+			      };
+			      \matrix[draw, anchor=west] (ball) at (-1.75, -3) {
+				      \node  {{\textbf{míč}}}; \\
+				      \node {\texttt{barva:}}; &
+				      \node {\texttt{\textit{červená}}};                  \\
+			      };
+			      \draw[-Stealth] (boy) to node[midway, above, sloped] {chytá} (ball);
+			      \draw[-Stealth] (boy) to node[midway, above, sloped] {nosí} (tshirt);
+			      \matrix[draw, anchor=west] (crumb) at ($0.5*(boy.north) + 0.25*(ball.south) + 0.25*(tshirt.south) + (4, 0)$) {
+				      \node {\texttt{kluk - stáří - mladý}}; \\
+				      \node {\texttt{kluk - výraz - úsměv}}; \\
+				      \node {\texttt{kluk - chytá - míč}}; \\
+				      \node {\texttt{kluk - nosí - tričko}}; \\
+				      \node {\texttt{míč - barva - červená}}; \\
+				      \node {\texttt{tričko - barva - zelená}}; \\
+			      };
+			      \draw[-Stealth] ($(crumb.west) + (-1.5, 0)$) to node[midway, above] {\texttt{crumble}} ($(crumb.west) + (-0.2, 0)$);
+		      \end{tikzpicture}
+		      \caption{Ukázka procesu \texttt{crumble} (\enquote{rozdrobení})}\label{fig:crumble_example}
+	      \end{figure}
+
 	\item \textbf{Příkaz} \texttt{render}: \\
 	      Tento příkaz slouží k vytvoření vizuální reprezentace referenčního popisu.
 
-	      Pro správnou funkci tohoto příkazu je nutné, aby byl na počítači dostupný program Graphviz,
-	      \todo{reference na graphviz}
+	      Pro správnou funkci tohoto příkazu je nutné, aby byl na počítači dostupný program Graphviz~\cite{graphviz},
 	      jehož DOT-engine je použitý pro vytvoření grafické reprezentace.
-	      Výhodou grafické prezentace je přehlednost pro člověka, nicméně pro velmi komplexní scény s mnoha vazbami ani grafická reprezentace nemusí být optimální.
+	      Výhodou grafické prezentace je přehlednost pro člověka, nicméně pro velmi komplexní scény s mnoha vazbami ani grafická reprezentace nemusí být dostatečná.
 	      Je vhodné zmínit, že jedním z problémů takto implementované vizualizace je to, že pro scény s mnoha objekty tvoří Graphviz velmi dlouhé a úzké obrázky,
 	      protože sázecí mechanismus skládá jednotlivé uzly pod sebe.
 
 	      Grafická prezentace a metody vizualizace jsou nad rámec zadání této práce, proto bylo rozhodnuto, že pro ilustraci tato implementace dostačuje a případné komplexnější
 	      způsoby grafické prezentace jsou ponechány jako možná budoucí rozšíření.
-	      \todo{příklad + zlepšit formulace?}
 \end{enumerate}

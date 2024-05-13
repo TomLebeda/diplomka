@@ -1,15 +1,27 @@
+%! TEX TS-program = xelatex
 \documentclass[12pt,a4paper,oneside]{article}
+
+\usepackage[backend=biber, style=iso-numeric]{biblatex}
+\addbibresource{src/biblio.bib}
+% Definice vlastního formátu citace pro čísla v hranatých závorkách
+\DeclareFieldFormat{labelnumberwidth}{\mkbibbrackets{#1}}
+\DeclareFieldFormat{shorthandwidth}{\mkbibbrackets{#1}}
+
 \input{/home/tom/Tools/TeX_tools/templates/protocol/src/_preamble.tex}
 \geometry{left=30mm,right=30mm,top=35mm,bottom=40mm}
 \usepackage{float}
 \usepackage{multirow}
+\usepackage{longtable}
 \usetikzlibrary{decorations.pathreplacing, calligraphy}
+\usepackage{hyperref}
 
 \newcommand{\todo}[1]{
 	{\color{red}\textsuperscript{\tiny \texttt{TODO}}\footnotemark\footnotetext{\scriptsize{}#1}}
 }
+\renewcommand\lstlistingname{Výpis}
 
 \begin{document}
+
 \input{src/desky.tex}
 \clearpage
 \tableofcontents
@@ -28,5 +40,8 @@
 
 \clearpage
 \input{src/zaver.tex}
+
+\clearpage
+\printbibliography[title=Použitá literatura]
 
 \end{document}

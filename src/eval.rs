@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use itertools::Itertools;
-use log::info;
+use log::{info, warn};
 use rayon::iter::{FromParallelIterator, IntoParallelRefIterator, ParallelIterator};
 
 use crate::{
@@ -89,7 +89,7 @@ fn init_grouped_wrong_values(scene: &Scene) -> HashMap<String, f32> {
 
 /// Runs evaluation on the provided scene and list of extracts.
 /// Prints out some statistics and comparisons that could be used as a feature vectors.
-pub fn eval(scene: Scene, extracts: Vec<Extract>, loss_table: LossTable) -> Score {
+pub fn eval(scene: Scene, extracts: Vec<Extract>, loss_table: LossTable, verbose: bool) -> Score {
     let mut grouped_missing_objects = init_grouped_missing_objects(&scene);
     let mut grouped_missing_attributes = init_grouped_missing_attributes(&scene);
     let mut grouped_missing_triplets = init_grouped_missing_triplets(&scene);
@@ -108,12 +108,27 @@ pub fn eval(scene: Scene, extracts: Vec<Extract>, loss_table: LossTable) -> Scor
         };
         let loss = match name.contains('#') {
             // we didn't found it immediately, so check if ignoring numbering could help
-            false => loss_table.get_loss_missing_obj(obj),
+            false => {
+                if verbose {
+                    warn!("missing object: {}", name)
+                }
+                loss_table.get_loss_missing_obj(obj)
+            }
             true => {
                 let numberless_name = remove_number_from_obj(name);
                 match extracted_objects.contains(&numberless_name) {
-                    true => loss_table.numberless_penalty,
-                    false => loss_table.get_loss_missing_obj(obj),
+                    true => {
+                        if verbose {
+                            warn!("numberless object: {}", name)
+                        }
+                        loss_table.numberless_penalty
+                    }
+                    false => {
+                        if verbose {
+                            warn!("missing object: {}", name)
+                        }
+                        loss_table.get_loss_missing_obj(obj)
+                    }
                 }
             }
         };
@@ -133,13 +148,23 @@ pub fn eval(scene: Scene, extracts: Vec<Extract>, loss_table: LossTable) -> Scor
         }
         let loss = match attr.object.contains('#') {
             // we didn't found it immediately, so check if ignoring numbering could help
-            false => loss_table.get_loss_missing_attr(&attr.attribute),
+            false => {
+                if verbose {
+                    warn!("missing attribute: {}", attr)
+                }
+                loss_table.get_loss_missing_attr(&attr.attribute)
+            }
             true => {
                 // the object is numbered, so try to ignore it
                 let numberless_name = remove_number_from_obj(&attr.object);
                 match extracted_objects.contains(&numberless_name) {
                     true => loss_table.numberless_penalty,
-                    false => loss_table.get_loss_missing_attr(&attr.attribute),
+                    false => {
+                        if verbose {
+                            warn!("missing attribute: {}", attr)
+                        }
+                        loss_table.get_loss_missing_attr(&attr.attribute)
+                    }
                 }
             }
         };
@@ -177,6 +202,9 @@ pub fn eval(scene: Scene, extracts: Vec<Extract>, loss_table: LossTable) -> Scor
         } else if extracted_triplets.contains(&&ignore_num_both) {
             loss_table.numberless_penalty * 2.0
         } else {
+            if verbose {
+                warn!("missing triplet: {}", trip)
+            }
             loss_table.get_loss_missing_triplet(&trip.predicate)
         };
         missing_triplets += loss;
@@ -246,6 +274,9 @@ pub fn eval(scene: Scene, extracts: Vec<Extract>, loss_table: LossTable) -> Scor
                 .reduce(f32::min)
                 .unwrap_or(loss_table.wrong_values);
             let loss = loss + loss_table.numberless_penalty;
+            if verbose {
+                warn!("wrong value: {}", a)
+            }
             wrong_values += loss;
             if let Some(v) = grouped_wrong_values.get_mut(&a.attribute) {
                 *v += loss;

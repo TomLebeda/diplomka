@@ -1,0 +1,1323 @@
+[
+  {
+    "timestamp": null,
+    "sentence": "upadlo maminka se nedívá takže to může bejt asi problém vedle sedí rybář který se snaží lovit ryby",
+    "data": {
+      "Attribute": {
+        "object": "woman",
+        "attribute": "action",
+        "value": "fishing"
+      }
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 18,
+        "rule_name": "out_attr",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "upadlo"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 17,
+              "rule_name": "attribute",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 1,
+                    "shift": 1,
+                    "rule_name": "object",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 1,
+                          "shift": 1,
+                          "rule_name": "woman",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 1,
+                                "shift": 1,
+                                "rule_name": "mom",
+                                "expansion": [
+                                  {
+                                    "Rule": {
+                                      "start": 1,
+                                      "shift": 1,
+                                      "rule_name": "maminka",
+                                      "expansion": [
+                                        {
+                                          "Token": [
+                                            1,
+                                            "maminka"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "Tag": "woman"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Tag": "part=obj"
+                },
+                {
+                  "Rule": {
+                    "start": 2,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          2,
+                          "se"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 3,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          3,
+                          "nedívá"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 4,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          4,
+                          "takže"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 5,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          5,
+                          "to"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 6,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          6,
+                          "může"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 7,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          7,
+                          "bejt"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 8,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          8,
+                          "asi"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 9,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          9,
+                          "problém"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 10,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          10,
+                          "vedle"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 11,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          11,
+                          "sedí"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 12,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          12,
+                          "rybář"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 13,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          13,
+                          "který"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 14,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          14,
+                          "se"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 15,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          15,
+                          "snaží"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 16,
+                    "shift": 2,
+                    "rule_name": "attr_VALS",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 16,
+                          "shift": 2,
+                          "rule_name": "action_VALS",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 16,
+                                "shift": 2,
+                                "rule_name": "fishing",
+                                "expansion": [
+                                  {
+                                    "Token": [
+                                      16,
+                                      "lovit"
+                                    ]
+                                  },
+                                  {
+                                    "Token": [
+                                      17,
+                                      "ryby"
+                                    ]
+                                  },
+                                  {
+                                    "Tag": "fishing"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "Tag": "attr=action"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Tag": "part=attr"
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=attribute"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": "upadlo maminka se nedívá takže to může bejt asi problém vedle sedí rybář který se snaží lovit ryby",
+    "data": {
+      "Attribute": {
+        "object": "man #2",
+        "attribute": "action",
+        "value": "fishing"
+      }
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 18,
+        "rule_name": "out_attr",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "upadlo"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "maminka"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    2,
+                    "se"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 3,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    3,
+                    "nedívá"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 4,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    4,
+                    "takže"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 5,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    5,
+                    "to"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 6,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    6,
+                    "může"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 7,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    7,
+                    "bejt"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 8,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    8,
+                    "asi"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 9,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    9,
+                    "problém"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 10,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    10,
+                    "vedle"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 11,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    11,
+                    "sedí"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 12,
+              "shift": 6,
+              "rule_name": "attribute",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 12,
+                    "shift": 1,
+                    "rule_name": "object",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 12,
+                          "shift": 1,
+                          "rule_name": "man",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 12,
+                                "shift": 1,
+                                "rule_name": "fisherman",
+                                "expansion": [
+                                  {
+                                    "Token": [
+                                      12,
+                                      "rybář"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "Tag": "man #2"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Tag": "part=obj"
+                },
+                {
+                  "Rule": {
+                    "start": 13,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          13,
+                          "který"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 14,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          14,
+                          "se"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 15,
+                    "shift": 1,
+                    "rule_name": "GARBAGE",
+                    "expansion": [
+                      {
+                        "Token": [
+                          15,
+                          "snaží"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Rule": {
+                    "start": 16,
+                    "shift": 2,
+                    "rule_name": "attr_VALS",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 16,
+                          "shift": 2,
+                          "rule_name": "action_VALS",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 16,
+                                "shift": 2,
+                                "rule_name": "fishing",
+                                "expansion": [
+                                  {
+                                    "Token": [
+                                      16,
+                                      "lovit"
+                                    ]
+                                  },
+                                  {
+                                    "Token": [
+                                      17,
+                                      "ryby"
+                                    ]
+                                  },
+                                  {
+                                    "Tag": "fishing"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "Tag": "attr=action"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Tag": "part=attr"
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=attribute"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": "upadlo maminka se nedívá takže to může bejt asi problém vedle sedí rybář který se snaží lovit ryby",
+    "data": {
+      "Object": "woman"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 2,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "upadlo"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 1,
+                    "shift": 1,
+                    "rule_name": "woman",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 1,
+                          "shift": 1,
+                          "rule_name": "mom",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 1,
+                                "shift": 1,
+                                "rule_name": "maminka",
+                                "expansion": [
+                                  {
+                                    "Token": [
+                                      1,
+                                      "maminka"
+                                    ]
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "woman"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": "upadlo maminka se nedívá takže to může bejt asi problém vedle sedí rybář který se snaží lovit ryby",
+    "data": {
+      "Object": "man #2"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 13,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "upadlo"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "maminka"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    2,
+                    "se"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 3,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    3,
+                    "nedívá"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 4,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    4,
+                    "takže"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 5,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    5,
+                    "to"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 6,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    6,
+                    "může"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 7,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    7,
+                    "bejt"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 8,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    8,
+                    "asi"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 9,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    9,
+                    "problém"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 10,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    10,
+                    "vedle"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 11,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    11,
+                    "sedí"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 12,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 12,
+                    "shift": 1,
+                    "rule_name": "man",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 12,
+                          "shift": 1,
+                          "rule_name": "fisherman",
+                          "expansion": [
+                            {
+                              "Token": [
+                                12,
+                                "rybář"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "man #2"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": "upadlo maminka se nedívá takže to může bejt asi problém vedle sedí rybář který se snaží lovit ryby",
+    "data": {
+      "Object": "fish"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 18,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "upadlo"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "maminka"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    2,
+                    "se"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 3,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    3,
+                    "nedívá"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 4,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    4,
+                    "takže"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 5,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    5,
+                    "to"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 6,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    6,
+                    "může"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 7,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    7,
+                    "bejt"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 8,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    8,
+                    "asi"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 9,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    9,
+                    "problém"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 10,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    10,
+                    "vedle"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 11,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    11,
+                    "sedí"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 12,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    12,
+                    "rybář"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 13,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    13,
+                    "který"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 14,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    14,
+                    "se"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 15,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    15,
+                    "snaží"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 16,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    16,
+                    "lovit"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 17,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 17,
+                    "shift": 1,
+                    "rule_name": "fish",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 17,
+                          "shift": 1,
+                          "rule_name": "ryba",
+                          "expansion": [
+                            {
+                              "Token": [
+                                17,
+                                "ryby"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "fish"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  }
+]

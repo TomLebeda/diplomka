@@ -1,8 +1,23 @@
 \section{Implementace a testování}\label{sec:implementace}
-% o čem bude tahle kapitola?
-% v čem jsem to psal?
-% jaká je forma implementace - že to je CLI nástroj s více příkazy? 
+V této kapitole je rozebrána konkrétní technická implementace navržených a výše popsaných konceptů a algoritmů.
+Jako první bude popsána implementace referenčního popisu obrázku a odpovídající reprezentace znalostí,
+následuje popis sémantické analýzy pomocí bezkontextových gramatik a následná tvorba testovaného popisu.
+Poté je popsána implementace hodnotícího algoritmu včetně ukázek a na závěr jsou ukázané ilustrační příklady funkčnosti celého systému.
+
+Systém byl vytvořen jako program s ovládáním z příkazové řádky (angl.~command line interface, CLI).
+Sestává z jednotlivých příkazů, které jednotlivě vykonávají příslušné fáze celého systému, od načtení, validace a manipulace s referenčním popisem,
+přes sémantickou analýzu textu až po finální vyhodnocení.
+
+Současná implementace slouží především k testování a vývoji navržených algoritmů,
+nicméně během implementace bylo dbáno na to, aby byly jednotlivé fáze a příkazy modulární a bylo možné je snadno
+použít pro zakomponování do konkrétních aplikací.
+
+Celý systém byl programován v jazyce Rust, kompletní zdrojový kód včetně použitých dat je k dispozici
+online na adrese \href{https://github.com/TomLebeda/diplomka}{\texttt{https://github.com/TomLebeda/diplomka}}.
 
 \input{src/implementace_popis_obrazku.tex}
 
 \input{src/moje_gramatika.tex}
+\input{src/moje_semantika.tex}
+\input{src/moje_hodnoceni.tex}
+\input{src/testovani.tex}

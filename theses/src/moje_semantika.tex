@@ -1,0 +1,171 @@
+\subsection{Tvorba testovaného popisu}
+Po implementaci systému pro zpracování přirozeného textu pomocí bezkontextových gramatik bylo potřeba získané derivační stromy nějakým způsobem
+zpracovat a vytvořit z nich testovaný popis, který by bylo možné srovnat s referenčním popisem od experta.
+
+Zpracování derivačních stromů obecně představuje konflikt mezi obtížností automatického zpracování a omezením na strukturu.
+Striktně daná forma bude lépe zpracovatelná programově, ale může být obtížné zachytit všechny potřebné informace v dané struktuře.
+Naopak více volná forma bude umožňovat snadnější zachycení různých typů informace, ale bude obtížnější sestavit algoritmus,
+který by dokázal spolehlivě zpracovat předem neznámou strukturu.
+
+Vzhledem k podobě testovaného a referenčního popisu, které byly popsané v kapitole~\ref{sec:navrh_architektura},
+byl vytvořen algoritmus, který prochází získané derivační stromy a ukládá navštívené uzly s tagy do seznamu.
+Z tohoto seznamu tagů pak určuje, jaká sémantická informace je v derivačním stromu obsažena.
+
+Zde navržený přístup klade požadavek na způsob, jakým jsou sestavené SPGF gramatiky, protože předpokládá, že výstupní derivační stromy
+budou mít takovou strukturu, aby při jejich procházení byly nalezené tagy v očekávaném pořadí.
+Neklade tedy omezení přímo na strukturu samotných derivačních stromů, ale pouze na relativní rozmístění tagů uvnitř derivačního stromu.
+
+\subsubsection{Algoritmus zpracování derivačních stromů}\label{subsubsec:algoritmus_zpracovani_stromu}
+V první fázi algoritmus projde získaný derivační strom $T$ strategií depth-first-post-order (dfpo)~\cite{taocp1} a všechny navštívené tagy $t_{i}$ ukládá do seznamu.
+Index $i$ značí index tagu odpovídající jeho pořadí při dfpo procházení stromu $T$.
+
+Příklad takového stromu je na Obrázku~\ref{fig:tree_example}.
+Zde je možné vidět, že ve skutečnosti tagy jsou realizované jako samostatné uzly, které následují vždy jako poslední (zleva doprava) uzel ke svému rodičovskému uzlu.
+Při dfpo zpracování pak z tohoto stromu vznikne následující posloupnost tagů:
+\begin{center}
+	\texttt{[dog, part=obj, squirrel, part=subj, predicate=chasing, type=triplet]}
+\end{center}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[inner sep=0pt,every node/.style={}]
+		\def\dist{60pt}
+		\foreach \w [count=\wi] in {velký, hnědý, pes, honí, oranžovou, malou, veverku}
+		\node (\w) at (\wi*\dist, 0) {\emph{\strut \w}};
+
+		\node (dog) at ($(pes.north) + (0, 50pt)$) {\strut\texttt{\$dog}};
+		\node (g1) at ($(velký.north) + (0, 50pt)$) {\strut\texttt{\$GARBAGE}};
+		\node (g2) at ($(hnědý.north) + (0, 50pt)$) {\strut\texttt{\$GARBAGE}};
+		\node (obj1) at ($(dog.north) + (24pt, 50pt)$) {\strut\texttt{\$object}};
+		\node (chasing) at ($(obj1.north) + (82pt, 50pt)$) {\strut\texttt{\$chasing}};
+		\node (g3) at ($(oranžovou.north) + (0pt, 50pt)$) {\strut\texttt{\$GARBAGE}};
+		\node (g4) at ($(malou.north) + (0, 50pt)$) {\strut\texttt{\$GARBAGE}};
+		\node (squirrel) at ($(veverku.north) + (0, 50pt)$) {\strut\texttt{\$squirrel}};
+		\node (obj2) at ($(squirrel.north) + (-60pt, 50pt)$) {\strut\texttt{\$object}};
+		\node (triplet) at ($(chasing.north) + (0, 50pt)$) {\strut\texttt{\$triplet}};
+		\node (output) at ($(triplet.north) + (-1, 50pt)$) {\strut\texttt{\$output}};
+
+		\node[green!60!black, anchor=north west] (t1) at ($(dog.south east) + (0pt, -15pt)$) {\footnotesize\strut dog};
+		\node[green!60!black, anchor=north west] (t2) at ($(obj1.south east) + (-26pt, -20pt)$) {\footnotesize\strut part=obj};
+		\node[green!60!black, anchor=north west] (t3) at ($(squirrel.south east) + (-17.6pt, -15pt)$) {\footnotesize\strut squirrel};
+		\node[green!60!black, anchor=north west] (t4) at ($(obj2.south east) + (30pt, -15pt)$) {\footnotesize\strut part=subj};
+		\node[green!60!black, anchor=north west] (t5) at ($(chasing.south east) + (53pt, -19pt)$) {\footnotesize\strut predicate=chasing};
+		\node[green!60!black, anchor=north west] (t6) at ($(triplet.south east) + (0pt, -15pt)$) {\footnotesize\strut type=triplet};
+		\draw[-](t1) -- (dog);
+		\draw[-](t2) -- (obj1);
+		\draw[-](t3) -- (squirrel);
+		\draw[-](t4) -- (obj2);
+		\draw[-](t5) -- (chasing);
+		\draw[-](t6) -- (triplet);
+
+		\draw[-] (velký) to (g1);
+		\draw[-] (hnědý) to (g2);
+		\draw[-] (pes) to (dog);
+		\draw[-] (honí) to (chasing);
+		\draw[-] (oranžovou) to (g3);
+		\draw[-] (malou) to (g4);
+		\draw[-] (veverku) to (squirrel);
+		\draw[-] (dog) to (obj1);
+		\draw[-] (squirrel) to (obj2);
+		\draw[-] (obj1) to (chasing);
+		\draw[-] (obj2) to (chasing);
+		\draw[-] (g3) to (chasing);
+		\draw[-] (g4) to (chasing);
+		\draw[-] (chasing) to (triplet);
+		\draw[-] (triplet) to (output);
+		\draw[-] (g1) to (output);
+		\draw[-] (g2) to (output);
+
+	\end{tikzpicture}
+	\caption{Příklad derivačního stromu s tagy pro zpracování}\label{fig:tree_example}
+\end{figure}
+
+Získaný seznam tagů je postupně porovnáván s jednotlivými vzory, zda odpovídá nějaké předem definované sémantické informaci.
+Rozlišované jsou tři typy informací, které odpovídají struktuře referenčního a testovaného popisu:
+\begin{enumerate}
+	\item \textbf{Objekty}: \\
+	      Pro objekty stačí pouze identifikátor toho, že se jedná o objekt, a poté samotný název objektu.
+	      Očekávaný seznam tagů tedy musí mít následující strukturu:
+	      \begin{center}
+		      $\bigl[ $ \emph{name},\ {\texttt{type=object}} $\bigr]$
+	      \end{center}
+	      kde \emph{name} je libovolný řetězec, který bude považován za název objektu.
+
+	      Například při zpracování derivačního strom, ze kterého bude získána posloupnost tagů
+	      \texttt{[dog, type=object]},
+	      bude extrahován objekt \enquote{\emph{dog}}, který bude poté přidán do testovaného popisu.
+	\item \textbf{Atributy}: \\
+	      Pro kompletní určení atributu je třeba identifikátor toho, že se jedná o atribut,
+	      pak objekt, kterému je atribut přiřazen, následně název atributu a jeho hodnota.
+	      Pro extrakci atributů byly definovány dvě různé struktury, kterých může seznam tagů nabývat:
+	      \begin{center}
+		      $\bigl[$ \emph{o\_name}, {\texttt{part=obj}}, \emph{a\_val}, \emph{a\_name},
+					      {\texttt{part=attr}}, {\texttt{type=attribute}} $\bigr]$ \\
+		      $\bigl[$ \emph{a\_val}, \emph{a\_name}, {\texttt{part=attr}}, \emph{o\_name},
+					      {\texttt{part=obj}}, {\texttt{type=attribute}} $\bigr]$
+	      \end{center}
+	      kde \emph{o\_name}, \emph{a\_val} a \emph{a\_name} jsou libovolné řetězce, které budou považované za název objektu,
+	      hodnotu atributu a název atributu.
+
+	      Dvě různá očekávaná pořadí tagů vycházejí z toho, že v běžné mluvě lze specifikovat vlastnost objektu
+	      před objektem (např.~\enquote{\emph{hnědý pes}}) i po něm (např.~\enquote{\emph{pes je hnědý}}).
+
+	      Například při zpracování derivačního stromu, ze kterého budou získány tagy
+	      \begin{center}
+		      \texttt{[dog, part=obj, brown, color, part=attr, type=attribute]},
+	      \end{center}
+	      bude extrahován atribut \enquote{\emph{dog: color = brown}}, který bude poté přidán do testovaného popisu.
+	\item \textbf{Vazby mezi objekty}:\\
+	      Pro kompletní určení vazby mezi dvěma objekty je potřeba znát názvy obou objektů a název vazby mezi nimi.
+	      Pro extrakci vazeb mezi objekty je očekáváno následující pořadí tagů:
+	      \begin{center}
+		      $\bigl[ $ \emph{from}, \texttt{part=obj}, \emph{to},
+					      {\texttt{part=subj}}, \texttt{predicate=}\emph{pred}, {\texttt{type=triplet}} $\bigr]$
+	      \end{center}
+	      kde \emph{from}, \emph{to} a \emph{pred} jsou libovolné řetězce, které budou považované za název
+	      zdrojového objektu, cílového objektu a název vazby.
+
+	      Například při zpracování derivačního stromu, ze kterého budou získány tagy
+	      \begin{center}
+		      \texttt{[dog, part=obj, squirrel, part=subj, predicate=chasing, type=triplet]},
+	      \end{center}
+	      bude extrahován triplet \enquote{\emph{dog chasing squirrel}}, který bude poté přidán do testovaného popisu.
+\end{enumerate}
+
+Po extrakci objektů, atributů a tripletů jsou tyto získané sémantické informace profiltrovány,
+za cílem odstranění falešně detekovaných entit.
+Jak již bylo dříve zmíněno, filtrování probíhá tím způsobem, že pokud daný objekt, atribut,
+nebo triplet nejsou v referenčním popisu, jsou ze seznamu odstraněné.
+Výjimku tvoří atributy, kde je pouze chybná hodnota - tyto atributy jsou v seznamu ponechané a jsou uvažované v hodnocení,
+jak bylo popsáno v kapitole~\ref{subsec:hodnoceni}.
+
+\subsubsection{Číslování objektů}\label{subsubsec:cislovani_objektu}
+Jeden z problémů, na který byl během implementace objeven, je absence číslování objektů.
+Jak bylo popsáno v sekci~\ref{subsec:referencni_popis}, objekty mohou mít v rámci svého názvu číslování, kvůli jednoznačné rozlišitelnosti.
+Nelze předpokládat, že by se tato číselná informace jakkoli vyskytovala v přirozeném popisu.
+Naskýtá se tedy otázka, jak z přirozeného textu získat informaci o tom, o který objekt se konkrétně jedná
+(za předpokladu, že daný objekt je v referenčním popise číslován).
+
+Pro tento účel rozlišení číslovaných objektů byl sestaven doplňkový algoritmus,
+který využívá unikátních vlastností objektů a jejich vazeb.
+Hlavní myšlenka spočívá v tom, že pokud se názvy vícero objektů liší pouze číslováním,
+pak je možné využít jejich atributy a vlastnosti k rozlišení, který objekt je který.
+
+Například pokud ve scéně budou dva stromy \enquote{\texttt{strom \#1}} a \enquote{\texttt{strom \#2}} a právě jeden z nich
+bude součástí tripletu \enquote{\texttt{veverka \to\ šplhá\_po \to\ strom \#1}}, pak lze například z textu
+\begin{center}
+	\enquote{\emph{na obrázku vidím veverku, co šplhá po stromě}}
+\end{center}
+usoudit, že se jedná o \enquote{\texttt{strom \#1}}, protože \enquote{\texttt{strom \#2}} nemůže být součástí daného tripletu.
+Je zde opět použit optimistický přístup, který předpokládá, že uživatel skutečně měl na mysli ten daný objekt (v tomto případě strom),
+který se vyskytuje v detekovaném atributu či tripletu.
+
+Na tomto principu byl tedy implementován algoritmus, který iterativně prochází extrahované informace z derivačních stromů
+a postupně hledá, zda jsou v datech nějaké objekty, které by šly takto specifikovat.
+Pokud je nějaký takový objekt nalezen, pak je mu přidáno příslušné číslování nejen v daném atributu nebo tripletu,
+ale i ve všech ostatních extrahovaných datech, jelikož si vnitřní implementace udržuje informace o tom,
+ze které části textu který kousek sémantiky pochází.
+
+Dále se může stát, že specifikování jednoho objektu umožní následovné specifikování jiného objektu, protože dojde k eliminaci ostatních možností.
+Tento iterativní algoritmus tedy prochází opakovaně všechna extrahovaná data až do chvíle,
+než je celý průchod beze změny - v ten okamžik proces končí.

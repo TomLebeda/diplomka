@@ -1,9 +1,13 @@
 \subsection{Reprezentace znalostí}\label{subsec:reprezentace_znalosti}
-Pro porovnání obrázku s jeho popisem v přirozené řeči bylo nutné zvolit či navrhnout nějakou formu reprezentace znalostí,
+Pro porovnání obrázku s jeho popisem v přirozené řeči bylo nutné zvolit či navrhnout takovou formu reprezentace znalostí,
 která by umožnila zachytit sémantiku z obou zdrojů.
-Jak již bylo výše zmíněno, zvolen byl expertní přístup a to v tomto případě znamená, že referenční popis obrázku je vytvořen lidským expertem,
+Jak již bylo výše zmíněno, zvolen byl expertní přístup, a to v tomto případě znamená, že referenční popis obrázku je vytvořen lidským expertem,
 což klade další omezení na formát reprezentace znalostí.
-\todo{zmínit, že expertní přístup umožňuje lepší kontrolu nad obsahem/kvalitou než automat/statistika?}
+
+Expertní přístup umožňuje velmi přesnou kontrolu nad obsahem a kvalitou vstupních dat, na rozdíl od automaticky získaných dat pomocí statistických metod.
+To je výhodné hlavně z toho důvodu, že kvalita referenčního popisu a dalších vstupních dat přímo ovlivňuje kvalitu výstupu.
+Další výhodou je průhlednost celého procesu, na rozdíl například od neuronových sítí, jejichž funkce je často označována jako black-box.
+To je také spojeno s možností dělat v případě potřeby drobné změny a opravy chyb v referenčním popise.
 
 Při návrhu bylo tedy potřeba brát v úvahu následující požadavky a najít nějaký formát, který by představoval vhodný kompromis mezi nimi.
 \begin{itemize}
@@ -29,22 +33,23 @@ Při návrhu bylo tedy potřeba brát v úvahu následující požadavky a nají
 	      Dynamické formáty s volnou strukturou bývají složitější na strojové zpracování, než fixní formáty s přesně definovanou podobou.
 \end{itemize}
 
-S ohledem na tyto body byla navržena reprezentace znalostí založená na sémantických sítích, která definuje 4 základní \emph{aspekty popisu}: objekty, jejich hierarchii,
-statické atributy a dynamické vazby.
-Detailnější popis těchto jednotlivých aspektů je v následujících částech, konkrétní technická implementace je pak popsána v sekci~\ref{sec:implementace}.
-\todo{jak a kde se správně používá emph pro zdůraznění pojmu/termínu?}
+S ohledem na tyto body byla navržena reprezentace znalostí založená na sémantických sítích,
+která definuje 4 základní \emph{aspekty popisu}: objekty, jejich hierarchii, statické atributy a dynamické vazby.
+Detailnější popis těchto jednotlivých aspektů je v následujících částech,
+konkrétní technická implementace je pak popsána v sekci~\ref{sec:implementace}.
 
 \subsubsection{Objekty ve scéně}\label{subsubsec:objekty_ve_scene}
 \newcommand{\objekt}{{\color{red!70!black}\texttt{objekt}}}
 Cokoli, co lze v obrázku ohraničit rámečkem (angl.~bounding-box)
-\todo{jak s anglikanismy?}
 a při separaci od zbytku scény (obrázku) neztratí nebo zásadně nezmění svůj význam,
 lze považovat za \emph{objekt}.
 
-Jako \emph{objekt} v obrázku lze tedy označit zobrazené fyzické předměty, postavy, zvířata, ale také nehmotné pojmy jako \enquote{nebe},
-místa, lokace či místnosti (např.~\enquote{kuchyň} nebo \enquote{louka}) a části jiných objektů (např.~\enquote{obličej} jsou součást hlavy nebo celého člověka).
+Jako objekt v obrázku lze tedy označit zobrazené fyzické předměty, postavy, zvířata, ale také nehmotné pojmy jako \enquote{nebe},
+místa, lokace či místnosti (např.~\enquote{kuchyň} nebo \enquote{louka}) a části jiných objektů (např.~\enquote{obličej}
+jsou součást hlavy nebo celého člověka).
 
-Tato definice objektu byla záměrně navržena velmi obecně, aby byl definovaný formát univerzální a šel použít i pro popis velmi odlišných obrázků s různými účely.
+Tato definice objektu byla záměrně navržena velmi obecně, aby byl definovaný formát univerzální a šel použít i pro
+popis velmi odlišných obrázků s různými účely.
 Potenciální nevýhodou, která plyne z univerzálnosti formátu, může být v některých situacích problém nejednoznačnosti.
 
 V jednom obrázku lze definovat různé množiny objektů, podle toho, jak moc detailní popis expert vytvoří.
@@ -56,7 +61,24 @@ možné sestavit různé množiny objektů podle toho, pro jaké potřeby je zro
 Pro aplikaci, kde je podstatné zachycení živých objektů, může být množina objektů v referenčním popise tvořena lidmi či zvířaty.
 Pro jiné použití pak ale může být podstatné zachytit prostředí a neživé předměty,
 takže množina objektů by byla tvořena částmi prostředí (např.~stromy, křoví, voda, skály), budovami nebo obecnými předměty.
-\todo{vyměnit dlouhé popisy za jeden ukázkový příklad?}
+
+Příkladem jednoduchého obrázku s několika vyznačenými objekty může být ilustrace zobrazená na Obrázku~\ref{fig:object_image}.
+\begin{figure}[H]
+	\centering
+	\def\dist{1pt}
+	\begin{tikzpicture}[inner sep=0pt]
+		\node[draw, inner sep=3pt] at (0, 0) {\includegraphics[scale=0.35]{imgs/dog_squirrel_tree_mushroom.pdf}};
+		\node[draw=red, minimum width=19mm, minimum height=14mm] (dog) at (-1.25, -1.85) {};
+		\node[draw=red, minimum width=7mm, minimum height=8mm] (squirrel) at (0.14, -0.82) {};
+		\node[draw=red, minimum width=10mm, minimum height=10mm] (mushroom) at (2.05, -1.82) {};
+		\node[draw=red, minimum width=43mm, minimum height=55mm] (tree) at (0.64, 0.32) {};
+		\node[red, anchor=south west] at ($(dog.north west) + (0, \dist)$) {\tiny pes};
+		\node[red, anchor=south west] at ($(squirrel.north west) + (0, \dist)$) {\tiny veverka};
+		\node[red, anchor=north west] at ($(tree.north west) + (\dist, -\dist)$) {\tiny strom};
+		\node[red, anchor=south west] at ($(mushroom.north west) + (0, \dist)$) {\tiny houba};
+	\end{tikzpicture}
+	\caption{Ilustrace s vyznačenými objekty}\label{fig:object_image}
+\end{figure}
 
 \subsubsection{Hierarchie objektů}
 Kromě množiny samotných objektů lze v obrázku také definovat jejich hierarchii.
@@ -89,7 +111,6 @@ Tato příslušnost objektu nějaké skupině je dalším typem sémantické inf
 
 Mohou však nastat situace, kdy je potřeba jeden objekt zařadit do několika různých skupin.
 Z tohoto důvodu bylo rozhodnuto, že každý objekt může mít libovolné množství rodičů a libovolné množství potomků.
-\todo{zdůvodňovat? dávat příklad? přirovnávat k OOP dědičnost vs kompozice?}
 
 \subsubsection{Atributy objektů}
 Vedle pouhého výčtu samotných objektů ve scéně je dále přirozeným požadavkem, aby byla reprezentace znalostí schopna zachytit i jejich vlastnosti.
@@ -110,8 +131,6 @@ Názvy atributů pod jedním objektem nemusí být unikátní, lze specifikovat 
 Typickým příkladem může být vícebarevný objekt, kde atribut s názvem \enquote{barva} bude vícekrát, pro různé konkrétní barvy.
 Příklad jednoho takového popisu je na Obrázku~\ref{fig:example_tshirt}, kde název objektu je \enquote{tričko}
 a definované jsou tři atributy: dvě barvy a vzor.
-\todo{hezčí tabulka pro popis objektu?}
-\todo{přidat šipky a popisky do tabulky co je co?}
 
 \begin{figure}[H]
 	\centering
@@ -143,17 +162,17 @@ a definované jsou tři atributy: dvě barvy a vzor.
 
 Pro složitější objekty se opět naskýtá problém toho, jaké vlastnosti vybrat a zapsat do referenčního popisu, a které je možné naopak zanedbat.
 Tato otázka je podobná problematice nejednoznačnosti, zmíněné v části~\ref{subsubsec:objekty_ve_scene} definující objekty.
-A i zde platí to, že popis byl záměrně vytvořen tak, aby byl univerzální a volba atributů do referenčního závisí na expertovi a konkrétní aplikaci.
+A i zde platí to, že popis byl záměrně vytvořen tak, aby byl univerzální a volba atributů do referenčního popisu
+závisí na expertovi a konkrétní aplikaci.
 
 
 \subsubsection{Vazby mezi objekty}
-Posledním typem informace, kterou by měl být referenční popis obrázku schopen zachytit, jsou vazby a vztahy mezi různými objekty.
+Dalším typem informace, kterou by měl být referenční popis obrázku schopen zachytit, jsou vazby a vztahy mezi různými objekty.
 Může se jednat například o činnosti, které se týkají dvou objektů, nebo popis relativních vlastností, jako je velikost či pozice.
 
 Každý takový záznam je označen jako \emph{triplet} a skládá se ze \emph{zdrojového objektu},
 \emph{cílového objektu} a \emph{predikátu}, který popisuje danou vazbu nebo vztah.
-Tato struktura je inspirována běžným zápisem sémantických sítí a RDF standardem.
-\todo{doplnit reference!}
+Tato struktura je inspirována běžným zápisem sémantických sítí a RDF standardem~\cite{rdf}.
 Obecné schéma jednoho tripletu je na Obrázku~\ref{fig:schema_tripletu}.
 
 \begin{figure}[H]
@@ -171,7 +190,7 @@ Objekt také nemusí být součástí žádných vazeb a dokonce v celém popisu
 Například pokud bychom chtěli pouze testovat paměť uživatele, mohli bychom mu ukázat obrázek, pak jej skrýt a sledovat, jaké objekty si vybaví.
 V takové úloze nás vazby mezi objekty vůbec nemusejí zajímat a je tedy zbytečné, aby byly součástí referenčního popisu.
 
-Při vytváření referenčního popisu obrázku se opět naskýtá otázka, jaké vazby a vztahy mezi objekty do popisu zavést a které lze ignorovat.
+Při vytváření referenčního popisu obrázku se opět naskýtá otázka, jaké vazby a vztahy mezi objekty do popisu zavést, a které lze ignorovat.
 Například relativní velikost nebo pozice objektů může být pro některé úlohy klíčová, ale pro jiné zcela nepodstatná.
 Tato problematika byla opět ponechána na expertovi, který vytváří referenční popis pro danou konkrétní aplikaci,
 aby rozhodl, které informace je potřeba v referenčním popise zachytit.
@@ -196,3 +215,23 @@ Konkrétní příklad několika tripletů je znázorněn na Obrázku~\ref{fig:tr
 	\caption{Příklad použití tripletů pro popis vztahů mezi objekty}\label{fig:triplety_priklad}
 \end{figure}
 \todo{příklad s kompletním popisem obrázku (všechno dohromady)?}
+
+\subsubsection{Další typy informací}
+Kromě výše zmíněných objektů, jejich vlastností a vazeb, je také možné pro některé aplikace požadovat,
+aby byly zachyceny i další jiné informace.
+
+Jednou takovou dodatečnou informací může být například přesah zobrazené scény do reálného života, nebo extrapolace dějů a objektů.
+Tím jsou myšlené různé další objekty, děje, činnosti nebo vlastnosti, které nejsou
+přímo zobrazené na daném obrázku, ale z kontextu by bylo možné je nějakým způsobem předvídat.
+Příkladem takové situace může být ilustrace zobrazující například dítě, které si hraje blízko břehu řeky - v takovém případě je možné
+požadovat zachycení informace ve stylu \enquote{dítě může spadnout do vody}.
+
+Druhým typem dodatečné informace může být meta-popis samotné scény.
+Pod tímto pojmem jsou myšlené obecné informace o obrázku, například celkový popis toho, co je na scéně vyobrazeno.
+Například pro Obrázek~\ref{fig:summer} by mohl být takovýmto meta-popisem například \enquote{scéna na břehu rybníka}.
+
+Pro oba tyto typy informací nebyly navrženy žádné speciální datové struktury.
+Bylo rozhodnuto, že v případě potřeby je možné tyto informace zachytit dostatečně dobře pomocí již definovaných
+objektů, atributů a vazeb mezi objekty.
+
+Případné rozšíření formy referenčního popisu o nějaké další specializované typy popisů bylo ponecháno jako předmět dalšího budoucího možného rozšíření.

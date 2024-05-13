@@ -1,0 +1,50 @@
+\begin{lstlisting}[
+	% there are many more options of styling, see the official documentation, these are just the defaults I like
+	frame=single, % make single-line frame around the verbatim
+	framesep=2mm, % put some more spacing between the frame and text
+	aboveskip=5mm, % put some more space above the box
+	basicstyle={\linespread{0.9}\small\ttfamily}, % use typewriter (monospace) font
+	caption={Ztrátová tabulka použitá při testování}, % set the caption text
+	captionpos=b, % put the caption at the bottom (b) or top (t) or both (bt)
+	label={lst:loss_table_example}, % label to be referenced via \ref{}
+	numbers=left, % line numbers on the left
+	numberstyle={\scriptsize\ttfamily\color{black!60}}, % the style for line numbers
+	escapeinside={<@}{@>} % between those sequences are command evaluated
+]
+<@\textcolor[HTML]{FF1010}{\texttt{\{}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"missing\_objects"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{3}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"missing\_attributes"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{1}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"missing\_triplets"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{2}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"numberless\_penalty"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{0.5}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"wrong\_values"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{2}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"missing\_objects\_override"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{418310}{\texttt{"person"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{5}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{418310}{\texttt{"animal"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{4}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{418310}{\texttt{"environment"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{1}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"missing\_attributes\_override"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{418310}{\texttt{"action"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{1.5}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{418310}{\texttt{"state"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{0.5}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"missing\_triplets\_override"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{418310}{\texttt{"falling\ into"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{5}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"wrong\_values\_override"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{\{}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"attribute"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{418310}{\texttt{"color"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"default"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{0.5}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"overrides"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{418310}{\texttt{"white"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{418310}{\texttt{"yellow"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{418310}{\texttt{"pink"}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{0.3}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{418310}{\texttt{"red"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{418310}{\texttt{"blue"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{418310}{\texttt{"green"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{418310}{\texttt{"yellow"}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{0.8}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{\}}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{\{}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"attribute"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{418310}{\texttt{"action"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"default"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{1.5}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ }}@><@\textcolor[HTML]{255CFF}{\texttt{"overrides"}}@><@\textcolor[HTML]{1041FF}{\texttt{:}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{418310}{\texttt{"sitting"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{418310}{\texttt{"reading"}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{0.8}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{FF1010}{\texttt{[}}@><@\textcolor[HTML]{418310}{\texttt{"fishing"}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{418310}{\texttt{"sitting"}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@><@\textcolor[HTML]{1041FF}{\texttt{,}}@><@\textcolor[HTML]{000000}{\texttt{\ }}@><@\textcolor[HTML]{DE6F10}{\texttt{0.7}}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ \ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{\}}}@>
+<@\textcolor[HTML]{000000}{\texttt{\ \ }}@><@\textcolor[HTML]{FF1010}{\texttt{]}}@>
+<@\textcolor[HTML]{FF1010}{\texttt{\}}}@>
+
+\end{lstlisting}

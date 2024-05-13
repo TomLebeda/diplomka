@@ -1,0 +1,173 @@
+\subsection{Testování na datech}
+Posledním krokem bylo ověření funkčnosti navrženého a implementovaného systému.
+K tomu bylo potřeba získat vhodná data, konkrétně obrázek a k němu přirozené popisy, pokud možnost v textové podobě.
+Tato data byla získána z projektu
+\todo{referovat DigiDiaDem data/projekt?}
+\todo{jak moc rozebírat účel toho projektu a dat?}
+
+Popisovanou scénou byla kresba zobrazená na Obrázku~\ref{fig:summer}.
+K tomuto obrázku bylo získáno několik desítek přepisů, z nichž bylo několik náhodně vybráno pro účely testování.
+
+Referenční popis daného obrázku, stejně jako SPGF gramatika a ztrátová tabulka,
+byly vytvořené autorem této práce a nikoli expertem z oboru, odkud pocházejí nasbíraná data.
+Hodnoty ve ztrátové tabulce je tedy třeba chápat jako ilustrační a ve výsledcích je možné srovnávat pouze relativní ztráty,
+nelze dělat smysluplné závěry z konkrétních hodnot.
+To však nepředstavuje problém, protože cílem zde bylo ověřit funkčnost navrženého systému, na což ilustrační hodnoty postačují.
+
+Vytvořený referenční popis Obrázku~\ref{fig:summer} je možné prozkoumat spolu se sestavenou SPGF gramatikou u zdrojových kódů.
+Ztrátová tabulka použitá při testování je na Výpisu~\ref{lst:loss_table_example}.
+
+\input{src/listings/loss.tex}
+
+V Tabulce~\ref{tab:exmple_extracts} je několik vět z prvního přepisu, k nimž je vypsána množina extrahovaných objektů $\mathcal{O}$,
+množina extrahovaných atributů $\mathcal A$ a množina extrahovaných vazeb $\mathcal V$.
+
+\begin{table}[H]
+	\centering
+
+	\def\objone{\begin{tabular}{l}
+			water  \\[-1mm]
+			people \\[-1mm]
+			animals
+		\end{tabular}}
+
+	\def\objtwo{\begin{tabular}{l}
+			woman   \\[-1mm]
+			lounger \\[-1mm]
+			book    \\[-1mm]
+			parasol
+		\end{tabular}}
+
+	\def\objthree{\begin{tabular}{l}
+			blanket \\[-1mm]
+			basket
+		\end{tabular}}
+
+	\def\objfour{\begin{tabular}{l}
+			girl         \\[-1mm]
+			swimsuit \#1 \\[-1mm]
+			boy          \\[-1mm]
+			cap          \\[-1mm]
+			tshirt       \\[-1mm]
+			shorts
+		\end{tabular}}
+
+	\def\attrone{\begin{tabular}{l}
+			people: count = 5
+		\end{tabular}}
+
+	\def\attrtwo{---}
+
+	\def\attrthree{---}
+
+	\def\attrfour{\begin{tabular}{l}
+			girl: hairstyle = ponytail \\[-1mm]
+			tshirt: pattern = striped
+		\end{tabular}}
+
+	\def\tripone{\begin{tabular}{l}
+			---
+		\end{tabular}}
+	\def\triptwo{woman reading book}
+	\def\tripthree{---}
+	\def\tripfour{\begin{tabular}{l}
+			% girl \to\ wearing \to\ swimsuit \#1 \\[-1mm]
+			% boy \to\ wearing \to\ cap
+			girl wearing swimsuit \#1 \\[-1mm]
+			boy wearing cap
+		\end{tabular}}
+
+	\def\senone{\emph{na břehu rybníka je pět osob a několik zvířat}}
+	\def\sentwo{\emph{vlevo sedí žena na lehátku čte si knihu pod slunečníkem}}
+	\def\senthree{\emph{vedle sebe má rozprostřenou piknikovou deku s košíkem a s jídlem na piknik}}
+	\def\senfour{\hspace{-1.5mm}\begin{tabular}{l}
+			\emph{je to děvče s culíkem a v plavkách a chlapec} \\[-1mm]
+			\emph{s kšiltovkou a pruhovanym tričkem a kraťasy}
+		\end{tabular}}
+
+	\begin{tabular}{|l|ccc|}
+		\hline
+		Věta 1            & \multicolumn{3}{l|}{\senone}                                                                                            \\ \hline
+		\multirow{2}{*}{} & \multicolumn{1}{c|}{Objekty $\mathcal O_{1}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{1}$} & Vazby $\mathcal V_{1}$ \\ \cline{2-4}
+		                  & \multicolumn{1}{l|}{\objone}                  & \multicolumn{1}{c|}{\attrone}                  & \tripone               \\ \hline
+		\hline
+		Věta 2            & \multicolumn{3}{l|}{\sentwo}                                                                                            \\ \hline
+		\multirow{2}{*}{} & \multicolumn{1}{c|}{Objekty $\mathcal O_{2}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{2}$} & Vazby $\mathcal V_{2}$ \\ \cline{2-4}
+		                  & \multicolumn{1}{l|}{\objtwo}                  & \multicolumn{1}{c|}{\attrtwo}                  & \triptwo               \\ \hline
+		\hline
+		Věta 3            & \multicolumn{3}{l|}{\senthree}                                                                                          \\ \hline
+		\multirow{2}{*}{} & \multicolumn{1}{c|}{Objekty $\mathcal O_{3}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{3}$} & Vazby $\mathcal V_{3}$ \\ \cline{2-4}
+		                  & \multicolumn{1}{l|}{\objthree}                & \multicolumn{1}{c|}{\attrthree}                & \tripthree             \\ \hline
+		\hline
+		Věta 4            & \multicolumn{3}{l|}{\senfour}                                                                                           \\ \hline
+		\multirow{2}{*}{} & \multicolumn{1}{c|}{Objekty $\mathcal O_{4}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{4}$} & Vazby $\mathcal V_{4}$ \\ \cline{2-4}
+		                  & \multicolumn{1}{l|}{\objfour}                 & \multicolumn{1}{c|}{\attrfour}                 & \tripfour              \\ \hline
+	\end{tabular}
+	\caption{Příklad konkrétních vět z nich extrahovaných entit}\label{tab:exmple_extracts}
+\end{table}
+
+Jak je možné na těchto ukázkách vidět, tak navržený systém je schopen z přirozeného textu extrahovat požadované sémantické informace.
+Předpokladem pro kvalitní výstup je kvalitní referenční popis a SPGF gramatika.
+Oba tyto faktory jsou zcela závislé na expertovi, který vytváří jak referenční popis, tak gramatiku.
+
+To může představovat problém ve smyslu vysokých počátečních nákladů, protože tvorba referenčního popisu a SPGF gramatiky
+vyžaduje znalost zde navrženého formátu a může být pro lidského experta časově náročná.
+Naopak výhodou zvoleného přístupu je ale možnost upravovat a vylepšovat jak referenční popis, tak SPGF gramatiku i v budoucnu,
+protože oba tyto vstupy jsou navržené tak, aby byly čitelné člověkem a bylo možné je v případě potřeby kdykoli upravit.
+
+Dále tento expertní přístup a manuální správa vstupních dat umožňuje přesnou kontrolu, na rozdíl od jiných přístupů, například neuronových sítí, jejichž funkce je spíše black-box a
+potřeba provést detailní změny nebo přímo kontrolovat některé aspekty procesu jsou velmi obtížné.
+
+Celé přepisy použité pro další testování a získání ilustračních výstupů jsou následující:
+\todo{má cenu vůbec řešit celkové výstupní ztráty, když stejně ztrátová tabulka má jenom ilustrační hodnoty?}
+\todo{nechat ty přepisy přímo tady, nebo je dát jako přílohu?}
+\input{src/prepisy.tex}
+
+Pro tyto přepisy bylo podle ztrátové tabulky (viz Výpis~\ref{lst:loss_table_example}) vypočteno hodnocení, jehož část (zkráceno kvůli délce) je vidět v Tabulce~\ref{tab:out_values}.
+Kompletní výpisy je možné prozkoumat spolu se zdrojovými kódy online.
+\todo{doplnit zbytek tabulky}
+\begin{table}[ht!]
+	\centering
+	\begin{tabular}{|l|c|c|c|c|c|}
+		\hline
+		\multirow{2}{*}{\textbf{Typ ztráty}}                & \multicolumn{5}{c|}{\textbf{Číslo přepisu}}                                                     \\
+		\cline{2-6}
+		                                                    & \textbf{1}                                  & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} \\
+		\hline
+		chybějící objekty                                   & 125.5                                       &            &            &            &            \\
+		chybějící atributy                                  & 79.5                                        &            &            &            &            \\
+		chybějící triplety                                  & 164.0                                       &            &            &            &            \\
+		atributy s chybnou hodnotou                         & 2.0                                         &            &            &            &            \\
+		\hline
+		chybějící objekt s tagem \enquote{animal}           & 52.0                                        &            &            &            &            \\
+		chybějící objekt s tagem \enquote{item}             & 24.0                                        &            &            &            &            \\
+		chybějící objekt s tagem \enquote{person}           & 5.5                                         &            &            &            &            \\
+		chybějící objekt s tagem \enquote{clothing}         & 24.0                                        &            &            &            &            \\
+		\hline
+		chybějící atributy typu \enquote{action}            & 5.0                                         &            &            &            &            \\
+		chybějící atributy typu \enquote{color}             & 61.0                                        &            &            &            &            \\
+		chybějící atributy typu \enquote{facial expression} & 0.5                                         &            &            &            &            \\
+		chybějící atributy typu \enquote{hairstyle}         & 1.0                                         &            &            &            &            \\
+		chybějící atributy typu \enquote{pattern}           & 1.0                                         &            &            &            &            \\
+		\hline
+		chybějící vazby typu \enquote{climbing}             & 2.0                                         &            &            &            &            \\
+		chybějící vazby typu \enquote{catching}             & 4.0                                         &            &            &            &            \\
+		chybějící vazby typu \enquote{sitting under}        & 2.0                                         &            &            &            &            \\
+		chybějící vazby typu \enquote{swimming in}          & 2.0                                         &            &            &            &            \\
+		chybějící vazby typu \enquote{watching}             & 2.0                                         &            &            &            &            \\
+		chybějící vazby typu \enquote{chasing}              & 2.0                                         &            &            &            &            \\
+		chybějící vazby typu \enquote{sitting on}           & 8.0                                         &            &            &            &            \\
+		chybějící vazby typu \enquote{falling into}         & 0.0                                         &            &            &            &            \\
+		chybějící vazby typu \enquote{running away from}    & 2.0                                         &            &            &            &            \\
+		chybějící vazby typu \enquote{wearing}              & 20.0                                        &            &            &            &            \\
+		chybějící vazby typu \enquote{throwing}             & 2.0                                         &            &            &            &            \\
+		\hline
+		chybné hodnoty atributů typu \enquote{action}       & 0.0                                         &            &            &            &            \\
+		chybné hodnoty atributů typu \enquote{color}        & 0.0                                         &            &            &            &            \\
+		chybné hodnoty atributů typu \enquote{pattern}      & 0.0                                         &            &            &            &            \\
+		chybné hodnoty atributů typu \enquote{count}        & 2.0                                         &            &            &            &            \\
+		chybné hodnoty atributů typu \enquote{hairstyle}    & 0.0                                         &            &            &            &            \\
+		\hline
+	\end{tabular}
+	\caption{Ztrátové hodnoty testovaných přepisů (zkráceno)}\label{tab:out_values}
+\end{table}
