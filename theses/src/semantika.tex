@@ -39,7 +39,8 @@ Následuje popis vybraných technik, které jsou široce používané v úlohác
 metody porozumění přirozené řeči.~\cite{the_conversational_interface}
 \todo{hodně jsem tady čerpal z~\cite{the_conversational_interface}, zdrojuje se každý odstavec samostatně?}
 
-Tato práce řeší danou problematiku expertním přístupem, konkrétně s využitím bezkontextových gramatik, které budou rozebrány detailněji.
+Tato práce řeší danou problematiku expertním přístupem, konkrétně s využitím bezkontextových sémantických gramatik,
+jejichž principy budou rozebrány detailněji později v samostatné sekci~\ref{subsubsec:grammars}.
 
 \begin{enumerate}
 	\item \textbf{Tokenizace}\\
@@ -83,50 +84,127 @@ Tato práce řeší danou problematiku expertním přístupem, konkrétně s vyu
 	      Pravidlový přístup je založen na použití často velmi rozsáhlé databáze pravidel, které jsou většinou tvořené ručně lidským expertem.
 	      Proti tomu stochastický přístup využívá statistických metod pro určení pravděpodobnosti jednotlivých tagů v na daných pozicích
 	      podle okolního kontextu.~\cite{the_conversational_interface}
-
-	      \newpage
-	\item \textbf{Sémantické gramatiky}\\
-	      Další způsob, jakým lze zpracovat vstupní text, je založený na metodách formální syntaxe.
-	      Celkový vstupní text lze chápat jako jeden objekt, který lze rozdělit na menší části.
-	      Tyto menší části lze dále rekurzivně dělit až do okamžiku, než jsou jednotlivé části dále nedělitelné (atomické) - v ten moment se označují jako \emph{primitiva},
-	      která mají funkci \emph{terminálních symbolů}.
-	      Tento proces rekurzivního dělení vytváří hierarchickou stromovou strukturu, kde kořenovým uzlem je původní vstupní text a
-	      koncové uzly (označované jako listy) jsou tvořené právě terminálními symboly.~\cite{PsutkaJ_2006_Mluvimes}
-
-	      Stromová struktura umožňuje výhodně aplikovat metody pro analýzu syntaxe formálních jazyků.
-	      Množina těchto terminální symbolů se označuje jako \emph{abeceda formálního jazyka}.
-	      Formálním jazykem je možné popsat množinu předmětů, které jsou tvořené složením terminálních symbolů do nějaké struktury (posloupnosti, řetězce).
-	      Tyto řetězce terminálních symbolů se označují jako \emph{slova formálního jazyka} a pravidla,
-	      která popisují, jak je možné jednotlivé terminální symboly skládat do slov, jsou označována jako \emph{substituční} nebo \emph{produkční pravidla}.
-	      Pro lepší možnosti vyjádření jsou definované ještě takzvané \emph{neterminální symboly}, které zastávají funkci pomocných částí popisu předmětů.
-	      Definovaná substituční pravidla lze definovat i rekurzivně, což výrazně rozšiřuje vyjadřovací schopnosti a umožňuje popsat i nekonečné množiny předmětů
-	      pomocí konečného (a relativně malého) počtu pravidel.~\cite{PsutkaJ_2006_Mluvimes}
-
-	      Tato pravidla, společně s množinou terminálních a neterminálních symbolů tvoří dohromady takzvanou \emph{gramatiku}.
-	      Formálně lze gramatiku $G$ popsat čtveřicí
-	      \[
-		      G = (V_{N}, V_{T}, \rho, S),
-	      \]
-	      kde $V_{N}$ je množina neterminálních symbolů, $V_{T}$ je množina terminálních symbolů,
-	      $\rho$ označuje množinu substitučních pravidel a $S \in V_{N}$ je počáteční symbol gramatiky.
-	      Gramatiky lze rozdělit na deterministické a stochastické, podle toho, zda jsou její pravidla definována deterministicky,
-	      nebo s využitím pravděpodobností.~\cite{PsutkaJ_2006_Mluvimes}
-	      Tato práce se zabývá pouze deterministickým přístupem.
-
-	      Takto definované gramatiky lze rozdělit do čtyř základních kategorií, podle typu jejich pravidel.
-	      Nejobecnější a nejsložitější jsou \emph{gramatiky typu 0}, poté jsou \emph{kontextové gramatiky},
-	      dále \emph{bezkontextové gramatiky} a nejjednodušším typem jsou \emph{regulární gramatiky}.
-	      Se složitostí gramatiky je také spojena její vyjadřovací schopnost, tedy pomocí složitějších gramatik je možné
-	      zachytit složitější struktury.
-	      Nejjednodušší regulární gramatiky nejsou například schopné zachytit vztah mezi částmi, které nejsou bezprostředně vedle
-	      sebe, což je pro text s přirozeným jazykem velmi silná limitace.
-	      Pro porozumění řeči se nejčastěji používají bezkontextové gramatiky.
-	      Kontextové gramatiky a gramatiky typu 0 by umožňovaly zachytit ještě další složitější vazby mezi částmi
-	      textu, ale jejich úroveň komplexnosti je natolik vysoká,
-	      že strojové zpracování je extrémně obtížné a výpočetně náročné.~\cite{PsutkaJ_2006_Mluvimes}
-
-	      Výstupem zpracování pomocí bezkontextových gramatik je tedy strukturální informace, ze které lze zjistit,
-	      zda daný vstupní text odpovídá dané gramatice a pokud ano, jak vypadá jeho rozklad.
-	      Takto získaná stromová struktura jednotlivých rozpoznaných symbolů představuje sémantickou informaci,
-	      kterou je možné dále využít a zpracovat.
 \end{enumerate}
+
+\subsubsection{Sémantické gramatiky}\label{subsubsec:grammars}
+Další způsob, jakým lze zpracovat vstupní text, je založený na metodách formální syntaxe.
+Celkový vstupní text lze chápat jako jeden objekt, který lze rozdělit na menší části.
+Tyto menší části lze dále rekurzivně dělit až do okamžiku, než jsou jednotlivé části dále nedělitelné (atomické) - v ten moment se označují jako \emph{primitiva},
+která mají funkci \emph{terminálních symbolů}.
+Tento proces rekurzivního dělení vytváří hierarchickou stromovou strukturu, kde kořenovým uzlem je původní vstupní text a
+koncové uzly (označované jako listy) jsou tvořené právě terminálními symboly.~\cite{PsutkaJ_2006_Mluvimes}
+
+Na Obrázku~\ref{fig:example_car_fix} je zobrazený rozklad věty
+\begin{center}
+	\enquote{\emph{Dobrý den, potřebuji zkontrolovat brzdy a vyměnit olej na autě, děkuji.}},
+\end{center}
+na kterém je možné vidět základní princip zpracování textu pomocí sémantických gramatik a výše zmíněný postupný rozklad na jednodušší jednotky.
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[inner sep=2pt]
+		\def\dist{15pt}
+		\def\mysize{\footnotesize}
+
+		\node[anchor=west] (dobrý den) at (0, 0) {\mysize \strut \emph{dobrý den}};
+		\node[anchor=west] (potřebuji) at ($(dobrý den.east) + (\dist, 0)$) {\mysize \strut \emph{potřebuji}};
+		\node[anchor=west] (zkontrolovat) at ($(potřebuji.east) + (\dist, 0)$) {\mysize \strut \emph{zkontrolovat}};
+		\node[anchor=west] (brzdy) at ($(zkontrolovat.east) + (\dist, 0)$) {\mysize \strut \emph{brzdy}};
+		\node[anchor=west] (a) at ($(brzdy.east) + (\dist, 0)$) {\mysize \strut \emph{a}};
+		\node[anchor=west] (vyměnit) at ($(a.east) + (\dist, 0)$) {\mysize \strut \emph{vyměnit}};
+		\node[anchor=west] (olej) at ($(vyměnit.east) + (\dist, 0)$) {\mysize \strut \emph{olej}};
+		\node[anchor=west] (na autě) at ($(olej.east) + (\dist, 0)$) {\mysize \strut \emph{na autě}};
+		\node[anchor=west] (děkuji) at ($(na autě.east) + (\dist, 0)$) {\mysize \strut \emph{děkuji}};
+
+		\def\dist{25pt}
+		\node (pozdrav) at ($(dobrý den.north) + (0, 2*\dist)$) {\mysize \texttt{\strut pozdrav}};
+		\node (výplň) at ($(potřebuji.north) + (0, 2*\dist)$) {\mysize \texttt{\strut výplň}};
+		\node (akce) at ($(zkontrolovat.north) + (0, \dist)$) {\mysize \texttt{\strut akce}};
+		\node (předmět) at ($(brzdy.north) + (0, \dist)$) {\mysize \texttt{\strut předmět}};
+		\node (výplň 2) at ($(a.north) + (0, 2*\dist)$) {\mysize \texttt{\strut výplň}};
+		\node (akce 2) at ($(vyměnit.north) + (0, \dist)$) {\mysize \texttt{\strut akce}};
+		\node (předmět 2) at ($(olej.north) + (0, \dist)$) {\mysize \texttt{\strut předmět}};
+		\node (kontext) at ($(na autě.north) + (0, 2*\dist)$) {\mysize \texttt{\strut kontext}};
+		\node (výplň 3) at ($(děkuji.north) + (0, 2*\dist)$) {\mysize \texttt{\strut výplň}};
+
+		\draw[->] (dobrý den) -- (pozdrav);
+		\draw[->] (potřebuji) -- (výplň);
+		\draw[->] (zkontrolovat) -- (akce);
+		\draw[->] (brzdy) -- (předmět);
+		\draw[->] (a) -- (výplň 2);
+		\draw[->] (vyměnit) -- (akce 2);
+		\draw[->] (olej) -- (předmět 2);
+		\draw[->] (na autě) -- (kontext);
+		\draw[->] (děkuji) -- (výplň 3);
+
+		\node (požadavek 1) at ($0.5*(akce.north west) + 0.5*(předmět.north east) + (0, \dist)$) {\mysize \texttt{\strut požadavek}};
+		\draw[->] (akce) -- (požadavek 1);
+		\draw[->] (předmět) -- (požadavek 1);
+
+		\node (požadavek 2) at ($0.5*(akce 2.north west) + 0.5*(předmět 2.north east) + (0, \dist)$) {\mysize \texttt{\strut požadavek}};
+		\draw[->] (akce 2) -- (požadavek 2);
+		\draw[->] (předmět 2) -- (požadavek 2);
+
+		\node (úvod) at ($0.5*(pozdrav.north west) + 0.5*(výplň.north east) + (2*\dist, 2*\dist)$) {\mysize \texttt{\strut úvod}};
+		\draw[->] (pozdrav) -- (úvod);
+		\draw[->] (výplň) -- (úvod);
+
+		\node (obsah) at ($(výplň 2.north) + (0, 2*\dist)$) {\mysize \texttt{\strut obsah}};
+		\draw[->] (požadavek 1) -- (obsah);
+		\draw[->] (požadavek 2) -- (obsah);
+		\draw[->] (výplň 2) -- (obsah);
+
+		\node (závěr) at ($(kontext.north) + (-1.5*\dist, 2*\dist)$) {\mysize \texttt{\strut závěr}};
+		\draw[->] (kontext) -- (závěr);
+		\draw[->] (výplň 3) -- (závěr);
+
+		\node (objednávka) at ($(obsah.north) + (0, 1*\dist)$) {\mysize \texttt{\strut objednávka}};
+		\draw[->] (úvod) -- (objednávka);
+		\draw[->] (obsah) -- (objednávka);
+		\draw[->] (závěr) -- (objednávka);
+	\end{tikzpicture}
+	\caption{Ukázka rozkladu věty}\label{fig:example_car_fix}
+\end{figure}
+
+Stromová struktura umožňuje výhodně aplikovat metody pro analýzu syntaxe formálních jazyků.
+Množina těchto terminální symbolů se označuje jako \emph{abeceda formálního jazyka}.
+Formálním jazykem je možné popsat množinu předmětů, které jsou tvořené složením terminálních symbolů do nějaké struktury (posloupnosti, řetězce).
+Tyto řetězce terminálních symbolů se označují jako \emph{slova formálního jazyka} a pravidla,
+která popisují, jak je možné jednotlivé terminální symboly skládat do slov, jsou označována jako \emph{substituční} nebo \emph{produkční pravidla}.
+
+Pro lepší možnosti vyjádření jsou definované ještě takzvané \emph{neterminální symboly}, které zastávají funkci pomocných částí popisu předmětů.
+Substituční pravidla mají tvar
+\[
+	\eta \to \omega \qquad \text{nebo} \qquad \eta \xrightarrow{P} \omega,
+\]
+kde $\eta$ a $\omega$ jsou řetězce terminálních a neterminálních symbolů a $P$ označuje pravděpodobnost (pro stochastická pravidla).
+Substituční pravidla lze definovat i rekurzivně, což výrazně rozšiřuje vyjadřovací schopnosti a umožňuje popsat i nekonečné množiny předmětů
+pomocí konečného (a relativně malého) počtu pravidel.~\cite{PsutkaJ_2006_Mluvimes}
+
+Tato pravidla, společně s množinou terminálních a neterminálních symbolů tvoří dohromady takzvanou \emph{gramatiku}.
+Formálně lze gramatiku $G$ popsat čtveřicí
+\[
+	G = (V_{N}, V_{T}, \rho, S),
+\]
+kde $V_{N}$ je množina neterminálních symbolů, $V_{T}$ je množina terminálních symbolů,
+$\rho$ označuje množinu substitučních pravidel a $S \in V_{N}$ je počáteční symbol gramatiky.
+Gramatiky lze rozdělit na deterministické a stochastické, podle toho, zda jsou její pravidla definována deterministicky,
+nebo s využitím pravděpodobností.~\cite{PsutkaJ_2006_Mluvimes}
+Tato práce se zabývá pouze deterministickým přístupem.
+
+Takto definované gramatiky lze rozdělit do čtyř základních kategorií, podle typu jejich pravidel.
+Nejobecnější a nejsložitější jsou \emph{gramatiky typu 0}, poté jsou \emph{kontextové gramatiky},
+dále \emph{bezkontextové gramatiky} a nejjednodušším typem jsou \emph{regulární gramatiky}.
+Se složitostí gramatiky je také spojena její vyjadřovací schopnost, tedy pomocí složitějších gramatik je možné
+zachytit složitější struktury.
+Nejjednodušší regulární gramatiky nejsou například schopné zachytit vztah mezi částmi, které nejsou bezprostředně vedle
+sebe, což je pro text s přirozeným jazykem velmi silná limitace.
+Pro porozumění řeči se nejčastěji používají bezkontextové gramatiky.
+Kontextové gramatiky a gramatiky typu 0 by umožňovaly zachytit ještě další složitější vazby mezi částmi
+textu, ale jejich úroveň komplexnosti je natolik vysoká,
+že strojové zpracování je extrémně obtížné a výpočetně náročné.~\cite{PsutkaJ_2006_Mluvimes}
+
+Výstupem zpracování pomocí bezkontextových gramatik je tedy strukturální informace, ze které lze zjistit,
+zda daný vstupní text odpovídá dané gramatice a pokud ano, jak vypadá jeho rozklad.
+Takto získaná stromová struktura jednotlivých rozpoznaných symbolů představuje sémantickou informaci,
+kterou je možné dále využít a zpracovat.
