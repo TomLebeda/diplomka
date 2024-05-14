@@ -524,7 +524,7 @@ Pokud element žádné opakování nemá specifikované, implicitní hodnota je 
 		\cline{2-3}
 		                                 & \textbf{min}                                  & \textbf{max}                       &                                             \\
 		\hline
-		\texttt{<m-n>}                   & $m$                                           & $n$                                & $m,n \in \mathbb{N}^{0} \ \wedge \ m\geq n$ \\
+		\texttt{<m-n>}                   & $m$                                           & $n$                                & $m,n \in \mathbb{N}^{0} \ \wedge \ m\leq n$ \\
 		\hline
 		\texttt{<m->}                    & $m$                                           & $\infty$                           & v implementaci $\textbf{max} = 2^{32}-1$    \\
 		\hline
@@ -560,8 +560,7 @@ Představuje situaci, kdy dvě alternativy mají různé tagy, ale stejné token
 \end{table}
 
 V existující implementaci SRGS, se kterou byly prováděné první experimenty, byl implementován pouze takzvaný \enquote{hladový algoritmus}, běžněji označovaný pod anglickým názvem \emph{greedy matching}.
-Pro potřeby sémantické analýzy textu v této práci bylo ovšem zjištěno, že pouze greedy algoritmus nebude zcela postačovat.
-\todo{můžu takhle použít rovnou anglické názvy? přijdou mi lepší než české \enquote{hladový} \enquote{líný} nebo \enquote{důsledný}}
+Pro potřeby sémantické analýzy textu v této práci bylo ovšem zjištěno, že pouze \emph{greedy} algoritmus nebude zcela postačovat.
 
 Příkladem takové situace by mohla být analýza textu
 \begin{center}
@@ -575,7 +574,7 @@ Pravidlo pro zachycení barvy zvířete by mohlo vypadat takto:
 kde \texttt{\$color} a \texttt{\$animal} jsou reference na pravidla akceptující konkrétní slova pro barvy a zvířata.
 Speciální pravidlo \texttt{\$GARBAGE} je zde definováno s operátorem opakování \enquote{\texttt{<*>}},
 což lze chápat tak, že mezi samotnou barvou a zvířetem může být libovolný počet dalších slov, která nejsou podstatná.
-Při zpracování textu pak ale dochází k problému, že greedy algoritmus vrátí derivační strom zakreslený na Obrázku~\ref{fig:parsing_tree_greedy}:
+Při zpracování textu pak ale dochází k problému, že \emph{greedy} algoritmus vrátí derivační strom zakreslený na Obrázku~\ref{fig:parsing_tree_greedy}:
 \begin{figure}[ht!]
 	\centering
 	\begin{tikzpicture}[inner sep=2pt]
@@ -598,28 +597,28 @@ Při zpracování textu pak ale dochází k problému, že greedy algoritmus vr�
 		\foreach \n in {1,...,6}
 		\draw[->] (r\n.north) -- (color);
 	\end{tikzpicture}
-	\caption{Derivační strom znázorňující problém s greedy algoritmem}\label{fig:parsing_tree_greedy}
+	\caption{Derivační strom znázorňující problém s \emph{greedy} algoritmem}\label{fig:parsing_tree_greedy}
 \end{figure}
 
 Jak je na derivačním stromu na Obrázku~\ref{fig:parsing_tree_greedy} vidět, následující sémantická analýza by došla pravděpodobně k závěru,
 že v textu byla informace o hnědé veverce - což je chyba.
-Zde speciální pravidlo \texttt{\$GARBAGE} s neomezeným počtem opakování v kombinaci s greedy algoritmem způsobilo,
+Zde speciální pravidlo \texttt{\$GARBAGE} s neomezeným počtem opakování v kombinaci s \emph{greedy} algoritmem způsobilo,
 že toto speciální pravidlo bylo \enquote{příliš agresivní} a aktivovalo se i v případech, kdy by již bylo možné použít následující element.
 
 Z tohoto důvody byla do systému implementována druhá strategie, která se běžně označuje jako \emph{lazy matching}.
-Zatímco greedy matching se v každém okamžiku snaží posunout parsování co nejdále, tato lazy strategie se naopak snaží použít element co nejméněkrát.
+Zatímco \emph{greedy} matching se v každém okamžiku snaží posunout parsování co nejdále, tato \emph{lazy} strategie se naopak snaží použít element co nejméněkrát.
 
 Také by se dalo říci, že pokud parsovací algoritmus narazí na element $e_{1}$ následovaný elementem $e_{2}$, pak:
 \begin{itemize}
-	\item greedy strategie se vždy nejdříve pokusí $e_{1}$ použít (opakovaně po sobě) a postoupí na $e_{2}$ až v moment, kdy
+	\item \emph{greedy} strategie se vždy nejdříve pokusí $e_{1}$ použít (opakovaně po sobě) a postoupí na $e_{2}$ až v moment, kdy
 	      již není možné dále opakovat $e_{1}$,
-	\item lazy strategie se vždy pokusí nejdříve postoupit na element $e_{2}$ a vrátí se k $e_{1}$ pro opakované použití až v moment,
-	      kdy $e_{2}$ není možné použít
+	\item \emph{lazy} strategie se vždy pokusí nejdříve postoupit na element $e_{2}$ a vrátí se k $e_{1}$ pro opakované použití až v moment,
+	      kdy $e_{2}$ není možné použít.
 \end{itemize}
 
-Implementace lazy strategie umožnila zachytit sémantiku, kterou by bylo obtížné získat pomocí greedy algoritmu.
+Implementace \emph{lazy} strategie umožnila zachytit sémantiku, kterou by bylo obtížné získat pomocí \emph{greedy} algoritmu.
 Po několika dalších experimentech ovšem bylo zjištěno, že ani tato strategie nebude sama o sobě postačovat pro všechny potřeby sémantické analýzy.
-Hlavním problémem s lazy strategií bylo to, že v textech, kde bylo více možných vyjádření stejného typu, byla detekována vždy jen ta nejkratší.
+Hlavním problémem s \emph{lazy} strategií bylo to, že v textech, kde bylo více možných vyjádření stejného typu, byla detekována vždy jen ta nejkratší.
 
 \newpage
 Například předchozí úloha určování barev zvířat se vstupním textem
@@ -630,7 +629,7 @@ by mohla být zpracována SPGF pravidlem:
 \begin{center}
 	\texttt{public \$has\_color = \$GARBAGE<*> \$color \$GARBAGE<*> \$animal;}
 \end{center}
-V tomto případě bylo přidáno na začátek pravidla další \texttt{\$GARBAGE<*>}, které při použití lazy algoritmu způsobí,
+V tomto případě bylo přidáno na začátek pravidla další \texttt{\$GARBAGE<*>}, které při použití \emph{lazy} algoritmu způsobí,
 že text nemusí začínat přímo barvou, ale je možné hledat barvy a zvířata až později v textu.
 Derivační strom tohoto příkladu je zakreslen na Obrázku~\ref{fig:parsing_tree_lazy}.
 
@@ -657,7 +656,7 @@ Derivační strom tohoto příkladu je zakreslen na Obrázku~\ref{fig:parsing_tr
 		($(honí.north west) + (0, 0)$) -- ($(veverku.north east) + (0, 0)$)
 		node[pos=0.5, above=4pt] {\scriptsize zbytek textu (není součástí derivačního stromu)};
 	\end{tikzpicture}
-	\caption{Derivační strom znázorňující problém s lazy algoritmem}\label{fig:parsing_tree_lazy}
+	\caption{Derivační strom znázorňující problém s \emph{lazy} algoritmem}\label{fig:parsing_tree_lazy}
 \end{figure}
 Z derivačního stromu na Obrázku~\ref{fig:parsing_tree_lazy} je možné usoudit, že následující sémantická analýza by pravděpodobně detekovala,
 že v textu se nacházela informace o hnědém psovi - to je správně.
@@ -668,7 +667,7 @@ Myšlenka byla taková, že by bylo vhodné, aby algoritmus v místě nejednozna
 který postup je nejlepší, ale aby místo toho uvažoval všechny možnosti.
 Tento přístup se tedy od předchozích dvou liší v tom, že může vrátit pro jeden vstup více výstupů.
 
-Základní koncept thorough strategie spočívá v tom, že v místě, kde by bylo možné postupovat vícero způsoby,
+Základní koncept \emph{thorough} strategie spočívá v tom, že v místě, kde by bylo možné postupovat vícero způsoby,
 je řešení rozděleno do více paralelních větví (jedna pro každou možnost) a každá větev je dále zpracovávána nezávisle.
 Tímto způsobem se rekurzivně vytváří strom možných řešení, jehož listy odpovídají finálním derivačním stromům.
 Po ukončení všech těchto paralelních parsování jsou úspěšné výsledky vráceny jako seznam derivačních stromů.
@@ -686,7 +685,7 @@ a SPGF pravidlem:
 	\texttt{public \$has\_color = \$GARBAGE<*> \$color \$GARBAGE<*> \$animal;}
 \end{center}
 by výstupem byly 3 derivační stromy.
-Dva z nich by byly shodné s výstupem greedy a lazy strategie (viz Obrázky~\ref{fig:parsing_tree_greedy} a~\ref{fig:parsing_tree_lazy}),
+Dva z nich by byly shodné s výstupem \emph{greedy} a \emph{lazy} strategie (viz Obrázky~\ref{fig:parsing_tree_greedy} a~\ref{fig:parsing_tree_lazy}),
 třetí (nový) derivační strom je na Obrázku~\ref{fig:parsing_tree_thorough}.
 
 \begin{figure}[ht!]
@@ -712,13 +711,13 @@ třetí (nový) derivační strom je na Obrázku~\ref{fig:parsing_tree_thorough}
 		\foreach \n in {1,...,7}
 		\draw[->] (r\n.north) -- (color);
 	\end{tikzpicture}
-	\caption{Derivační stromy z thorough algoritmu}\label{fig:parsing_tree_thorough}
+	\caption{Derivační stromy z \emph{thorough} algoritmu}\label{fig:parsing_tree_thorough}
 \end{figure}
 
 Celkově by tedy z tohoto výstupu bylo možné získat informace o tom, že v textu byla hnědá veverka, hnědý pes a oranžová veverka.
 Dvě z těchto informací jsou správně, pouze informace o hnědé veverce je chybná, ta se v textu nevyskytla.
 
-Jedná se o jednu z nevýhod thorough přístupu, že bude v textu hledat i takové informace, které z něj neplynou.
+Jedná se o jednu z nevýhod \emph{thorough} přístupu, že bude v textu hledat i takové informace, které z něj neplynou.
 Tento problém byl vyřešen následnou filtrací získaných entit oproti referenčnímu popisu.
 Detailní popis tohoto filtrování bude popsán v kapitole~\ref{subsubsec:algoritmus_zpracovani_stromu}.
 % tak, že získané sémantické informace jsou porovnané s referenčním popisem obrázku a ty,
@@ -731,7 +730,7 @@ Také ale bohužel představuje omezení v tom smyslu, že neumožňuje detekova
 ale nebyla zanesena do referenčního popisu - to klade očekávání na kvalitu referenčního popisu od experta.
 Sestavení nějakého složitějšího algoritmu pro detekci falešně extrahované sémantiky představuje jedno z možných rozšíření do budoucna.
 
-Další nevýhodou thorough strategie je její výpočetní náročnost.
+Další nevýhodou \emph{thorough} strategie je její výpočetní náročnost.
 Vzhledem k rekurzivnímu charakteru algoritmu a způsobu vytváření nových paralelních větví
 se naskýtá riziko kombinatorické exploze počtu paralelních větví.
 Během testování se však ukázalo, že pro moderní výpočetní techniku nepředstavují vstupy o velikosti desítek až stovek tokenů žádný problém.
@@ -741,17 +740,17 @@ Posledním problémem, který bylo potřeba vyřešit v rámci parsovacích stra
 V první verzi parseru se jednalo o globální přepínač, kdy bylo možné před samotným parsováním zvolit, jaká strategie má být použita.
 Bylo ale zjištěno, že pro některé situace by bylo výhodné, aby bylo možné změnit výchozí strategii pro konkrétní pravidla nebo jejich části.
 
-Například při zpracovávání číselných údajů je vhodná greedy strategie.
+Například při zpracovávání číselných údajů je vhodná \emph{greedy} strategie.
 Je totiž potřeba, aby posloupnost sobě jdoucí slov, které reprezentující číselný údaj, byla brána jako jeden celek.
 
 Jiný příklad pak může být již výše zmíněný začátek pravidla \texttt{\$GARBAGE<*>},
 který libovolný počet prvních slov považovat za výplň a hledat tak význam až později v textu.
-Pro tuto situaci je naopak greedy algoritmus zcela nevhodný, protože by celý text byl zpracován hned tímto počátkem.
-Zde je vhodná lazy strategie, která ve své podstatě bude dávat přednost následujícím elementům
+Pro tuto situaci je naopak \emph{greedy} algoritmus zcela nevhodný, protože by celý text byl zpracován hned tímto počátkem.
+Zde je vhodná \emph{lazy} strategie, která ve své podstatě bude dávat přednost následujícím elementům
 v pravidle a tento počátek bude používat až když zbytek pravidla selže.
 
 Z těchto důvodů byla rozšířena syntaxe pro operátor definující opakování.
 Před samotné hodnoty opakování (tedy hned za otevírací špičatou závorku \enquote{\texttt{<}}) je možné napsat
 jedno z písmen \texttt{L}, \texttt{G}, \texttt{T} následované dvojtečkou a poté zbytek definice opakování.
-Tato písmena odpovídají jednotlivým strategiím (lazy, greedy, thorough) a umožňují tak vynutit danou strategii pro dané pravidlo nebo jeho část.
+Tato písmena odpovídají jednotlivým strategiím (\emph{lazy}, \emph{greedy}, \emph{thorough}) a umožňují tak vynutit danou strategii pro dané pravidlo nebo jeho část.
 Ve výsledku tak operátor opakování může vypadat například \enquote{\texttt{<G:1-3>}}, \enquote{\texttt{<L:*>}}, nebo \enquote{\texttt{<T:2->}}.

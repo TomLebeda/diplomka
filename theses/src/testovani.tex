@@ -123,9 +123,24 @@ Celé přepisy použité pro další testování a získání ilustračních vý
 \todo{nechat ty přepisy přímo tady, nebo je dát jako přílohu?}
 \input{src/prepisy.tex}
 
-Pro tyto přepisy bylo podle ztrátové tabulky (viz Výpis~\ref{lst:loss_table_example}) vypočteno hodnocení, jehož část (zkráceno kvůli délce) je vidět v Tabulce~\ref{tab:out_values}.
+Pro tyto přepisy bylo podle ztrátové tabulky (viz Výpis~\ref{lst:loss_table_example}) vypočteno hodnocení,
+jehož část (zkráceno kvůli délce) je vidět v Tabulce~\ref{tab:out_values}.
 Kompletní výpisy je možné prozkoumat spolu se zdrojovými kódy online.
-\todo{doplnit zbytek tabulky}
+
+Z Tabulky~\ref{tab:out_values} je možné vidět, že pro jednotlivé testované popisy se výstupní ztráty skutečně liší.
+Jak již bylo zmíněno dříve, referenční popis, SPGF gramatika a ztrátová tabulka byly sestavené pouze pro účely testování
+a interpretace výsledků je tudíž obtížná.
+
+I přesto je ale možné vidět, že popisy 4 a 5, které jsou celkově výrazně kratší a nepoužívají tolik rozvité věty,
+mají vyšší ztrátu pro chybějící vazby (triplety).
+
+Dalším znatelným rozdílem ve výstupních hodnotách, který je možné sledovat, je značný rozdíl ztráty pro chybějící objekty s tagem \enquote{\emph{person}}.
+To odpovídá faktu, že popisy 4 a 5 nezmiňují tolik osob jako první tři popisy.
+
+Obdobně je možné v Tabulce~\ref{tab:out_values} pozorovat, že přepisy 1 a 5 mají relativně vysoké ztráty pro objekty s chybějícím tagem \enquote{\emph{animal}}.
+Opět to odpovídá tomu, že tyto texty neobsahují tolik označení zvířat, jako například text 2, který má tuto ztrátu nejnižší.
+\todo{zvýraznit některé hodnoty? normálně se dělá maximum tučně, ale nevím jestli to zde má význam}
+
 \begin{table}[ht!]
 	\centering
 	\begin{tabular}{|l|c|c|c|c|c|}
@@ -134,40 +149,55 @@ Kompletní výpisy je možné prozkoumat spolu se zdrojovými kódy online.
 		\cline{2-6}
 		                                                    & \textbf{1}                                  & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} \\
 		\hline
-		chybějící objekty                                   & 125.5                                       &            &            &            &            \\
-		chybějící atributy                                  & 79.5                                        &            &            &            &            \\
-		chybějící triplety                                  & 164.0                                       &            &            &            &            \\
-		atributy s chybnou hodnotou                         & 2.0                                         &            &            &            &            \\
+		chybějící objekty                                   & 125.5                                       & 97.0       & 108.05     & 141.0      & 161.0      \\
+		chybějící atributy                                  & 79.0                                        & 76.0       & 77.5       & 80.5       & 79.0       \\
+		chybějící triplety                                  & 164.0                                       & 156.5      & 164.00     & 173.0      & 175.0      \\
+		atributy s chybnou hodnotou                         & 2.0                                         & 0.0        & 4.7        & 0.0        & 0.0        \\
 		\hline
-		chybějící objekt s tagem \enquote{animal}           & 52.0                                        &            &            &            &            \\
-		chybějící objekt s tagem \enquote{item}             & 24.0                                        &            &            &            &            \\
-		chybějící objekt s tagem \enquote{person}           & 5.5                                         &            &            &            &            \\
-		chybějící objekt s tagem \enquote{clothing}         & 24.0                                        &            &            &            &            \\
+		chybějící objekt s tagem \enquote{animal}           & 52.0                                        & 18.5       & 26.5       & 28.0       & 40.0       \\
+		% chybějící objekt s tagem \enquote{background}           & 15.0                                     & 8.5         & 15.0        & 6.0       &  10.0     \\
+		chybějící objekt s tagem \enquote{clothing}         & 24.0                                        & 24.0       & 27.0       & 36.0       & 36.0       \\
+		% chybějící objekt s tagem \enquote{environment}          & 17.0                                     & 11.5        & 16.0        & 15.0      &  14.0     \\
+		% chybějící objekt s tagem \enquote{group}                & 21.0                                     & 16.0        & 21.0        & 17.0      &  30.0     \\
+		chybějící objekt s tagem \enquote{item}             & 24.0                                        & 33.0       & 30.0       & 42.0       & 45.0       \\
+		chybějící objekt s tagem \enquote{person}           & 5.5                                         & 10.0       & 5.5        & 20.0       & 26.0       \\
 		\hline
-		chybějící atributy typu \enquote{action}            & 5.0                                         &            &            &            &            \\
-		chybějící atributy typu \enquote{color}             & 61.0                                        &            &            &            &            \\
-		chybějící atributy typu \enquote{facial expression} & 0.5                                         &            &            &            &            \\
-		chybějící atributy typu \enquote{hairstyle}         & 1.0                                         &            &            &            &            \\
-		chybějící atributy typu \enquote{pattern}           & 1.0                                         &            &            &            &            \\
+		chybějící atributy typu \enquote{action}            & 5.0                                         & 4.5        & 5.0        & 6.0        & 5.5        \\
+		chybějící atributy typu \enquote{color}             & 61.0                                        & 56.5       & 57.5       & 59.0       & 59.0       \\
+		% chybějící atributy typu \enquote{count}                 & 10.0                                     & 10.0        & 10.0        & 10.0      &  10.0     \\
+		chybějící atributy typu \enquote{facial expression} & 0.5                                         & 1.0        & 0.5        & 1.0        & 0.5        \\
+		chybějící atributy typu \enquote{hairstyle}         & 1.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
+		chybějící atributy typu \enquote{pattern}           & 1.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
+		% chybějící atributy typu \enquote{style}                 & 0.5                                      & 0.0         & 0.5         & 0.5       &  0.0      \\
 		\hline
-		chybějící vazby typu \enquote{climbing}             & 2.0                                         &            &            &            &            \\
-		chybějící vazby typu \enquote{catching}             & 4.0                                         &            &            &            &            \\
-		chybějící vazby typu \enquote{sitting under}        & 2.0                                         &            &            &            &            \\
-		chybějící vazby typu \enquote{swimming in}          & 2.0                                         &            &            &            &            \\
-		chybějící vazby typu \enquote{watching}             & 2.0                                         &            &            &            &            \\
-		chybějící vazby typu \enquote{chasing}              & 2.0                                         &            &            &            &            \\
-		chybějící vazby typu \enquote{sitting on}           & 8.0                                         &            &            &            &            \\
-		chybějící vazby typu \enquote{falling into}         & 0.0                                         &            &            &            &            \\
-		chybějící vazby typu \enquote{running away from}    & 2.0                                         &            &            &            &            \\
-		chybějící vazby typu \enquote{wearing}              & 20.0                                        &            &            &            &            \\
-		chybějící vazby typu \enquote{throwing}             & 2.0                                         &            &            &            &            \\
+		chybějící vazby typu \enquote{catching}             & 4.0                                         & 4.0        & 4.0        & 4.0        & 4.0        \\
+		chybějící vazby typu \enquote{chasing}              & 2.0                                         & 0.0        & 2.0        & 0.0        & 2.0        \\
+		chybějící vazby typu \enquote{climbing}             & 2.0                                         & 0.0        & 2.0        & 2.0        & 2.0        \\
+		chybějící vazby typu \enquote{falling into}         & 0.0                                         & 0.0        & 0.0        & 5.0        & 5.0        \\
+		% chybějící vazby typu \enquote{following}                & 10.0                                     & 10.0        & 10.0        & 10.0      &  10.0     \\
+		% chybějící vazby typu \enquote{has child object}         & 70.0                                     & 62.5        & 70.0        & 70.0      &  70.0     \\
+		% chybějící vazby typu \enquote{has parent object}        & 28.0                                     & 28.0        & 28.0        & 28.0      &  28.0     \\
+		% chybějící vazby typu \enquote{holding}                  & 2.0                                      & 2.0         & 2.0         & 2.0       &  2.0      \\
+		% chybějící vazby typu \enquote{jumping from}             & 2.0                                      & 2.0         & 2.0         & 2.0       &  2.0      \\
+		% chybějící vazby typu \enquote{playing with}             & 6.0                                      & 6.0         & 6.0         & 6.0       &  6.0      \\
+		% chybějící vazby typu \enquote{reading}                  & 0.0                                      & 0.0         & 0.0         & 2.0       &  2.0      \\
+		chybějící vazby typu \enquote{running away from}    & 2.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
+		chybějící vazby typu \enquote{sitting on}           & 8.0                                         & 8.0        & 6.0        & 8.0        & 8.0        \\
+		chybějící vazby typu \enquote{sitting under}        & 2.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
+		chybějící vazby typu \enquote{swimming in}          & 2.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
+		chybějící vazby typu \enquote{throwing}             & 2.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
+		chybějící vazby typu \enquote{watching}             & 2.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
+		chybějící vazby typu \enquote{wearing}              & 20.0                                        & 24.0       & 22.0       & 24.0       & 24.0       \\
 		\hline
-		chybné hodnoty atributů typu \enquote{action}       & 0.0                                         &            &            &            &            \\
-		chybné hodnoty atributů typu \enquote{color}        & 0.0                                         &            &            &            &            \\
-		chybné hodnoty atributů typu \enquote{pattern}      & 0.0                                         &            &            &            &            \\
-		chybné hodnoty atributů typu \enquote{count}        & 2.0                                         &            &            &            &            \\
-		chybné hodnoty atributů typu \enquote{hairstyle}    & 0.0                                         &            &            &            &            \\
+		chybné hodnoty atributů typu \enquote{action}       & 0.0                                         & 0.0        & 0.7        & 0.0        & 0.0        \\
+		chybné hodnoty atributů typu \enquote{color}        & 0.0                                         & 0.0        & 0.0        & 0.0        & 0.0        \\
+		chybné hodnoty atributů typu \enquote{count}        & 2.0                                         & 0.0        & 4.0        & 0.0        & 0.0        \\
+		%chybné hodnoty atributů typu \enquote{facial expression} & 0.0                                      & 0.0         & 0.0         & 0.0       &  0.0      \\
+		chybné hodnoty atributů typu \enquote{hairstyle}    & 0.0                                         & 0.0        & 0.0        & 0.0        & 0.0        \\
+		chybné hodnoty atributů typu \enquote{pattern}      & 0.0                                         & 0.0        & 0.0        & 0.0        & 0.0        \\
+		%chybné hodnoty atributů typu \enquote{state}             & 0.0                                      & 0.0         & 0.0         & 0.0       &  0.0      \\
 		\hline
 	\end{tabular}
 	\caption{Ztrátové hodnoty testovaných přepisů (zkráceno)}\label{tab:out_values}
 \end{table}
+

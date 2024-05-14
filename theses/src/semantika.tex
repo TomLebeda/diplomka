@@ -1,16 +1,132 @@
 \subsection{Sémantika a porozumění řeči}
-{\color{blue}co to je sémantika}
+% NOTE: co to je sémantika
+Sémantika je vědní obor, který se zabývá zkoumáním významu.
+Je to obor související s lingvistikou a logikou, jelikož jeho předmětem je analýza významu frází, slov, vět a nebo i obecně jiných symbolů,
+pomocí kterých lze předávat informace.~\cite{palmer1981semantics}
 
-Sémantika je vědní obor související s lingvistikou a logikou a zabývá se zkoumáním významu.
-Jejím předmětem je zkoumání významu frází, slov, vět a nebo i obecně jiných symbolů, pomocí kterých lze předávat informace.
+Sémantiku je možné dále rozdělit do subkategorií, podle konkrétního zaměření.
 
-Úloha porozumění řeči (angl.~spoken language understanding, SLU) je jednou z klíčových částí
+Lexikální sémantika se zaměřuje na význam slov, konkrétně se zabývá studiem buďto vnitřní významové struktury slova,
+nebo významové vazby, které se nacházejí v daném slovníku.~\cite{lexical-semantics}.
 
+Formální sémantika studuje význam výrazů v přirozeném jazyce pomocí matematických a logických nástrojů.
+Využívá exaktně definovaných pravidel a formalismů ke zkoumání přirozeného jazyka a souvislostí mezi významem a strukturou frází.
+Také se zabývá modelováním vazeb mezi jazykem, jeho strukturou, významem a informací, kterou popisuje.~\cite{rajman2007speech}~\cite{portner2008formal}
 
-{\color{blue}rozdíl sémantika vs syntaxe}
+Frázová sémantika (angl.~phrasal semantics) se zabývá studiem významu vět a frází především z pohledu jejich skladby a kompozice.
+Hlavním předmětem je analýza toho, jak funguje skládání jednotlivých menších částí (slov či dílčích frází),
+jaké jsou významy jednotlivých elementů a jak jejich složení ovlivní celkový význam fráze.\cite{riemer2010introducing-semantic}
+Analýza jednotlivých částí se většinou zaměřuje na rozlišení subjektu, predikátu a argumentu.
+Subjekt většinou referuje na nějaký konkrétní objekt či entitu, predikát reprezentuje vlastnosti a události, které jsou se subjektem spojené
+a argument dodává doplňující informace, jako třeba konkrétní hodnotu dané vlastnosti.~\cite{fasold2006introduction}
 
-{\color{blue}sémantická analýza v AI vs v přirozené lingvistice}
+V kontextu výpočetní technologie a umělé inteligence existuje \enquote{výpočetní sémantika} (angl.~computational semantics).
+Výpočetní sémantika je disciplína, která kombinuje znalosti z formální sémantiky, výpočetní lingvistiky a automatického odvozování znalostí.
+Jejím cílem je hledání a analýza metod, které by umožnily automatické zpracování a vytváření sémantických reprezentací pro výrazy z přirozeného jazyka a inferenční postupy.
+Dále se zabývá řešením neurčitostí, analýzou komplexních frází,
+vliv kontextu na význam a použití získaných znalostí pro automatické rozhodování.~\cite{computational-semantics-blackburn-bos}~\cite{computation-semantics}
 
-{\color{blue}kde se sémantická analýza používá, k čemu je dobrá}
+Porozumění řeči (angl.~spoken language understanding, SLU) označuje strojové zpracování lidské přirozené řeči na sémantické úrovni.
+Jedná se tedy o extrakci významu z přirozené řeči pomocí automatických počítačových metod.
+Správné určení významu promluvy je často nezbytným krokem pro mnoho běžných úloh, například interpretace požadavků či příkazů,
+vyhledávání dokumentů nebo zodpovídání dotazů.~\cite{the_conversational_interface}
 
-{\color{blue}metody SLU, extra potom gramatiky}
+Přirozený lidský jazyk je velmi variabilní a stejné sdělení je možné vyjádřit v mnoha podobách, které mohou být od sebe velmi rozdílné.
+Tato variabilita jazyka představuje hlavní problém, který metody porozumění řeči musí řešit.
+Existuje řada metod, jakými jsou z přirozené řeči extrahovány sémantické informace pro různé typy úloh.
+
+Následuje popis vybraných technik, které jsou široce používané v úlohách využívajících
+metody porozumění přirozené řeči.~\cite{the_conversational_interface}
+\todo{hodně jsem tady čerpal z~\cite{the_conversational_interface}, zdrojuje se každý odstavec samostatně?}
+
+Tato práce řeší danou problematiku expertním přístupem, konkrétně s využitím bezkontextových gramatik, které budou rozebrány detailněji.
+
+\begin{enumerate}
+	\item \textbf{Tokenizace}\\
+	      Tokenizace bývá jedním z prvních kroků při zpracování přirozeného jazyka, kdy je vstupní text
+	      rozdělen na jednotlivé diskrétní části, kterým jsou právě označovány jako \emph{tokeny}.~\cite{the_conversational_interface}
+
+	      Častým přístupem k tokenizaci je rozdělení vstupního textu na jednotlivá slova,
+	      ale existují i jiné přístupy, které používají například ještě menší jednotky~\cite{yang2024rethinking}.
+	      Zatímco pro anglický nebo český jazyk je rozdělení na slova relativně přímočarý proces, pro některé jazyky,
+	      které nepoužívají mezeru pro oddělení slov (např.~Japonština), může být i pouhé rozdělení na slova obtížný úkol.~\cite{the_conversational_interface}
+
+	      Součástí tokenizace je často i proces \emph{normalizace}, který upravuje vstupní data tak, aby odpovídaly nějakým požadavkům
+	      a bylo jednodušší s nimi pracovat dále.
+	      Typickým příkladem normalizace může být expanze zkratek.~\cite{the_conversational_interface}
+
+	\item \textbf{Bag-of-words}\\
+	      Přístup označený jako bag-of-words je jednoduchý způsob, jak analyzovat vstupní text na relativně povrchní úrovni.
+	      Tento způsob zpracování je také označovaný jako \emph{vector space model}.~\cite{the_conversational_interface}
+
+	      Základní princip je vytvoření množiny slov ze vstupního textu a počítání jejich četností.
+	      Srovnání takto získaných vektorů hodnot je pak základem pro určení míry shody dvou nebo více zdrojů.
+	      Z tohoto přístupu plyne, že metoda zcela ignoruje jakékoli syntaktické informace a pořadí slov ve vstupním textu.
+	      Její součástí je také často vyřazení slov, která nepřispívají do sémantické informace (například předložky a spojky),
+	      tato vyřazená slova se označují jako \emph{stop words}.
+	      Dalším častým rozšířením je \emph{lemmatizace}, což je normalizace různých tvarů slov do jedné základní podoby.
+	      Výhodou přístupu bag-of-words je jeho jednoduchost a nezávislost na lingvistických znalostech.
+	      Naopak nevýhodou je nízká úroveň detailu a přesnosti.~\cite{the_conversational_interface}
+
+	\item \textbf{Latentní sémantická analýza}\\
+	      Metoda latentní sémantické analýzy je podobná předchozí metodě bag-of-words ve svém základním konceptu vytvoření množiny
+	      sledovaných prvků, spočítání jejich četnosti a následné práce se získaným vektorem hodnot.
+	      Rozdíl oproti bag-of-words spočívá v tom, že namísto jednotlivých slov (nebo lemmat) jsou použité jejich významy a koncepty.
+	      Příkladem může být sledování vzorů, kde se často v textu vyskytují stejná slova blízko sebe.~\cite{the_conversational_interface}
+
+	\item \textbf{Part-of-speech (POS) tagování}\\
+	      Tento způsob zpracování přirozené řeči spočívá v přiřazení značek - \emph{tagů} - k jednotlivým slovům.
+	      Tyto tagy přidávají dodatečnou informaci k daným slovům a tím tak obohacují vstupní text o sémantickou informaci.
+	      Často je POS tagování také využíváno jako doplňující proces k dalším, komplexnějším způsobům zpracování sémantického textu.~\cite{the_conversational_interface}
+
+	      Způsob realizace POS tagování může být založený na deterministických pravidlech a nebo může být proveden stochasticky.
+	      Pravidlový přístup je založen na použití často velmi rozsáhlé databáze pravidel, které jsou většinou tvořené ručně lidským expertem.
+	      Proti tomu stochastický přístup využívá statistických metod pro určení pravděpodobnosti jednotlivých tagů v na daných pozicích
+	      podle okolního kontextu.~\cite{the_conversational_interface}
+
+	      \newpage
+	\item \textbf{Sémantické gramatiky}\\
+	      Další způsob, jakým lze zpracovat vstupní text, je založený na metodách formální syntaxe.
+	      Celkový vstupní text lze chápat jako jeden objekt, který lze rozdělit na menší části.
+	      Tyto menší části lze dále rekurzivně dělit až do okamžiku, než jsou jednotlivé části dále nedělitelné (atomické) - v ten moment se označují jako \emph{primitiva},
+	      která mají funkci \emph{terminálních symbolů}.
+	      Tento proces rekurzivního dělení vytváří hierarchickou stromovou strukturu, kde kořenovým uzlem je původní vstupní text a
+	      koncové uzly (označované jako listy) jsou tvořené právě terminálními symboly.~\cite{PsutkaJ_2006_Mluvimes}
+
+	      Stromová struktura umožňuje výhodně aplikovat metody pro analýzu syntaxe formálních jazyků.
+	      Množina těchto terminální symbolů se označuje jako \emph{abeceda formálního jazyka}.
+	      Formálním jazykem je možné popsat množinu předmětů, které jsou tvořené složením terminálních symbolů do nějaké struktury (posloupnosti, řetězce).
+	      Tyto řetězce terminálních symbolů se označují jako \emph{slova formálního jazyka} a pravidla,
+	      která popisují, jak je možné jednotlivé terminální symboly skládat do slov, jsou označována jako \emph{substituční} nebo \emph{produkční pravidla}.
+	      Pro lepší možnosti vyjádření jsou definované ještě takzvané \emph{neterminální symboly}, které zastávají funkci pomocných částí popisu předmětů.
+	      Definovaná substituční pravidla lze definovat i rekurzivně, což výrazně rozšiřuje vyjadřovací schopnosti a umožňuje popsat i nekonečné množiny předmětů
+	      pomocí konečného (a relativně malého) počtu pravidel.~\cite{PsutkaJ_2006_Mluvimes}
+
+	      Tato pravidla, společně s množinou terminálních a neterminálních symbolů tvoří dohromady takzvanou \emph{gramatiku}.
+	      Formálně lze gramatiku $G$ popsat čtveřicí
+	      \[
+		      G = (V_{N}, V_{T}, \rho, S),
+	      \]
+	      kde $V_{N}$ je množina neterminálních symbolů, $V_{T}$ je množina terminálních symbolů,
+	      $\rho$ označuje množinu substitučních pravidel a $S \in V_{N}$ je počáteční symbol gramatiky.
+	      Gramatiky lze rozdělit na deterministické a stochastické, podle toho, zda jsou její pravidla definována deterministicky,
+	      nebo s využitím pravděpodobností.~\cite{PsutkaJ_2006_Mluvimes}
+	      Tato práce se zabývá pouze deterministickým přístupem.
+
+	      Takto definované gramatiky lze rozdělit do čtyř základních kategorií, podle typu jejich pravidel.
+	      Nejobecnější a nejsložitější jsou \emph{gramatiky typu 0}, poté jsou \emph{kontextové gramatiky},
+	      dále \emph{bezkontextové gramatiky} a nejjednodušším typem jsou \emph{regulární gramatiky}.
+	      Se složitostí gramatiky je také spojena její vyjadřovací schopnost, tedy pomocí složitějších gramatik je možné
+	      zachytit složitější struktury.
+	      Nejjednodušší regulární gramatiky nejsou například schopné zachytit vztah mezi částmi, které nejsou bezprostředně vedle
+	      sebe, což je pro text s přirozeným jazykem velmi silná limitace.
+	      Pro porozumění řeči se nejčastěji používají bezkontextové gramatiky.
+	      Kontextové gramatiky a gramatiky typu 0 by umožňovaly zachytit ještě další složitější vazby mezi částmi
+	      textu, ale jejich úroveň komplexnosti je natolik vysoká,
+	      že strojové zpracování je extrémně obtížné a výpočetně náročné.~\cite{PsutkaJ_2006_Mluvimes}
+
+	      Výstupem zpracování pomocí bezkontextových gramatik je tedy strukturální informace, ze které lze zjistit,
+	      zda daný vstupní text odpovídá dané gramatice a pokud ano, jak vypadá jeho rozklad.
+	      Takto získaná stromová struktura jednotlivých rozpoznaných symbolů představuje sémantickou informaci,
+	      kterou je možné dále využít a zpracovat.
+\end{enumerate}

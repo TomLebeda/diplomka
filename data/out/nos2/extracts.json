@@ -661,6 +661,305 @@
     "sentence": "pán plave kraula malé dítě na břehu vypadá že zakoplo a zrovna padá do vody",
     "data": {
       "Triplet": {
+        "from": "man #1",
+        "predicate": "falling into",
+        "to": "water"
+      }
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 15,
+        "rule_name": "out_triplet",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 15,
+              "rule_name": "triplet",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 0,
+                    "shift": 15,
+                    "rule_name": "falling_into",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 0,
+                          "shift": 1,
+                          "rule_name": "object",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 0,
+                                "shift": 1,
+                                "rule_name": "man",
+                                "expansion": [
+                                  {
+                                    "Rule": {
+                                      "start": 0,
+                                      "shift": 1,
+                                      "rule_name": "pán",
+                                      "expansion": [
+                                        {
+                                          "Token": [
+                                            0,
+                                            "pán"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "Tag": "man #1"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "part=obj"
+                      },
+                      {
+                        "Rule": {
+                          "start": 1,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                1,
+                                "plave"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 2,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                2,
+                                "kraula"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 3,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                3,
+                                "malé"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 4,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                4,
+                                "dítě"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 5,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                5,
+                                "na"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 6,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                6,
+                                "břehu"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 7,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                7,
+                                "vypadá"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 8,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                8,
+                                "že"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 9,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                9,
+                                "zakoplo"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 10,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                10,
+                                "a"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 11,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                11,
+                                "zrovna"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Token": [
+                          12,
+                          "padá"
+                        ]
+                      },
+                      {
+                        "Token": [
+                          13,
+                          "do"
+                        ]
+                      },
+                      {
+                        "Rule": {
+                          "start": 14,
+                          "shift": 1,
+                          "rule_name": "object",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 14,
+                                "shift": 1,
+                                "rule_name": "water",
+                                "expansion": [
+                                  {
+                                    "Rule": {
+                                      "start": 14,
+                                      "shift": 1,
+                                      "rule_name": "voda",
+                                      "expansion": [
+                                        {
+                                          "Token": [
+                                            14,
+                                            "vody"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "Tag": "water"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "part=subj"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Tag": "predicate=falling into"
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=triplet"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": "pán plave kraula malé dítě na břehu vypadá že zakoplo a zrovna padá do vody",
+    "data": {
+      "Triplet": {
         "from": "child",
         "predicate": "falling into",
         "to": "water"
@@ -8193,6 +8492,269 @@
                 },
                 {
                   "Tag": "predicate=reading"
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=triplet"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": "pani vypadá že má dovolenou protože kromě toho že si čte knihu tak tam má ještě připravenou deku nějaký piknik",
+    "data": {
+      "Triplet": {
+        "from": "woman",
+        "predicate": "wearing",
+        "to": "book"
+      }
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 12,
+        "rule_name": "out_triplet",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 12,
+              "rule_name": "triplet",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 0,
+                    "shift": 12,
+                    "rule_name": "wearing",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 0,
+                          "shift": 1,
+                          "rule_name": "object",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 0,
+                                "shift": 1,
+                                "rule_name": "woman",
+                                "expansion": [
+                                  {
+                                    "Rule": {
+                                      "start": 0,
+                                      "shift": 1,
+                                      "rule_name": "paní",
+                                      "expansion": [
+                                        {
+                                          "Token": [
+                                            0,
+                                            "pani"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "Tag": "woman"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "part=obj"
+                      },
+                      {
+                        "Rule": {
+                          "start": 1,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                1,
+                                "vypadá"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 2,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                2,
+                                "že"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Token": [
+                          3,
+                          "má"
+                        ]
+                      },
+                      {
+                        "Rule": {
+                          "start": 4,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                4,
+                                "dovolenou"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 5,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                5,
+                                "protože"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 6,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                6,
+                                "kromě"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 7,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                7,
+                                "toho"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 8,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                8,
+                                "že"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 9,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                9,
+                                "si"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 10,
+                          "shift": 1,
+                          "rule_name": "GARBAGE",
+                          "expansion": [
+                            {
+                              "Token": [
+                                10,
+                                "čte"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Rule": {
+                          "start": 11,
+                          "shift": 1,
+                          "rule_name": "object",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 11,
+                                "shift": 1,
+                                "rule_name": "book",
+                                "expansion": [
+                                  {
+                                    "Rule": {
+                                      "start": 11,
+                                      "shift": 1,
+                                      "rule_name": "kniha",
+                                      "expansion": [
+                                        {
+                                          "Token": [
+                                            11,
+                                            "knihu"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "Tag": "book"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "part=subj"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Tag": "predicate=wearing"
                 }
               ]
             }
