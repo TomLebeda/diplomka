@@ -1,12 +1,10 @@
 \subsection{Testování na datech}
 Posledním krokem bylo ověření funkčnosti navrženého a implementovaného systému.
 K tomu bylo potřeba získat vhodná data, konkrétně obrázek a k němu přirozené popisy, pokud možnost v textové podobě.
-Tato data byla získána z projektu TAČR SIGMA\_DC3 \enquote{Telemedicínské samovyšetření řeči
-	a paměti pro rychlou detekci kognitivních poruch metodami strojového učení}.
-\todo{jak moc rozebírat účel toho projektu a dat?}
+Tato data byla získána z projektu TAČR SIGMA\_DC3 \enquote{Telemedicínské samovyšetření řeči a paměti pro rychlou detekci kognitivních poruch metodami strojového učení}.
 
 Popisovanou scénou byla kresba zobrazená na Obrázku~\ref{fig:summer}.
-K tomuto obrázku bylo k dispozici několik desítek přepisů, z nichž bylo několik náhodně vybráno pro účely testování.
+K tomuto obrázku bylo k dispozici několik přepisů, které byly použité pro účely testování.
 
 Referenční popis daného obrázku, stejně jako SPGF gramatika a ztrátová tabulka,
 byly vytvořené autorem této práce a nikoli expertem z oboru, odkud pocházejí nasbíraná data.
@@ -14,13 +12,10 @@ Hodnoty ve ztrátové tabulce je tedy třeba chápat jako ilustrační a ve výs
 nelze dělat smysluplné závěry z konkrétních hodnot.
 To však nepředstavuje problém, protože cílem zde bylo ověřit funkčnost navrženého systému, na což ilustrační hodnoty postačují.
 
-Vytvořený referenční popis Obrázku~\ref{fig:summer} je možné prozkoumat spolu se sestavenou SPGF gramatikou u zdrojových kódů.
+Vytvořený referenční popis Obrázku~\ref{fig:summer} obsahuje 69 objektů a 37 vazeb mezi nimi a je možné jej prozkoumat spolu se sestavenou SPGF gramatikou u zdrojových kódů.
 Ztrátová tabulka použitá při testování je na Výpisu~\ref{lst:loss_table_example}.
 
 \input{src/listings/loss.tex}
-
-V Tabulce~\ref{tab:exmple_extracts} je několik vět z prvního přepisu, k nimž je vypsána množina extrahovaných objektů $\mathcal{O}$,
-množina extrahovaných atributů $\mathcal A$ a množina extrahovaných vazeb $\mathcal V$.
 
 \begin{table}[H]
 	\centering
@@ -44,12 +39,10 @@ množina extrahovaných atributů $\mathcal A$ a množina extrahovaných vazeb $
 		\end{tabular}}
 
 	\def\objfour{\begin{tabular}{l}
-			girl         \\[-1mm]
-			swimsuit \#1 \\[-1mm]
-			boy          \\[-1mm]
-			cap          \\[-1mm]
-			tshirt       \\[-1mm]
-			shorts
+			girl, shorts, \\[-1mm]
+			swimsuit \#1  \\[-1mm]
+			boy, cap      \\[-1mm]
+			tshirt
 		\end{tabular}}
 
 	\def\attrone{\begin{tabular}{l}
@@ -87,26 +80,36 @@ množina extrahovaných atributů $\mathcal A$ a množina extrahovaných vazeb $
 
 	\begin{tabular}{|l|ccc|}
 		\hline
-		Věta 1            & \multicolumn{3}{l|}{\senone}                                                                                            \\ \hline
-		\multirow{2}{*}{} & \multicolumn{1}{c|}{Objekty $\mathcal O_{1}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{1}$} & Vazby $\mathcal V_{1}$ \\ \cline{2-4}
-		                  & \multicolumn{1}{l|}{\objone}                  & \multicolumn{1}{c|}{\attrone}                  & \tripone               \\ \hline
+		Věta 1                    & \multicolumn{3}{l|}{\senone}                                                                                            \\ \hline
+		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{1}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{1}$} & Vazby $\mathcal V_{1}$ \\ \cline{2-4}
+		                          & \multicolumn{1}{l|}{\objone}                  & \multicolumn{1}{c|}{\attrone}                  & \tripone               \\ \hline
 		\hline
-		Věta 2            & \multicolumn{3}{l|}{\sentwo}                                                                                            \\ \hline
-		\multirow{2}{*}{} & \multicolumn{1}{c|}{Objekty $\mathcal O_{2}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{2}$} & Vazby $\mathcal V_{2}$ \\ \cline{2-4}
-		                  & \multicolumn{1}{l|}{\objtwo}                  & \multicolumn{1}{c|}{\attrtwo}                  & \triptwo               \\ \hline
+		Věta 2                    & \multicolumn{3}{l|}{\sentwo}                                                                                            \\ \hline
+		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{2}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{2}$} & Vazby $\mathcal V_{2}$ \\ \cline{2-4}
+		                          & \multicolumn{1}{l|}{\objtwo}                  & \multicolumn{1}{c|}{\attrtwo}                  & \triptwo               \\ \hline
 		\hline
-		Věta 3            & \multicolumn{3}{l|}{\senthree}                                                                                          \\ \hline
-		\multirow{2}{*}{} & \multicolumn{1}{c|}{Objekty $\mathcal O_{3}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{3}$} & Vazby $\mathcal V_{3}$ \\ \cline{2-4}
-		                  & \multicolumn{1}{l|}{\objthree}                & \multicolumn{1}{c|}{\attrthree}                & \tripthree             \\ \hline
+		Věta 3                    & \multicolumn{3}{l|}{\senthree}                                                                                          \\ \hline
+		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{3}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{3}$} & Vazby $\mathcal V_{3}$ \\ \cline{2-4}
+		                          & \multicolumn{1}{l|}{\objthree}                & \multicolumn{1}{c|}{\attrthree}                & \tripthree             \\ \hline
 		\hline
-		Věta 4            & \multicolumn{3}{l|}{\senfour}                                                                                           \\ \hline
-		\multirow{2}{*}{} & \multicolumn{1}{c|}{Objekty $\mathcal O_{4}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{4}$} & Vazby $\mathcal V_{4}$ \\ \cline{2-4}
-		                  & \multicolumn{1}{l|}{\objfour}                 & \multicolumn{1}{c|}{\attrfour}                 & \tripfour              \\ \hline
+		Věta 4                    & \multicolumn{3}{l|}{\senfour}                                                                                           \\ \hline
+		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{4}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{4}$} & Vazby $\mathcal V_{4}$ \\ \cline{2-4}
+		                          & \multicolumn{1}{l|}{\objfour}                 & \multicolumn{1}{c|}{\attrfour}                 & \tripfour              \\ \hline
 	\end{tabular}
 	\caption{Příklad konkrétních vět z nich extrahovaných entit}\label{tab:exmple_extracts}
 \end{table}
 
-Jak je možné na těchto ukázkách vidět, tak navržený systém je schopen z přirozeného textu extrahovat požadované sémantické informace.
+V Tabulce~\ref{tab:exmple_extracts} je několik vět z prvního přepisu, k nimž je vypsána množina extrahovaných objektů $\mathcal{O}$,
+množina extrahovaných atributů $\mathcal A$ a množina extrahovaných vazeb $\mathcal V$.
+Jak je možné na těchto ukázkách vidět, tak navržený systém je schopen z přirozeného textu extrahovat očekávané sémantické informace.
+Dalším pozitivním faktem je to, že všechny extrahované informace jsou skutečně obsažené v původních promluvách a tudíž lze usoudit, že filtrační
+algoritmus pro odstranění falešných detekcí funguje správně.
+
+V Tabulce~\ref{tab:exmple_extracts} lze dále pozorovat, že nejpočetnější kategorií ve větách jsou objekty, jejichž zachycení je nejjednodušší a především jich věty také obsahují nejvíce.
+Dále lze pozorovat, že detekovaný objekt \emph{swimsuit \#1} ve čtvrté větě má u sebe přiřazené číslování (v popise se vyskytují dvoje plavky, jedny červené na dívce v pozadí
+a jedny bílé na ženě na lehátku).
+To je významné z toho důvodu, že to značí schopnost systému rozlišit objekty stejného typu, jak bylo popsáno v sekci~\ref{subsubsec:cislovani_objektu}.
+
 Předpokladem pro kvalitní výstup je kvalitní referenční popis a SPGF gramatika.
 Oba tyto faktory jsou zcela závislé na expertovi, který vytváří jak referenční popis, tak gramatiku.
 
@@ -119,83 +122,42 @@ Dále tento expertní přístup a manuální správa vstupních dat umožňuje p
 potřeba provést detailní změny nebo přímo kontrolovat některé aspekty procesu jsou velmi obtížné.
 
 Celé přepisy použité pro další testování a získání ilustračních výstupů jsou následující:
-\todo{má cenu vůbec řešit celkové výstupní ztráty, když stejně ztrátová tabulka má jenom ilustrační hodnoty?}
 \input{src/prepisy.tex}
 
-Pro tyto přepisy bylo podle ztrátové tabulky (viz Výpis~\ref{lst:loss_table_example}) vypočteno hodnocení,
+Dále bylo pro srovnání vygenerováno ještě několik \enquote{umělých} popisu fiktivních obrázků,
+které jsou záměrně sémanticky zcela rozdílné.
+Generování těchto popisů bylo realizováno pomocí volně dostupného softwaru ChatGPT se vstupní úlohou
+vygenerovat popis obrázku, který zobrazuje scénu na farmě, poté scénu v lese a nakonec scénu v rušném městě.
+Tyto umělé popisy jsou následující:
+\input{src/prepisy2.tex}
+
+Pro výše zmíněné přepisy bylo podle ztrátové tabulky (viz Výpis~\ref{lst:loss_table_example}) vypočteno hodnocení,
 jehož část (zkráceno kvůli délce) je vidět v Tabulce~\ref{tab:out_values}.
 Kompletní výpisy je možné prozkoumat spolu se zdrojovými kódy online.
 
-Z Tabulky~\ref{tab:out_values} je možné vidět, že pro jednotlivé testované popisy se výstupní ztráty skutečně liší.
-Jak již bylo zmíněno dříve, referenční popis, SPGF gramatika a ztrátová tabulka byly sestavené pouze pro účely testování
-a interpretace výsledků je tudíž obtížná.
+Z Tabulky~\ref{tab:out_values} je možné vidět, že pro jednotlivé testované popisy se výstupní ztráty skutečně liší, obzvláště v prvních několika
+hodnotách, které udávají ztráty pro celkově všechny chybějící objekty, atributy a triplety.
+Jak již bylo zmíněno dříve, referenční popis obrázku a ztrátová tabulka byly sestavené ne-expertem, především pro účely testování.
+Interpretace výsledků je tudíž obtížná, protože se může podstatně lišit od reálného nasazení, kde se předpokládá, že referenční popis a
+ztrátová tabulka budou pečlivě sestavené expertem z oboru.
 
-I přesto je ale možné vidět, že popisy 4 a 5, které jsou celkově výrazně kratší a nepoužívají tolik rozvité věty,
-mají vyšší ztrátu pro chybějící vazby (triplety).
+I přes tyto komplikace je ale možné učinit několik pozorování:
+\begin{enumerate}
+	\item Popisy č.~4 a 5, které jsou ve své celkové délce výrazně kratší a používají velmi strohé nerozvité věty, mají vyšší ztrátu pro chybějící vazby (triplety).
+	      To odpovídá tomu, že v těchto popisech je většina obsahu pouze vyjmenovávání objektů z obrázku a téměř žádná pozornost není věnována
+	      jejich vzájemným vazbám a vztahům mezi nimi.
+	\item Dalším znatelným rozdílem ve výstupních hodnotách, který je možné sledovat, je značný rozdíl ztráty pro chybějící objekty s tagem \enquote{\emph{person}}.
+	      To odpovídá faktu, že zmínky osob se v jednotlivých popisech skutečně výrazně liší, konkrétně pak popisy 4 a 5 zmiňují omezené množství osob z obrázku ve srovnání s prvními třemi popisy.
+	\item Obdobně je možné v Tabulce~\ref{tab:out_values} pozorovat, že přepisy č.~1 a 5 mají relativně vysoké ztráty pro objekty s chybějícím tagem \enquote{\emph{animal}}.
+	      Opět to odpovídá tomu, že tyto texty neobsahují tolik zmínek o zvířatech v obrázku.
+	      Kontrastem může být text č.~2, který má tuto ztrátu nejnižší a skutečně je možné se přesvědčit, že v tomto textu je značná pozornost věnována popisu zvířat.
+	\item Dále je možné pozorovat, že vysoké hodnoty některých ztrát jsou ve sloupcích pro uměle generované popisy \textbf{G1}, \textbf{G2}, \textbf{G3}.
+	      % Tyto vysoké ztráty jsou očekávaný výsledek, vzhledem k jejich účelnému vytvoření.
+	      % tyto umělé popisy byly vytvořené záměrně tak, aby popoisovaly zcela jiné obrázky a tudíž
+	      % se zde použitou ilustrací na Obrázku~\ref{fig:summer} měly velmi málo společné sémantiky.
+	      Především je možné pozorovat výrazně vyšší ztráty pro chybějící objekty a atributy, způsobené patrně tím, že
+	      v příslušných textech se nevyskytují popisy sledovaných objektů.
+	      %ty objekty, které byly sledované vytvořeným referenčním popisem.
+\end{enumerate}
 
-Dalším znatelným rozdílem ve výstupních hodnotách, který je možné sledovat, je značný rozdíl ztráty pro chybějící objekty s tagem \enquote{\emph{person}}.
-To odpovídá faktu, že popisy 4 a 5 nezmiňují tolik osob jako první tři popisy.
-
-Obdobně je možné v Tabulce~\ref{tab:out_values} pozorovat, že přepisy 1 a 5 mají relativně vysoké ztráty pro objekty s chybějícím tagem \enquote{\emph{animal}}.
-Opět to odpovídá tomu, že tyto texty neobsahují tolik označení zvířat, jako například text 2, který má tuto ztrátu nejnižší.
-
-\begin{table}[ht!]
-	\centering
-	\begin{tabular}{|l|c|c|c|c|c|}
-		\hline
-		\multirow{2}{*}{\textbf{Typ ztráty}}                & \multicolumn{5}{c|}{\textbf{Číslo přepisu}}                                                     \\
-		\cline{2-6}
-		                                                    & \textbf{1}                                  & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} \\
-		\hline
-		chybějící objekty                                   & 125.5                                       & 97.0       & 108.05     & 141.0      & 161.0      \\
-		chybějící atributy                                  & 79.0                                        & 76.0       & 77.5       & 80.5       & 79.0       \\
-		chybějící triplety                                  & 164.0                                       & 156.5      & 164.00     & 173.0      & 175.0      \\
-		atributy s chybnou hodnotou                         & 2.0                                         & 0.0        & 4.7        & 0.0        & 0.0        \\
-		\hline
-		chybějící objekt s tagem \enquote{animal}           & 52.0                                        & 18.5       & 26.5       & 28.0       & 40.0       \\
-		% chybějící objekt s tagem \enquote{background}           & 15.0                                     & 8.5         & 15.0        & 6.0       &  10.0     \\
-		chybějící objekt s tagem \enquote{clothing}         & 24.0                                        & 24.0       & 27.0       & 36.0       & 36.0       \\
-		% chybějící objekt s tagem \enquote{environment}          & 17.0                                     & 11.5        & 16.0        & 15.0      &  14.0     \\
-		% chybějící objekt s tagem \enquote{group}                & 21.0                                     & 16.0        & 21.0        & 17.0      &  30.0     \\
-		chybějící objekt s tagem \enquote{item}             & 24.0                                        & 33.0       & 30.0       & 42.0       & 45.0       \\
-		chybějící objekt s tagem \enquote{person}           & 5.5                                         & 10.0       & 5.5        & 20.0       & 26.0       \\
-		\hline
-		chybějící atributy typu \enquote{action}            & 5.0                                         & 4.5        & 5.0        & 6.0        & 5.5        \\
-		chybějící atributy typu \enquote{color}             & 61.0                                        & 56.5       & 57.5       & 59.0       & 59.0       \\
-		% chybějící atributy typu \enquote{count}                 & 10.0                                     & 10.0        & 10.0        & 10.0      &  10.0     \\
-		chybějící atributy typu \enquote{facial expression} & 0.5                                         & 1.0        & 0.5        & 1.0        & 0.5        \\
-		chybějící atributy typu \enquote{hairstyle}         & 1.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
-		chybějící atributy typu \enquote{pattern}           & 1.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
-		% chybějící atributy typu \enquote{style}                 & 0.5                                      & 0.0         & 0.5         & 0.5       &  0.0      \\
-		\hline
-		chybějící vazby typu \enquote{catching}             & 4.0                                         & 4.0        & 4.0        & 4.0        & 4.0        \\
-		chybějící vazby typu \enquote{chasing}              & 2.0                                         & 0.0        & 2.0        & 0.0        & 2.0        \\
-		chybějící vazby typu \enquote{climbing}             & 2.0                                         & 0.0        & 2.0        & 2.0        & 2.0        \\
-		chybějící vazby typu \enquote{falling into}         & 0.0                                         & 0.0        & 0.0        & 5.0        & 5.0        \\
-		% chybějící vazby typu \enquote{following}                & 10.0                                     & 10.0        & 10.0        & 10.0      &  10.0     \\
-		% chybějící vazby typu \enquote{has child object}         & 70.0                                     & 62.5        & 70.0        & 70.0      &  70.0     \\
-		% chybějící vazby typu \enquote{has parent object}        & 28.0                                     & 28.0        & 28.0        & 28.0      &  28.0     \\
-		% chybějící vazby typu \enquote{holding}                  & 2.0                                      & 2.0         & 2.0         & 2.0       &  2.0      \\
-		% chybějící vazby typu \enquote{jumping from}             & 2.0                                      & 2.0         & 2.0         & 2.0       &  2.0      \\
-		% chybějící vazby typu \enquote{playing with}             & 6.0                                      & 6.0         & 6.0         & 6.0       &  6.0      \\
-		% chybějící vazby typu \enquote{reading}                  & 0.0                                      & 0.0         & 0.0         & 2.0       &  2.0      \\
-		chybějící vazby typu \enquote{running away from}    & 2.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
-		chybějící vazby typu \enquote{sitting on}           & 8.0                                         & 8.0        & 6.0        & 8.0        & 8.0        \\
-		chybějící vazby typu \enquote{sitting under}        & 2.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
-		chybějící vazby typu \enquote{swimming in}          & 2.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
-		chybějící vazby typu \enquote{throwing}             & 2.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
-		chybějící vazby typu \enquote{watching}             & 2.0                                         & 2.0        & 2.0        & 2.0        & 2.0        \\
-		chybějící vazby typu \enquote{wearing}              & 20.0                                        & 24.0       & 22.0       & 24.0       & 24.0       \\
-		\hline
-		chybné hodnoty atributů typu \enquote{action}       & 0.0                                         & 0.0        & 0.7        & 0.0        & 0.0        \\
-		chybné hodnoty atributů typu \enquote{color}        & 0.0                                         & 0.0        & 0.0        & 0.0        & 0.0        \\
-		chybné hodnoty atributů typu \enquote{count}        & 2.0                                         & 0.0        & 4.0        & 0.0        & 0.0        \\
-		%chybné hodnoty atributů typu \enquote{facial expression} & 0.0                                      & 0.0         & 0.0         & 0.0       &  0.0      \\
-		chybné hodnoty atributů typu \enquote{hairstyle}    & 0.0                                         & 0.0        & 0.0        & 0.0        & 0.0        \\
-		chybné hodnoty atributů typu \enquote{pattern}      & 0.0                                         & 0.0        & 0.0        & 0.0        & 0.0        \\
-		%chybné hodnoty atributů typu \enquote{state}             & 0.0                                      & 0.0         & 0.0         & 0.0       &  0.0      \\
-		\hline
-	\end{tabular}
-	\caption{Ztrátové hodnoty testovaných přepisů (zkráceno)}\label{tab:out_values}
-\end{table}
-
+\input{src/final_table.tex}

@@ -2,9 +2,7 @@
 Extrakce sémantické informace byla jednou z hlavních řešených problematik.
 Jak již bylo řečeno dříve, byl zvolen přístup založený na parsování textu pomocí sémantických bezkontextových gramatik.
 
-Při prvotních experimentech byla použita již existující implementace tohoto konceptu,
-\todo{referovat na SpeechCloud}
-používající standard SRGS~\cite{srgs}.
+Při prvotních experimentech byla použita již existující implementace tohoto systému v platformě SpeechCloud, používající standard SRGS~\cite{srgs}.
 
 Během těchto prvních pokusů ale bylo zjištěno, že funkcionalita, kterou nabízí existující implementace,
 nebude pro potřeby této práce postačovat.
@@ -15,9 +13,7 @@ realizovaným a popsaným postupům a metodám.
 Detaily této vlastní implementace a rozdíly oproti existujícím variantám jsou popsány v následujících kapitolách.
 
 \subsubsection{Problémy s existující implementací a SRGS}
-Při práci s existující implementací SRGS standardu (SpeechCloud)
-\todo{referovat SC správně formálně}
-vyvstaly následující problémy:
+Při práci s existující implementací SRGS standardu na platformě SpeechCloud vyvstaly následující problémy:
 \begin{enumerate}
 	\item \textbf{Speciální pravidlo \texttt{\$GARBAGE}}\\
 	      První problém, který bylo potřeba vyřešit, byla absence pravidla \texttt{\$GARBAGE}.

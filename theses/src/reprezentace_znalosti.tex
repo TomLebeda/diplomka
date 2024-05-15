@@ -143,15 +143,43 @@ Aby bylo možné pomocí sémantických sítí zachytit i principy logiky, jako 
 a další komplexnější vztahy, je možné sémantické sítě rozšířit o další typy vazeb (např.~IS-NOT-A) i celé strukturální koncepty,
 jako je rozdělení sítě do \emph{prostorů}, které se mohou překrývat jako Vennovy diagramy, což umožňuje vyjádřit složitější logické operace.
 Dalším typem rozšíření, který se vyskytuje v \emph{konceptuálních grafech}, je použití \emph{vnořených kontextů},
-jejichž principem je využití metod logiky pro vyjádření složitějších operací skrze zapouzdření (angl.~encapsulation) primitivních operací.
-~\cite{semantic-nets-LEHMANN19921}
+jejichž principem je využití metod logiky pro vyjádření složitějších operací skrze zapouzdření (angl.~encapsulation) primitivních operací.~\cite{semantic-nets-LEHMANN19921}
 
 \subsubsection{Ontologie}
 Samotná forma reprezentace znalostí a způsob práce s nimi je pouze částí problematiky sémantických sítí,
 druhou otázkou, kterou je potřeba řešit, je samotný obsah, neboli \enquote{co reprezentovat}.
 Tímto problémem se zabývá \emph{ontologie}, která zahrnuje formální označení, strukturu a definice jednotlivých kategorií,
 vlastností, relací a samotných dat, které je potřeba reprezentovat.
-Existuje řada různých přístupů a realizací, příkladem může být projekt \emph{Cyc}~\cite{cyc}, jehož cílem je poskytnout ontologii pro reálný svět.
+
+Podle~\cite{onto_svatek} je cílem ontologie podpora porozumění mezi lidmi, zejména pak experty v určité oblasti,
+podpora komunikace mezi počítačovými systémy a usnadnění návrhu aplikací se znalostním zaměřením.
+
+Rozdělení ontologií do typů či kategorií lze podle~\cite{onto_svatek} dělat podle různých kritérií:
+\begin{itemize}
+	\item \emph{Dělení podle historického vývoje}:\\
+	      V důsledku historického vývoje lze ontologie rozdělit na \emph{terminologické} či \emph{lexikální}, které se zaměřují
+	      na textové zdroje a lze je považovat za pokročilé slovníky, poté \emph{informační ontologie}, které jsou spojené s databázovými systémy a schématy
+	      a \emph{znalostní ontologie}, které jsou spojené s oblastí umělé inteligence a reprezentace znalostí.
+	\item \emph{Dělení podle míry formalizace}:\\
+	      Existují typy ontologií, které nejsou celé striktně formalizované a například používají přirozený jak pro vysvětlení pojmů.
+	      Pak ale také existují striktně formalizované ontologie, které využívají formální jazyky.
+	      Podle~\cite{onto_svatek} však většina formálních ontologií obsahuje do nějaké míry i neformální ontologie.
+	\item \emph{Dělení podle obsahu}:\\
+	      Hlavní typy ontologií podle jejich obsahu jsou doménové, generické, úlohové a aplikační.
+	      Svátek~\cite{onto_svatek} uvádí, že tento způsob dělení je \enquote{tradiční}, avšak s různými variantami, podle konkrétního autora.
+\end{itemize}
+
+Struktura ontologií obecně sestává ze \emph{tříd}, \emph{individuí}, \emph{relací}, \emph{pravidel} a \emph{hodnot}.
+Třídy odpovídají množinám objektům, někdy jsou také označované jako \emph{kategorie} nebo \emph{koncepty}.
+Individua jsou v ontologiích označení pro konkrétní objekty, většinou reprezentující nějaké objekty v reálném světě.
+Mezi objekty je možné vytvořit \emph{relace}, které popisují nějaké vazby mezi objekty, či mohou popisovat jejich vlastnosti.
+Pravidla, někdy označovaná jako \emph{axiomy}, slouží v ontologických jazycích pro vyjádření logických formulí, jako je ekvivalence tříd, nebo jejich disjunktnost.~\cite{onto_svatek}
+
+Existuje řada různých přístupů a realizací~\cite{semantic-nets-LEHMANN19921}, příkladem může být projekt \emph{Cyc}~\cite{cyc}, jehož cílem je poskytnout ontologii pro reálný svět.
 Jiným příkladem může být J. L. Jolleyův \emph{Holotheme}~\cite{jolley1971holotheme}, který se také snaží klasifikovat cokoli,
 ovšem v rámci jednoho schématu založeného na strukturální komplexitě.
-Dalším příkladem je \emph{Wordtree}~\cite{burger1984wordtree}, který představuje pokus o definici významů slov pomocí kombinování primitivních konceptů a významů.~\cite{semantic-nets-LEHMANN19921}
+Dalším příkladem je \emph{Wordtree}~\cite{burger1984wordtree}, který představuje pokus o definici významů slov pomocí kombinování primitivních konceptů a významů.
+
+Jedním z ontologických jazyků je \emph{RDF Schema}~\cite{rdf-schema}, které patří k \emph{Resource Description Framework (RDF)}~\cite{rdf} standardu pod skupinou W3C.
+RDF je datový model, který byl navržený pro Web, se zaměřením na kompatibilitu dat a schopnost jejich sloučení.
+Je založený na syntaxi značkovacího jazyka XML a hojně využívá URL adresy.

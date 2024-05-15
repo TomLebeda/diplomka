@@ -84,7 +84,7 @@
       "tags": ["animal", "background", "group"],
       "top_left_corner": [512, 18],
       "size": [253, 99],
-      "parents": [],
+      "parents": ["animals"],
       "children": [],
       "attributes": [
         ["color", "black"],
@@ -108,7 +108,7 @@
       "tags": ["person"],
       "top_left_corner": [653, 283],
       "size": [179, 232],
-      "parents": [],
+      "parents": ["people", "children"],
       "children": [],
       "attributes": [["hairstyle", "ponytail"]]
     },
@@ -135,7 +135,7 @@
       "tags": ["person"],
       "top_left_corner": [719, 330],
       "size": [56, 78],
-      "parents": [],
+      "parents": ["people", "children"],
       "children": [],
       "attributes": []
     },
@@ -174,7 +174,7 @@
       "tags": ["animal"],
       "top_left_corner": [1403, 335],
       "size": [240, 101],
-      "parents": [],
+      "parents": ["animals"],
       "children": ["leash"],
       "attributes": [
         ["color", "brown"],
@@ -186,7 +186,7 @@
       "tags": ["animal"],
       "top_left_corner": [1655, 286],
       "size": [116, 76],
-      "parents": [],
+      "parents": ["animals"],
       "children": [],
       "attributes": [
         ["color", "orange"],
@@ -207,7 +207,7 @@
       "tags": ["animal"],
       "top_left_corner": [1095, 193],
       "size": [93, 47],
-      "parents": [],
+      "parents": ["animals"],
       "children": [],
       "attributes": [["color", "white"]]
     },
@@ -312,7 +312,7 @@
       "tags": ["person"],
       "top_left_corner": [60, 426],
       "size": [458, 312],
-      "parents": [],
+      "parents": ["people"],
       "children": [],
       "attributes": [
         ["hairstyle", "bun"],
@@ -433,7 +433,7 @@
       "tags": ["person"],
       "top_left_corner": [680, 680],
       "size": [327, 191],
-      "parents": [],
+      "parents": ["people", "children"],
       "children": [],
       "attributes": []
     },
@@ -442,7 +442,7 @@
       "tags": ["animal"],
       "top_left_corner": [222, 837],
       "size": [181, 82],
-      "parents": ["ducks"],
+      "parents": ["ducks", "animals"],
       "children": [],
       "attributes": [["color", "brown"]]
     },
@@ -469,7 +469,7 @@
       "tags": ["animal"],
       "top_left_corner": [29, 783],
       "size": [88, 41],
-      "parents": ["ducklings"],
+      "parents": ["ducklings", "animals"],
       "children": [],
       "attributes": [["color", "brown"]]
     },
@@ -478,7 +478,7 @@
       "tags": ["animal"],
       "top_left_corner": [108, 797],
       "size": [88, 41],
-      "parents": ["ducklings"],
+      "parents": ["ducklings", "animals"],
       "children": [],
       "attributes": [["color", "brown"]]
     },
@@ -487,7 +487,7 @@
       "tags": ["animal"],
       "top_left_corner": [200, 809],
       "size": [88, 41],
-      "parents": ["ducklings"],
+      "parents": ["ducklings", "animals"],
       "children": [],
       "attributes": [["color", "brown"]]
     },
@@ -496,7 +496,7 @@
       "tags": ["animal"],
       "top_left_corner": [228, 837],
       "size": [88, 41],
-      "parents": ["ducklings"],
+      "parents": ["ducklings", "animals"],
       "children": [],
       "attributes": [["color", "brown"]]
     },
@@ -505,7 +505,7 @@
       "tags": ["animal"],
       "top_left_corner": [110, 877],
       "size": [88, 41],
-      "parents": ["ducklings"],
+      "parents": ["ducklings", "animals"],
       "children": [],
       "attributes": [["color", "brown"]]
     },
@@ -523,7 +523,7 @@
       "tags": ["animal"],
       "top_left_corner": [1000, 950],
       "size": [109, 61],
-      "parents": [],
+      "parents": ["animals"],
       "children": [],
       "attributes": [["color", "green"]]
     },
@@ -532,7 +532,7 @@
       "tags": ["person"],
       "top_left_corner": [1344, 898],
       "size": [354, 194],
-      "parents": [],
+      "parents": ["people"],
       "children": [],
       "attributes": [["action", "swimming"]]
     },
@@ -541,7 +541,7 @@
       "tags": ["person"],
       "top_left_corner": [1474, 446],
       "size": [287, 334],
-      "parents": [],
+      "parents": ["people"],
       "children": [],
       "attributes": [
         ["facial expression", "smiling"],
@@ -601,7 +601,7 @@
       "tags": ["animal"],
       "top_left_corner": [1667, 749],
       "size": [179, 96],
-      "parents": [],
+      "parents": ["animals"],
       "children": [],
       "attributes": [["color", "green"]]
     },
@@ -860,7 +860,7 @@
     {
       "from": "man #2",
       "predicate": "wearing",
-      "to": "west"
+      "to": "vest"
     },
     {
       "from": "woman",
