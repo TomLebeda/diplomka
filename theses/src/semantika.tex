@@ -39,7 +39,6 @@ Tato variabilita jazyka představuje hlavní problém, který metody porozuměn�
 Existuje řada metod, jakými jsou z přirozené řeči extrahovány sémantické informace pro různé typy úloh.
 Následuje popis vybraných technik, které jsou široce používané v úlohách využívajících
 metody porozumění přirozené řeči, jako tokenizace, bag-of-words, latentní sémantická analýza, part-of-speech tagování, nebo sémantické sítě.~\cite{the_conversational_interface}
-\todo{hodně jsem tady čerpal z~\cite{the_conversational_interface}, zdrojuje se každý odstavec samostatně?}
 
 Tato práce řeší danou problematiku expertním přístupem, konkrétně s využitím bezkontextových sémantických gramatik,
 jejichž principy budou rozebrány detailněji později v samostatné sekci~\ref{subsubsec:grammars}.
@@ -58,13 +57,15 @@ jejichž principy budou rozebrány detailněji později v samostatné sekci~\ref
 	      a bylo jednodušší s nimi pracovat dále.
 	      Typickým příkladem normalizace může být expanze zkratek.~\cite{the_conversational_interface}
 
+	      \newpage
 	\item \textbf{Bag-of-words}\\
 	      Přístup označený jako bag-of-words je jednoduchý způsob, jak analyzovat vstupní text na relativně povrchní úrovni.
 	      Tento způsob zpracování je také označovaný jako \emph{vector space model}.~\cite{the_conversational_interface}
 
 	      Základní princip je vytvoření množiny slov ze vstupního textu a počítání jejich četností.
 	      Srovnání takto získaných vektorů hodnot je pak základem pro určení míry shody dvou nebo více zdrojů.
-	      Z tohoto přístupu plyne, že metoda zcela ignoruje jakékoli syntaktické informace a pořadí slov ve vstupním textu.
+	      Z tohoto přístupu plyne, že metoda zcela ignoruje jakékoli syntaktické informace a pořadí slov ve vstupním textu.~\cite{the_conversational_interface}
+
 	      Její součástí je také často vyřazení slov, která nepřispívají do sémantické informace (například předložky a spojky),
 	      tato vyřazená slova se označují jako \emph{stop words}.
 	      Dalším častým rozšířením je \emph{lemmatizace}, což je normalizace různých tvarů slov do jedné základní podoby.
@@ -84,7 +85,7 @@ jejichž principy budou rozebrány detailněji později v samostatné sekci~\ref
 
 	      Způsob realizace POS tagování může být založený na deterministických pravidlech a nebo může být proveden stochasticky.
 	      Pravidlový přístup je založen na použití často velmi rozsáhlé databáze pravidel, které jsou většinou tvořené ručně lidským expertem.
-	      Proti tomu stochastický přístup využívá statistických metod pro určení pravděpodobnosti jednotlivých tagů v na daných pozicích
+	      % Proti tomu stochastický přístup využívá statistických metod pro určení pravděpodobnosti jednotlivých tagů v na daných pozicích
 	      podle okolního kontextu.~\cite{the_conversational_interface}
 \end{enumerate}
 
