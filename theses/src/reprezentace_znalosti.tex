@@ -11,6 +11,7 @@ Nové znalosti je možné získat v základu dvěma způsoby.
 Prvním z nich je pozorování objektů a jevů, což je označováno jako přímé získávání znalostí.
 Druhou metodou, která označována jako nepřímá, je odvození nových znalostí z těch, které jsou již známé.~\cite{prepreze_znal}
 
+\subsubsection{Dělení reprezentace znalostí}
 Podle učebního textu~\cite{prepreze_znal} je možné metody reprezentace znalostí rozdělit do několika kategorií.
 Schématické znázornění tohoto dělení je na Obrázku~\ref{fig:schema_repreznalosti}.
 \begin{figure}[ht!]
@@ -43,7 +44,6 @@ Schématické znázornění tohoto dělení je na Obrázku~\ref{fig:schema_repre
 	\caption{Schéma dělení metod reprezentace znalostí~\cite{prepreze_znal}}\label{fig:schema_repreznalosti}
 \end{figure}
 
-\todo{je tady potřeba tenhle popis dělení?}
 Deklarativní přístup je založený na vyjádření různých znalostí ve formě \emph{poznatků}, množinou konkrétních a navzájem nezávislých faktů.
 S těmito fakty je pak možné manipulovat pomocí takzvaných \emph{procedur}, někdy označovaných jako tvrzení.
 Mezi deklarativní metody se také řadí různé přístupy založené na matematice a logice, na algebře, relačních strukturách.
@@ -52,13 +52,44 @@ relací, které mezi těmito objekty popisují jejich vztahy.
 Dalším deklarativním typem reprezentace znalostí jsou \emph{stavové prostory},
 které popisují řešený problém jako množinu možných stavů, ve kterých se daný problém může nacházet.
 Mezi další formy reprezentace znalostí deklarativní povahy se řadí různé druhy logiky,
-jako jsou \emph{predikátová logika} a \emph{fuzzy logika}.
+jako jsou \emph{predikátová logika} a \emph{fuzzy logika}.~\cite{prepreze_znal}
+
 Procedurální metody reprezentace znalostí zahrnují produkční systémy.
 To jsou systémy navržené tak, že pomocí předem dané množiny pravidel, které se označují jako produkční pravidla,
-se snaží dosáhnout nějakého stanoveného cíle a vyřešení určitého problému.
+se snaží dosáhnout nějakého stanoveného cíle a vyřešení určitého problému.~\cite{prepreze_znal}
+
 Poslední skupina, označená jako rámcová metoda reprezentace znalostí, představuje kombinaci obou předchozích přístupů.
 Rámce jsou struktury, které popisují různé objekty podle předem dané formy a v průběhu řešení
 problému se doplňují konkrétní hodnoty k daným vlastnostem.~\cite{prepreze_znal}
+
+Schématická ukázka sémantické sítě využívající rámce je na Obrázku~\ref{fig:frames_net}
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}
+		\node[inner sep=0pt] (n) at (0, 0) {
+			\begin{tabular}{|l|l|}
+				\hline
+				\emph{Slot}           & \emph{Value}                   \\
+				\hline
+				\texttt{INSTANCE-OF}: & \texttt{(DOG, PET)}            \\
+				Name:                 & \enquote{Fido}                 \\
+				Color:                & \texttt{(BROWN)}               \\
+				Father:               & \texttt{(BOWSER)}              \\
+				Mother:               & \texttt{(WEENIE)}              \\
+				Owner:                & \texttt{(MR.-SMITH)}           \\
+				Cost:                 & \ \$12.95                      \\
+				Has-as-ears:          & \texttt{(LEFT-EAR, RIGHT-EAR)} \\
+				Number-of-ears:       & \texttt{(2)}                   \\
+				\hline
+			\end{tabular}
+		};
+
+		\node[draw=none] (n1) at (8, 0) {\includegraphics{./src/imgs/frames.pdf}};
+
+		\node[draw, anchor=south west] at ($(n.north west) + (0, -0.5pt)$) {\texttt{(FIDO)}};
+	\end{tikzpicture}
+	\caption{Ukázka rámce pro individuálního psa (vlevo) a schématické znázornění propojení více rámců (vpravo), převzato z~\cite{semantic-nets-LEHMANN19921}}\label{fig:frames_net}
+\end{figure}
 
 \subsubsection{Sémantické sítě}
 Sémantické sítě reprezentují znalosti pomocí grafových struktur složených z uzlů a hran.
@@ -114,6 +145,7 @@ Dalším typem rozšíření, který se vyskytuje v \emph{konceptuálních grafe
 jejichž principem je využití metod logiky pro vyjádření složitějších operací skrze zapouzdření (angl.~encapsulation) primitivních operací.
 ~\cite{semantic-nets-LEHMANN19921}
 
+\subsubsection{Ontologie}
 Samotná forma reprezentace znalostí a způsob práce s nimi je pouze částí problematiky sémantických sítí,
 druhou otázkou, kterou je potřeba řešit, je samotný obsah, neboli \enquote{co reprezentovat}.
 Tímto problémem se zabývá \emph{ontologie}, která zahrnuje formální označení, strukturu a definice jednotlivých kategorií,

@@ -1,5 +1,6 @@
-\subsection{Sémantika a porozumění řeči}
+\subsection{Sémantika a zpracování přirozeného jazyka}
 % NOTE: co to je sémantika
+\subsubsection{Sémantika}
 Sémantika je vědní obor, který se zabývá zkoumáním významu.
 Je to obor související s lingvistikou a logikou, jelikož jeho předmětem je analýza významu frází, slov, vět a nebo i obecně jiných symbolů,
 pomocí kterých lze předávat informace.~\cite{palmer1981semantics}
@@ -27,6 +28,7 @@ sémantických reprezentací pro výrazy z přirozeného jazyka a inferenční p
 Dále se zabývá řešením neurčitostí, analýzou komplexních frází,
 vliv kontextu na význam a použití získaných znalostí pro automatické rozhodování.~\cite{computational-semantics-blackburn-bos}~\cite{computation-semantics}
 
+\subsubsection{Porozumění řeči}
 Porozumění řeči (angl.~spoken language understanding, SLU) označuje strojové zpracování lidské přirozené řeči na sémantické úrovni.
 Jedná se tedy o extrakci významu z přirozené řeči pomocí automatických počítačových metod.
 Správné určení významu promluvy je často nezbytným krokem pro mnoho běžných úloh, například interpretace požadavků či příkazů,
@@ -116,7 +118,7 @@ na kterém je možné vidět základní princip zpracování textu pomocí séma
 		\node[anchor=west] (na autě) at ($(olej.east) + (\dist, 0)$) {\mysize \strut \emph{na autě}};
 		\node[anchor=west] (děkuji) at ($(na autě.east) + (\dist, 0)$) {\mysize \strut \emph{děkuji}};
 
-		\def\dist{25pt}
+		\def\dist{40pt}
 		\node (pozdrav) at ($(dobrý den.north) + (0, 2*\dist)$) {\mysize \texttt{\strut pozdrav}};
 		\node (výplň) at ($(potřebuji.north) + (0, 2*\dist)$) {\mysize \texttt{\strut výplň}};
 		\node (akce) at ($(zkontrolovat.north) + (0, \dist)$) {\mysize \texttt{\strut akce}};
@@ -166,11 +168,13 @@ na kterém je možné vidět základní princip zpracování textu pomocí séma
 	\caption{Ukázka rozkladu věty}\label{fig:example_car_fix}
 \end{figure}
 
+
 Stromová struktura umožňuje výhodně aplikovat metody pro analýzu syntaxe formálních jazyků.
 Množina těchto terminální symbolů se označuje jako \emph{abeceda formálního jazyka}.
 Formálním jazykem je možné popsat množinu předmětů, které jsou tvořené složením terminálních symbolů do nějaké struktury (posloupnosti, řetězce).
 Tyto řetězce terminálních symbolů se označují jako \emph{slova formálního jazyka} a pravidla,
-která popisují, jak je možné jednotlivé terminální symboly skládat do slov, jsou označována jako \emph{substituční} nebo \emph{produkční pravidla}.
+která popisují, jak je možné jednotlivé terminální symboly skládat do slov, jsou označována jako \emph{substituční} nebo \emph{produkční pravidla}.~\cite{PsutkaJ_2006_Mluvimes}
+
 
 Pro lepší možnosti vyjádření jsou definované ještě takzvané \emph{neterminální symboly}, které zastávají funkci pomocných částí popisu předmětů.
 Substituční pravidla mají tvar
@@ -187,7 +191,17 @@ Formálně lze gramatiku $G$ popsat čtveřicí
 	G = (V_{N}, V_{T}, \rho, S),
 \]
 kde $V_{N}$ je množina neterminálních symbolů, $V_{T}$ je množina terminálních symbolů,
-$\rho$ označuje množinu substitučních pravidel a $S \in V_{N}$ je počáteční symbol gramatiky.
+$\rho$ označuje množinu substitučních pravidel a $S \in V_{N}$ je počáteční symbol gramatiky.~\cite{PsutkaJ_2006_Mluvimes}
+
+Konkrétní příklad ukázkové gramatiky je na Výpisu~\ref{lst:example_grammar} a k ní příslušné dva derivační stromy,
+jeden pro vstupní text \enquote{\emph{malý hnědý pes spokojeně spí}} (Obrázek~\ref{fig:dog_sleep_tree})
+a druhý pro vstupní text \enquote{\emph{bílý medvěd rychle a zdatně plave}} (Obrázek~\ref{fig:bear_swim_tree}).
+Gramatika na Výpisu~\ref{lst:example_grammar} je ve formátu SPGF, který je představen v této práci.
+V gramatice i stromech je možné vidět použití některých další konceptů, jako jsou \emph{tagy} (zeleně), které nemají vliv na proces
+vytváření derivačního stromu, ale přidávají do kontextu dodatečné sémantické informace.
+\input{src/listings/grammar_example.tex}
+\input{src/trees_example.tex}
+
 Gramatiky lze rozdělit na deterministické a stochastické, podle toho, zda jsou její pravidla definována deterministicky,
 nebo s využitím pravděpodobností~\cite{PsutkaJ_2006_Mluvimes}.
 Tato práce se zabývá pouze deterministickým přístupem.
@@ -195,8 +209,8 @@ Tato práce se zabývá pouze deterministickým přístupem.
 Takto definované gramatiky lze rozdělit do čtyř základních kategorií, podle typu jejich pravidel.
 Nejobecnější a nejsložitější jsou \emph{gramatiky typu 0}, poté jsou \emph{kontextové gramatiky},
 dále \emph{bezkontextové gramatiky} a nejjednodušším typem jsou \emph{regulární gramatiky}.
-Se složitostí gramatiky je také spojena její vyjadřovací schopnost, tedy pomocí složitějších gramatik je možné
-zachytit složitější struktury.
+
+Se složitostí gramatiky je také spojena její vyjadřovací schopnost, tedy pomocí složitějších gramatik je možné zachytit složitější struktury.
 Nejjednodušší regulární gramatiky nejsou například schopné zachytit vztah mezi částmi, které nejsou bezprostředně vedle
 sebe, což je pro text s přirozeným jazykem velmi silná limitace.
 Pro porozumění řeči se nejčastěji používají bezkontextové gramatiky.

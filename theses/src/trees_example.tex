@@ -1,0 +1,96 @@
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[inner sep=2pt]
+		\def\dist{25pt}
+		\def\mysize{\normalsize}
+		\node[anchor=west] (malý) at (0, 0) {\mysize\strut\emph{malý}};
+		\node[anchor=west] (hnědý) at ($(malý.east) + (\dist, 0)$) {\mysize\strut\emph{hnědý}};
+		\node[anchor=west] (pes) at ($(hnědý.east) + (\dist, 0)$) {\mysize\strut\emph{pes}};
+		\node[anchor=west] (spokojeně) at ($(pes.east) + (\dist, 0)$) {\mysize\strut\emph{spokojeně}};
+		\node[anchor=west] (spí) at ($(spokojeně.east) + (\dist, 0)$) {\mysize\strut\emph{spí}};
+
+		\def\dist{27pt}
+		\node[anchor=south] (vlast) at ($(malý.north) + (0, 2*\dist)$) {\mysize\strut\texttt{\$popis}};
+		\node[anchor=south] (color) at ($(hnědý.north) + (0, \dist)$) {\mysize\strut\texttt{\$barva}};
+		\node[anchor=south] (animal) at ($(pes.north) + (0, 5*\dist)$) {\mysize\strut\texttt{\$zvíře}};
+		\node[anchor=south] (garb) at ($(spokojeně.north) + (0, 2*\dist)$) {\mysize\strut\texttt{\$GARBAGE}};
+		\node[anchor=south] (činnost) at ($(spí.north) + (0, 3*\dist)$) {\mysize\strut\texttt{\$činnost}};
+		\node[anchor=south] (popis 2) at ($(color.north) + (0, \dist)$) {\mysize\strut\texttt{\$popis}};
+		\node[anchor=south] (věta) at ($(garb.north) + (0*\dist, 4*\dist)$) {\mysize\strut\texttt{\$věta}};
+
+		\def\labelsize{\footnotesize}
+		\draw[->] (malý) -- (vlast);
+		\draw[->] (hnědý) -- node[inner sep=1pt, midway, green!60!black, fill=white] {\labelsize \texttt{tmavý}} (color);
+		\draw[->] (pes) --
+		node[inner sep=1pt, pos=0.3, green!60!black, fill=white] {\labelsize \texttt{nohy=4}}
+		node[inner sep=1pt, pos=0.6, green!60!black, fill=white] {\labelsize \texttt{savec}}
+		(animal);
+		\draw[->] (spokojeně) -- (garb);
+		\draw[->] (spí) -- node[inner sep=1pt, midway, green!60!black, fill=white] {\labelsize \texttt{klid}}(činnost);
+		\draw[->] (color) -- (popis 2);
+		\draw[->] (popis 2) -- (animal);
+		\draw[->] (vlast) -- ++(0, 1.5*\dist) -- (animal);
+		\draw[->] (garb) -- (věta);
+		\draw[->] (animal) -- node[inner sep=1pt, midway, green!60!black, fill=white] {\labelsize \texttt{podmět}} (věta);
+		\draw[->] (činnost) --node[inner sep=1pt, midway, green!60!black, fill=white] {\labelsize \texttt{přísudek}} ($(věta.south east) + (-5pt, 0pt)$);
+	\end{tikzpicture}
+	\caption{Ukázka derivačního stromu pro vstup \enquote{\emph{malý hnědý pes spokojeně spí}} při použití gramatiky z Výpisu~\ref{lst:example_grammar}}\caption{Ukázka derivačního stromu}\label{fig:dog_sleep_tree}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[inner sep=2pt]
+		\def\dist{25pt}
+		\def\mysize{\normalsize}
+		\node[anchor=west] (bílý) at (0, 0) {\mysize\strut\emph{bílý}};
+		\node[anchor=west] (medvěd) at ($(bílý.east) + (\dist, 0)$) {\mysize\strut\emph{medvěd}};
+		\node[anchor=west] (rychle) at ($(medvěd.east) + (\dist, 0)$) {\mysize\strut\emph{rychle}};
+		\node[anchor=west] (a) at ($(rychle.east) + (\dist, 0)$) {\mysize\strut\emph{a}};
+		\node[anchor=west] (zdatně) at ($(a.east) + (\dist, 0)$) {\mysize\strut\emph{zdatně}};
+		\node[anchor=west] (plave) at ($(zdatně.east) + (\dist, 0)$) {\mysize\strut\emph{plave}};
+
+		\def\dist{27pt}
+		\node[anchor=south] (color) at ($(bílý.north) + (0, \dist)$) {\mysize\strut\texttt{\$barva}};
+		\node[anchor=south] (animal) at ($(medvěd.north) + (0, 4.5*\dist)$) {\mysize\strut\texttt{\$zvíře}};
+		\node[anchor=south] (garb 1) at ($(rychle.north) + (0, 1.5*\dist)$) {\mysize\strut\texttt{\$GARBAGE}};
+		\node[anchor=south] (garb 2) at ($(a.north) + (0, 2.5*\dist)$) {\mysize\strut\texttt{\$GARBAGE}};
+		\node[anchor=south] (garb 3) at ($(zdatně.north) + (0, 1.5*\dist)$) {\mysize\strut\texttt{\$GARBAGE}};
+		\node[anchor=south] (činnost) at ($(plave.north) + (0, 3.5*\dist)$) {\mysize\strut\texttt{\$činnost}};
+		\node[anchor=south] (popis) at ($(color.north) + (0, \dist)$) {\mysize\strut\texttt{\$popis}};
+		\node[anchor=south] (věta) at ($(garb 2.north) + (0*\dist, 3.5*\dist)$) {\mysize\strut\texttt{\$věta}};
+
+
+		\def\labelsize{\footnotesize}
+		\draw[->] (bílý) --
+		node[inner sep=1pt, pos=0.5, green!60!black, fill=white] {\labelsize \texttt{světlý}}
+		(color);
+
+		\draw[->] (medvěd) --
+		node[inner sep=1pt, pos=0.3, green!60!black, fill=white] {\labelsize \texttt{nohy=4}}
+		node[inner sep=1pt, pos=0.5, green!60!black, fill=white] {\labelsize \texttt{savec}}
+		(animal);
+		\draw[->] (rychle) -- (garb 1);
+		\draw[->] (a) -- (garb 2);
+		\draw[->] (zdatně) -- (garb 3);
+		\draw[->] (color) -- (popis);
+		\draw[->] (popis) -- (animal);
+		\draw[->] (garb 2) -- node[near end] (n) {} (věta);
+		\draw[-] (garb 1) -- ++(0, 2*\dist) -- (n.center);
+		\draw[-] (garb 3) -- ++(0, 2*\dist) -- (n.center);
+
+
+
+		\draw[->] (plave) --
+		node[inner sep=1pt, pos=0.5, green!60!black, fill=white] {\labelsize \texttt{pohyb}}
+		(činnost);
+
+		\draw[->] (animal) --
+		node[inner sep=1pt, pos=0.5, green!60!black, fill=white] {\labelsize \texttt{podmět}}
+		(věta);
+
+		\draw[->] (činnost) --
+		node[inner sep=1pt, pos=0.5, green!60!black, fill=white] {\labelsize \texttt{přísudek}}
+		(věta);
+	\end{tikzpicture}
+	\caption{Ukázka derivačního stromu pro vstup \enquote{\emph{bílý medvěd rychle a zdatně plave}} při použití gramatiky z Výpisu~\ref{lst:example_grammar}}\label{fig:bear_swim_tree}
+\end{figure}
