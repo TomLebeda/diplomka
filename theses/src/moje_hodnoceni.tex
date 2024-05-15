@@ -2,7 +2,7 @@
 Po získání testovaného popisu je potřeba jej srovnat s referenčním popisem a ohodnotit míru jejich shody.
 K tomuto účelu byl navržen a implementován hodnotící algoritmus, který byl detailně popsán v kapitole~\ref{subsec:hodnoceni}.
 
-Vstupem jsou referenční popis získaný od experta, testovaný popis, jehož získání je popsáno v předchozích kapitolách a ztrátová tabulka,
+Vstupem je referenční popis získaný od experta, testovaný popis, jehož získání je popsáno v předchozích kapitolách a ztrátová tabulka,
 která udává závažnost různých chyb.
 Samotná ztrátová tabulka odpovídá svým formátem asociativnímu poli (též hash-tabulka nebo slovník), s předem danou strukturou.
 Jelikož je SPGF systém citlivý na velikost písmen a interpunkční znaménka, jsou texty před vstupem normalizované
@@ -18,19 +18,19 @@ Ukázka ztrátové tabulky je na Výpisu~\ref{lst:loss_table_example}.
 Význam jednotlivých položek byl detailně popsán v sekci~\ref{subsec:hodnoceni}, proto zde bude pouze stručně shrnuto,
 který klíč odpovídá jakému významu:
 \begin{itemize}
-	\item \texttt{missing\_objects} \to\ výchozí ztráta pro chybějící objekty
-	\item \texttt{missing\_attributes} \to\ výchozí ztráta pro chybějící atributy
-	\item \texttt{missing\_triplets} \to\ výchozí ztráta pro chybějící triplety (vazby)
-	\item \texttt{numberless\_penalty} \to\ ztráta pro informace obsahující objekty s chybějícím číslováním (viz sekce~\ref{subsubsec:cislovani_objektu})
-	\item \texttt{wrong\_value} \to\ výchozí ztráta pro atributy s chybnou hodnotou
-	\item \texttt{missing\_objects\_override} \to\ seznam konkrétních ztrát pro chybějící objekty s daným tagem
-	\item \texttt{missing\_attributes\_override} \to\ seznam konkrétních ztrát pro chybějící atributy (podle názvu atributu)
-	\item \texttt{missing\_triplets\_override} \to\ seznam konkrétních ztrát pro chybějící triplety (podle názvu vazby)
-	\item \texttt{wrong\_values\_override} \to\ seznam konkrétních ztrát pro daný atribut a případně i pro záměnu konkrétních hodnot
+	\item \texttt{missing\_objects} \to\ výchozí ztráta pro chybějící objekty,
+	\item \texttt{missing\_attributes} \to\ výchozí ztráta pro chybějící atributy,
+	\item \texttt{missing\_triplets} \to\ výchozí ztráta pro chybějící triplety (vazby),
+	\item \texttt{numberless\_penalty} \to\ ztráta pro informace obsahující objekty s chybějícím číslováním (viz sekce~\ref{subsubsec:cislovani_objektu}),
+	\item \texttt{wrong\_value} \to\ výchozí ztráta pro atributy s chybnou hodnotou,
+	\item \texttt{missing\_objects\_override} \to\ seznam konkrétních ztrát pro chybějící objekty s daným tagem,
+	\item \texttt{missing\_attributes\_override} \to\ seznam konkrétních ztrát pro chybějící atributy (podle názvu atributu),
+	\item \texttt{missing\_triplets\_override} \to\ seznam konkrétních ztrát pro chybějící triplety (podle názvu vazby),
+	\item \texttt{wrong\_values\_override} \to\ seznam konkrétních ztrát pro daný atribut a případně i pro záměnu konkrétních hodnot.
 \end{itemize}
 
 Finálním výstupem hodnotícího algoritmu je množina označených číselných hodnot, získaných akumulací ztrát pro různé druhy chyb.
-Přirozenou datovou strukturou, která by odpovídala tomuto formátu, by bylo asociativní pole (někdy také označované jako hash-tabulka, nebo slovník).
+Přirozenou datovou strukturou, která by odpovídala tomuto formátu, by bylo asociativní pole.
 
 Příkladem takového výstupu může být Výpis~\ref{lst:output_example}:
 \begin{lstlisting}[
