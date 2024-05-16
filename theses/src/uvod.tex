@@ -1,22 +1,37 @@
 \clearpage
 \section{Úvod}
-% V současném výzkumu aplikované lingvistiky a počítačového zpracování přirozeného jazyka zaujímá oblast analýzy textu a
-% reprezentace vizuálních informací značné místo.
-% Častým
-%
-% Tato práce se zabývá technikami zpracování a interpretace textových popisů spojených s vizuálními daty s cílem
-% diagnostikovat potenciální kognitivní poruchy u uživatelů.
-% Konkrétně se zaměřuje na analýzu přirozených popisů obrázků, které uživatelé poskytují, a na základě této analýzy se snaží odhadnout existenci možných poruch, aniž by se angažovala klinická diagnostika.
-%
-% Tento výzkum spojuje oblasti počítačové lingvistiky, strojového učení a sémantické analýzy s cílem lépe porozumět tomu, jak lidé popisují vizuální scény a jak je tyto popisy reprezentují.
-% Zvláštní pozornost je věnována tomu, jak moc dobře jsou uživatelské popisy schopny reflektovat skutečný obsah zobrazovaného obrázku a jaké jsou známky nesrovnalostí,
-% které by mohly naznačovat potenciální kognitivní problémy.
-%
-% Tato práce se věnuje především technickým aspektům zpracování a interpretace textových dat a vizuálních reprezentací,
-% což má důležitý význam jak pro akademické zkoumání v oblasti umělé inteligence, tak i pro potenciální aplikace v oblasti kognitivních věd.
-% Zvláštní důraz je kladen na rozvoj sofistikovaných algoritmů a modelů, které dokáží efektivně zpracovávat a analyzovat velké množství textových dat spojených s vizuálními stimuly.
-%
-%
-% Tato práce přispívá k dalšímu porozumění interakce mezi lidským jazykem a vizuálními vjemy a poskytuje technický základ pro možnou
-% automatizovanou detekci nesrovnalostí v popisech, což může mít důležité implikace pro diagnostiku kognitivních poruch a případné využití v klinické praxi.
-%
+% NOTE: obecně oblast - co to je, k čemu se to používá
+V současném výzkumu aplikované lingvistiky a počítačového zpracování přirozeného
+jazyka zaujímá oblast zpracování textu, sémantická analýza a reprezentace znalostí význačnou pozici.
+Tyto problematiky jsou nedílnou součástí mnoha běžně používaných systémů,
+mezi které patří dnes již běžně dostupní hlasoví asistenti, automatické překlady a titulkování,
+či systémy pro extrakci informací v různých průmyslových nasazeních.
+% Ve všech těchto nasazeních jsou nějakou formou řešené také problémy sémantiky a reprezentace znalostí, 
+% jakožto nedílné součásti těchto řešení.
+% Kromě průmyslových a komerčních aplikacích se však zpracování přirozeného textu a sémantická analýza
+% uplatňuje i v řadě dalších, více specializovaných oblastech, jako je například medicína,
+% kde jsou tyto koncepty používané například pro automatické zpracování a extrakci informací.
+
+% NOTE: co bude v této práci + motivace
+Cílem této práce je navrhnout a implementovat systém pro určení míry korespondence obrázku a jeho popisu v přirozené řeči, a to na sémantické úrovni.
+Motivací pro takovýto systém je možnost jeho využití pro vytvoření aplikace usnadňující vyšetření pro detekci kognitivních
+poruch s využitím metod strojového učení.
+Základní myšlenkou je využití předpokladu, že snížené kognitivní funkce se projeví mimo jiné
+i na schopnosti člověka detailně popsat komplexní scénu zobrazenou na předloženém obrázku.
+
+Hlavní koncept prezentovaný v této práci spočívá v extrahování sémantické informace obsažené v přirozeném popisu,
+srovnání se vzorovým popisem a ohodnocení míry korespondence v podobě vektoru hodnot, který je možné
+následně použít jako vstup pro další zpracování, například jako vektor příznaků pro klasifikaci.
+
+% NOTE: Na co byl kladen důraz
+Během návrhu celkového konceptu systému, jeho jednotlivých částí a i následné implementace, byl kladen důraz na to,
+aby byly jednotlivé procesy \enquote{průhledné}, bylo možné detailně sledovat všechny kroky
+a v případě potřeby dělat detailní změny či vylepšení, pro zdokonalení výsledků v konkrétním nasazení.
+Dále bylo dbáno na modularitu systému, aby bylo možné v případě potřeby jednotlivé části nahradit za případné alternativy,
+nebo doplnit dodatečnými rozšířeními.
+Je vhodné poznamenat, že ačkoli bylo primární motivací již zmíněná podpora diagnostiky kognitivních poruch,
+byl systém navrhován obecně tak, aby jej bylo možné použít i pro případná další nasazení benefitující ze zde navržených metod.
+
+% NOTE: co je v práci popsáno
+V práci bude popsán návrh jednotlivých částí i celkové architektury, včetně zdůvodnění učiněných rozhodnutí.
+Následně bude popsána samotná realizace, společně s problémy a jejich řešením, které se v průběhu vypracování vyskytly.

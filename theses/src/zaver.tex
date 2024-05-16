@@ -1,1 +1,63 @@
 \section{Závěr}
+% NOTE: co bylo cílem
+Cílem této práce bylo navrhnout a implementovat systém pro hodnocení míry korespondence mezi
+obrázkem a jeho popisem v přirozeném řeči.
+Motivací pro takovýto systém bylo jeho využití pro usnadnění diagnostických testů pro detekci kognitivních poruch.
+Zvolené řešení bylo založeno na expertním přístupu, který byl pro toto použití shledán vhodným.
+
+% NOTE: na co byl kladen důraz
+Během návrhu a realizace byl kladen důraz na to, aby všechny důležité procesy a subsystémy umožňovaly
+precizní kontrolu a možnost případných detailních úprav pro dosažení co nejlepších výsledků v reálném nasazení.
+Dále bylo během návrhu dbáno na modularitu a obecnost, aby bylo možné jednotlivé procesy nahradit
+za případné vhodnější alternativy pro konkrétní aplikace v různých oblastech.
+
+% NOTE: jak dopadla architektura
+Výsledná architektura celého systému se skládá z referenčního popisu obrázku, subsystému pro zpracování přirozené
+řeči a extrakce sémantické informace, která je v ní obsažena, a hodnotícího algoritmu,
+který porovná referenční popis se získanou sémantikou a na základě ztrátové tabulky vygeneruje
+vektor hodnot, které reprezentují míru sémantické shody mezi vzorovým a testovaným popisem.
+Tento výstupní vektor je pak možné použít jako výchozí bod pro další zpracování, například jako vektor příznaků pro klasifikační metody.
+
+% NOTE: popis procesu, výhody a nevýhody jednotlivých částí
+% Celkový návrh systému je založený na expertním přístupu k řešení dané problematiky.
+Od lidského experta v daném oboru je vyžadováno, aby vybral obrázek a sestavil jeho referenční popis, který udává,
+jak by měl vypadat ideální popis vybraného obrázku.
+Dále je nutné vytvořit gramatiku pro sémantické zpracování řeči a nakonec je na expertovi, aby vytvořil podle referenčního popisu
+ztrátovou tabulku, pomocí které specifikuje závažnost různých druhů chyb v popisu.
+
+% NOTE: jaké jsou omezení a nevýhody
+Tento expertní přístup s sebou přináší omezení ve smyslu vysokých počátečních nákladů a náročné přípravy,
+jelikož tvorba referenčního popisu, gramatik a ztrátové tabulky může představovat časově náročný úkol.
+Na druhou stranu ale zvolený přístup umožňuje velmi detailní a precizní kontrolu nad jednotlivými procesy a fázemi, právě
+díky tomu, že vstupní vzorová data mohou být pečlivě sestavena a nejsou generována automaticky pomocí statistických metod či neuronových sítí,
+jejichž výsledky nemusí být dostačující pro takto specializovanou problematiku.
+
+% NOTE: spgf - vedlejší produkt
+V rámci implementace navržených systémů byl také navržen nový formát pro sémantické gramatiky, včetně implementace jeho parseru.
+Jedná se o jednou z klíčových částí zpracování přirozené řeči a extrakci sémantické informace ve zde prezentovaném systému.
+Tento nový formát, pojmenovaný \enquote{Semantic Parsing Grammar Format}, byl založen na existujícím standardu Speech Recognition Grammar Specification,
+oproti kterému nabízí rozšíření funkčnosti, především ve smyslu ergonomie použití a možnostech volby z vícero parsovacích strategií.
+Tento formát a k němu přidružený software je možné použít nezávisle na zbytku této práce i pro zcela jiné účely.
+
+% NOTE: jaké byly komplikace
+Během realizace se nevyskytly žádné významné technické komplikace.
+Jediným výraznějším problémem byla absence expertních znalostí z oblasti medicíny zaměřující se na kognitivní poruchy,
+která vedla k tomu, že vytvořený referenční popis obrázku a ztrátovou tabulku bylo možné brát pouze jako ilustrační a pro testovací účely.
+To však ve výsledku nepředstavovalo výrazný problém, jelikož účelem práce bylo navrhnout systém pro výše popsaný účel,
+na jehož otestování ilustrační vstupní data postačovala.
+
+
+% NOTE: jak dopadly výsledky
+Výsledky prezentované v kapitole~\ref{sec:vyhodnoceni} ukazují, že navržený systém je schopen extrahovat z přirozeného
+textu požadované sémantické informace, za předpokladu dobře navrženého referenčního popisu a především kvalitně sestavených gramatik.
+Vzhledem k již popsaným problémům s absencí expertem poskytnutých dat bylo vyhodnocení porovnávacího a hodnotícího algoritmu
+obtížnější, avšak dosažené výsledky nasvědčují tomu, že skutečně méně kvalitním popisům obrázku odpovídají vyšší hodnoty
+ztrát, což je v souladu s původním předpokladem.
+
+% NOTE: jaká jsou potenciální budoucí rozšíření
+Důkladnější testování hodnotícího algoritmu je plánováno v rámci již zmíněného projektu \projekt{},
+který umožní detailnější analýzu nad větším množstvím dat a spolupráci s experty z daného oboru.
+Dalším potenciálním rozšířením je otestování alternativních přístupů k extrakci sémantické informace,
+například s využitím dnes populárních velkých jazykových modelů (angl.~large language models, LLMs).
+
+

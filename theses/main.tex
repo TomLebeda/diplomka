@@ -15,6 +15,7 @@
 \usepackage{float}
 \usepackage{multirow}
 \usepackage{longtable}
+\usepackage{pdfpages}
 \usetikzlibrary{decorations.pathreplacing, calligraphy}
 \usepackage{hyperref}
 
@@ -24,9 +25,12 @@
 \renewcommand\lstlistingname{Výpis}
 
 \begin{document}
+\def\projekt{TAČR SIGMA\_DC3 \enquote{\emph{Telemedicínské samovyšetření řeči a paměti pro rychlou detekci kognitivních poruch metodami strojového učení}}}
 
 \input{src/desky.tex}
 \clearpage
+\includepdf[page=1,trim=0mm 0mm 0mm 0.0mm, angle=0.2]{src/imgs/zadani1.pdf}
+\includepdf[page=1,trim=0mm 0mm 0mm 0.0mm, angle=0.6]{src/imgs/zadani2.pdf}
 \tableofcontents
 
 \input{src/uvod.tex}
