@@ -1,0 +1,81 @@
+\begin{table}[H]
+	\centering
+
+	\def\objone{\begin{tabular}{l}
+			water  \\[-1mm]
+			people \\[-1mm]
+			animals
+		\end{tabular}}
+
+	\def\objtwo{\begin{tabular}{l}
+			woman   \\[-1mm]
+			lounger \\[-1mm]
+			book    \\[-1mm]
+			parasol
+		\end{tabular}}
+
+	\def\objthree{\begin{tabular}{l}
+			blanket \\[-1mm]
+			basket
+		\end{tabular}}
+
+	\def\objfour{\begin{tabular}{l}
+			girl, shorts, \\[-1mm]
+			swimsuit \#1  \\[-1mm]
+			boy, cap      \\[-1mm]
+			tshirt
+		\end{tabular}}
+
+	\def\attrone{\begin{tabular}{l}
+			people: count = 5
+		\end{tabular}}
+
+	\def\attrtwo{---}
+
+	\def\attrthree{---}
+
+	\def\attrfour{\begin{tabular}{l}
+			girl: hairstyle = ponytail \\[-1mm]
+			tshirt: pattern = striped
+		\end{tabular}}
+
+	\def\tripone{\begin{tabular}{l}
+			---
+		\end{tabular}}
+	\def\triptwo{woman reading book}
+	\def\tripthree{---}
+	\def\tripfour{\begin{tabular}{l}
+			% girl \to\ wearing \to\ swimsuit \#1 \\[-1mm]
+			% boy \to\ wearing \to\ cap
+			girl wearing swimsuit \#1 \\[-1mm]
+			boy wearing cap
+		\end{tabular}}
+
+	\def\senone{\emph{na břehu rybníka je pět osob a několik zvířat}}
+	\def\sentwo{\emph{vlevo sedí žena na lehátku čte si knihu pod slunečníkem}}
+	\def\senthree{\emph{vedle sebe má rozprostřenou piknikovou deku s košíkem a s jídlem na piknik}}
+	\def\senfour{\hspace{-1.5mm}\begin{tabular}{l}
+			\emph{je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym } \\[-1mm]
+			\emph{tričkem a kraťasy}
+		\end{tabular}}
+
+	\begin{tabular}{|l|ccc|}
+		\hline
+		Věta 1                    & \multicolumn{3}{l|}{\senone}                                                                                            \\ \hline
+		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{1}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{1}$} & Vazby $\mathcal V_{1}$ \\ \cline{2-4}
+		                          & \multicolumn{1}{l|}{\objone}                  & \multicolumn{1}{c|}{\attrone}                  & \tripone               \\ \hline
+		\hline
+		Věta 2                    & \multicolumn{3}{l|}{\sentwo}                                                                                            \\ \hline
+		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{2}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{2}$} & Vazby $\mathcal V_{2}$ \\ \cline{2-4}
+		                          & \multicolumn{1}{l|}{\objtwo}                  & \multicolumn{1}{c|}{\attrtwo}                  & \triptwo               \\ \hline
+		\hline
+		Věta 3                    & \multicolumn{3}{l|}{\senthree}                                                                                          \\ \hline
+		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{3}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{3}$} & Vazby $\mathcal V_{3}$ \\ \cline{2-4}
+		                          & \multicolumn{1}{l|}{\objthree}                & \multicolumn{1}{c|}{\attrthree}                & \tripthree             \\ \hline
+		\hline
+		Věta 4                    & \multicolumn{3}{l|}{\senfour}                                                                                           \\ \hline
+		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{4}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{4}$} & Vazby $\mathcal V_{4}$ \\ \cline{2-4}
+		                          & \multicolumn{1}{l|}{\objfour}                 & \multicolumn{1}{c|}{\attrfour}                 & \tripfour              \\ \hline
+	\end{tabular}
+	\caption{Příklad konkrétních vět z nich extrahovaných entit}\label{tab:exmple_extracts}
+\end{table}

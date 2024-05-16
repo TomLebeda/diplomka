@@ -54,6 +54,9 @@ pub struct EvalArgs {
     pub scene_file: PathBuf,
     /// Path to the loss-table file (JSON)
     pub loss_file: PathBuf,
+    /// if true, the output will be easier to parse
+    #[arg(short, long)]
+    pub parsable: bool,
 }
 
 #[derive(Args, Debug)]

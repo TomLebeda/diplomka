@@ -17,18 +17,19 @@ Výsledek tohoto porovnání lze pak považovat za finální výstup, ale také 
 (např.~vektor příznaků pro klasifikátor).
 Schématické znázornění je na Obrázku~\ref{fig:architecture_scheme}.
 
-\begin{figure}[H]
+\begin{figure}[ht!]
 	\centering
 	\begin{tikzpicture}[minimum width=2.5cm, minimum height=1cm]
+		\footnotesize
 		\node[anchor=south, inner sep=4pt, minimum height=0cm] (img) at (0,0) {\texttt{obrázek}};
 		\node[draw] (user) at (-3,-1.5) {\texttt{UŽIVATEL}};
 		\node[draw] (exp) at (3,-3.5) {\texttt{EXPERT}};
 		\node[draw] (asr) at (-3,-3.5) {\texttt{ASR + SLU}};
-		\node[draw] (comp) at (0,-6) {\texttt{KOMPARÁTOR}};
+		\node[draw] (comp) at (0,-5) {\texttt{KOMPARÁTOR}};
 		\draw[-Stealth,rounded corners=2mm] (0,0) -- (0,-0.4) -| (exp.north);
 		\draw[-Stealth,rounded corners=2mm] (0,0) -- (0,-0.4) -| (user.north);
 		\draw[-Stealth] (user) -- node[minimum width=0cm,anchor=west,midway] {\texttt{řeč}} (asr);
-		\draw[-Stealth,rounded corners=2mm] (asr) |- node[minimum width=0cm,right, near start] {\parbox{2cm}{\texttt{testovaný}\\[-3mm] \texttt{popis}}} (comp.west);
+		\draw[-Stealth,rounded corners=2mm] (asr) |- node[minimum width=0cm,left, near start] {\parbox{2cm}{\texttt{testovaný}\\[-3mm] \texttt{\phantom{llll}popis}}} (comp.west);
 		\draw[-Stealth,rounded corners=2mm] (exp) |- node[minimum width=0cm,right, near start] {\parbox{2cm}{\texttt{referenční}\\[-3mm] \texttt{popis}}} (comp.east);
 		\draw[-Stealth] (comp.south) -- node[midway, right, minimum width=0cm]{\texttt{hodnocení}} ++(0, -1);
 	\end{tikzpicture}

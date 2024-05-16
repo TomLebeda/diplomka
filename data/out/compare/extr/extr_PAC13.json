@@ -1,0 +1,1451 @@
+[
+  {
+    "timestamp": null,
+    "sentence": "tady si děti hrajou",
+    "data": {
+      "Object": "children"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 3,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "si"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 2,
+                    "shift": 1,
+                    "rule_name": "children",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 2,
+                          "shift": 1,
+                          "rule_name": "děti",
+                          "expansion": [
+                            {
+                              "Token": [
+                                2,
+                                "děti"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "children"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " tady tady je rybář",
+    "data": {
+      "Object": "man"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 4,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    2,
+                    "je"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 3,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 3,
+                    "shift": 1,
+                    "rule_name": "man",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 3,
+                          "shift": 1,
+                          "rule_name": "fisherman",
+                          "expansion": [
+                            {
+                              "Token": [
+                                3,
+                                "rybář"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "man"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " voda tady",
+    "data": {
+      "Object": "water"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 1,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 0,
+                    "shift": 1,
+                    "rule_name": "water",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 0,
+                          "shift": 1,
+                          "rule_name": "voda",
+                          "expansion": [
+                            {
+                              "Token": [
+                                0,
+                                "voda"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "water"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " tady je ryba",
+    "data": {
+      "Object": "fish"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 3,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "je"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 2,
+                    "shift": 1,
+                    "rule_name": "fish",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 2,
+                          "shift": 1,
+                          "rule_name": "ryba",
+                          "expansion": [
+                            {
+                              "Token": [
+                                2,
+                                "ryba"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "fish"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " tady je žába",
+    "data": {
+      "Object": "frog"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 3,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "je"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 2,
+                    "shift": 1,
+                    "rule_name": "frog",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 2,
+                          "shift": 1,
+                          "rule_name": "žába",
+                          "expansion": [
+                            {
+                              "Token": [
+                                2,
+                                "žába"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "frog"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " tady se tady jde tady je ňáká ňáký zvíře který jde který jako leze po stromě",
+    "data": {
+      "Object": "tree"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 16,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "se"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    2,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 3,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    3,
+                    "jde"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 4,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    4,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 5,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    5,
+                    "je"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 6,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    6,
+                    "ňáká"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 7,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    7,
+                    "ňáký"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 8,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    8,
+                    "zvíře"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 9,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    9,
+                    "který"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 10,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    10,
+                    "jde"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 11,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    11,
+                    "který"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 12,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    12,
+                    "jako"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 13,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    13,
+                    "leze"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 14,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    14,
+                    "po"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 15,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 15,
+                    "shift": 1,
+                    "rule_name": "tree",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 15,
+                          "shift": 1,
+                          "rule_name": "strom",
+                          "expansion": [
+                            {
+                              "Token": [
+                                15,
+                                "stromě"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "tree"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " a tady je pes no",
+    "data": {
+      "Object": "dog"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 4,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "a"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    2,
+                    "je"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 3,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 3,
+                    "shift": 1,
+                    "rule_name": "dog",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 3,
+                          "shift": 1,
+                          "rule_name": "pes",
+                          "expansion": [
+                            {
+                              "Token": [
+                                3,
+                                "pes"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "dog"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " tady hrajou kluci s ňákou ňákou hru",
+    "data": {
+      "Object": "boy"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 3,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "hrajou"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 2,
+                    "shift": 1,
+                    "rule_name": "boy",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 2,
+                          "shift": 1,
+                          "rule_name": "kluk",
+                          "expansion": [
+                            {
+                              "Token": [
+                                2,
+                                "kluci"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "boy"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " pani si čte knížku něco zrovna jí",
+    "data": {
+      "Object": "woman"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 1,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 0,
+                    "shift": 1,
+                    "rule_name": "woman",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 0,
+                          "shift": 1,
+                          "rule_name": "paní",
+                          "expansion": [
+                            {
+                              "Token": [
+                                0,
+                                "pani"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "woman"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " pani si čte knížku něco zrovna jí",
+    "data": {
+      "Object": "book"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 4,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "pani"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "si"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    2,
+                    "čte"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 3,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 3,
+                    "shift": 1,
+                    "rule_name": "book",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 3,
+                          "shift": 1,
+                          "rule_name": "knížka",
+                          "expansion": [
+                            {
+                              "Token": [
+                                3,
+                                "knížku"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "book"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " pani si čte knížku něco zrovna jí",
+    "data": {
+      "Triplet": {
+        "from": "woman",
+        "predicate": "reading",
+        "to": "book"
+      }
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 4,
+        "rule_name": "out_triplet",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 4,
+              "rule_name": "triplet",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 0,
+                    "shift": 4,
+                    "rule_name": "reading",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 0,
+                          "shift": 1,
+                          "rule_name": "object",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 0,
+                                "shift": 1,
+                                "rule_name": "woman",
+                                "expansion": [
+                                  {
+                                    "Rule": {
+                                      "start": 0,
+                                      "shift": 1,
+                                      "rule_name": "paní",
+                                      "expansion": [
+                                        {
+                                          "Token": [
+                                            0,
+                                            "pani"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "Tag": "woman"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "part=obj"
+                      },
+                      {
+                        "Token": [
+                          1,
+                          "si"
+                        ]
+                      },
+                      {
+                        "Token": [
+                          2,
+                          "čte"
+                        ]
+                      },
+                      {
+                        "Rule": {
+                          "start": 3,
+                          "shift": 1,
+                          "rule_name": "object",
+                          "expansion": [
+                            {
+                              "Rule": {
+                                "start": 3,
+                                "shift": 1,
+                                "rule_name": "book",
+                                "expansion": [
+                                  {
+                                    "Rule": {
+                                      "start": 3,
+                                      "shift": 1,
+                                      "rule_name": "knížka",
+                                      "expansion": [
+                                        {
+                                          "Token": [
+                                            3,
+                                            "knížku"
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    "Tag": "book"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "part=subj"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Tag": "predicate=reading"
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=triplet"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " no tady je lopatka",
+    "data": {
+      "Object": "shovel"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 4,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "no"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    2,
+                    "je"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 3,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 3,
+                    "shift": 1,
+                    "rule_name": "shovel",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 3,
+                          "shift": 1,
+                          "rule_name": "lopatka",
+                          "expansion": [
+                            {
+                              "Token": [
+                                3,
+                                "lopatka"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "shovel"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " tady je slunce",
+    "data": {
+      "Object": "sun"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 3,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "je"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 2,
+                    "shift": 1,
+                    "rule_name": "sun",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 2,
+                          "shift": 1,
+                          "rule_name": "slunce",
+                          "expansion": [
+                            {
+                              "Token": [
+                                2,
+                                "slunce"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "sun"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": null,
+    "sentence": " tady je ňákej pták",
+    "data": {
+      "Object": "bird"
+    },
+    "tree": {
+      "Rule": {
+        "start": 0,
+        "shift": 4,
+        "rule_name": "out_obj",
+        "expansion": [
+          {
+            "Rule": {
+              "start": 0,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    0,
+                    "tady"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 1,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    1,
+                    "je"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 2,
+              "shift": 1,
+              "rule_name": "GARBAGE",
+              "expansion": [
+                {
+                  "Token": [
+                    2,
+                    "ňákej"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Rule": {
+              "start": 3,
+              "shift": 1,
+              "rule_name": "object",
+              "expansion": [
+                {
+                  "Rule": {
+                    "start": 3,
+                    "shift": 1,
+                    "rule_name": "bird",
+                    "expansion": [
+                      {
+                        "Rule": {
+                          "start": 3,
+                          "shift": 1,
+                          "rule_name": "pták",
+                          "expansion": [
+                            {
+                              "Token": [
+                                3,
+                                "pták"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "Tag": "bird"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Tag": "type=object"
+          }
+        ]
+      }
+    }
+  }
+]

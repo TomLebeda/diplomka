@@ -1,13 +1,16 @@
-\subsection{Testování na datech}
+\clearpage
+\section{Vyhodnocení}
+\def\projekt{TAČR SIGMA\_DC3 \enquote{Telemedicínské samovyšetření řeči a paměti pro rychlou detekci kognitivních poruch metodami strojového učení}}
 Posledním krokem bylo ověření funkčnosti navrženého a implementovaného systému.
 K tomu bylo potřeba získat vhodná data, konkrétně obrázek a k němu přirozené popisy, pokud možnost v textové podobě.
-Tato data byla získána z projektu TAČR SIGMA\_DC3 \enquote{Telemedicínské samovyšetření řeči a paměti pro rychlou detekci kognitivních poruch metodami strojového učení}.
+Tato data byla získána z projektu \projekt.
 
 Popisovanou scénou byla kresba zobrazená na Obrázku~\ref{fig:summer}.
 K tomuto obrázku bylo k dispozici několik přepisů, které byly použité pro účely testování.
 
 Referenční popis daného obrázku, stejně jako SPGF gramatika a ztrátová tabulka,
 byly vytvořené autorem této práce a nikoli expertem z oboru, odkud pocházejí nasbíraná data.
+
 Hodnoty ve ztrátové tabulce je tedy třeba chápat jako ilustrační a ve výsledcích je možné srovnávat pouze relativní ztráty,
 nelze dělat smysluplné závěry z konkrétních hodnot.
 To však nepředstavuje problém, protože cílem zde bylo ověřit funkčnost navrženého systému, na což ilustrační hodnoty postačují.
@@ -15,95 +18,14 @@ To však nepředstavuje problém, protože cílem zde bylo ověřit funkčnost n
 Vytvořený referenční popis Obrázku~\ref{fig:summer} obsahuje 69 objektů a 37 vazeb mezi nimi a je možné jej prozkoumat spolu se sestavenou SPGF gramatikou u zdrojových kódů.
 Ztrátová tabulka použitá při testování je na Výpisu~\ref{lst:loss_table_example}.
 
-\input{src/listings/loss.tex}
-
-\begin{table}[H]
-	\centering
-
-	\def\objone{\begin{tabular}{l}
-			water  \\[-1mm]
-			people \\[-1mm]
-			animals
-		\end{tabular}}
-
-	\def\objtwo{\begin{tabular}{l}
-			woman   \\[-1mm]
-			lounger \\[-1mm]
-			book    \\[-1mm]
-			parasol
-		\end{tabular}}
-
-	\def\objthree{\begin{tabular}{l}
-			blanket \\[-1mm]
-			basket
-		\end{tabular}}
-
-	\def\objfour{\begin{tabular}{l}
-			girl, shorts, \\[-1mm]
-			swimsuit \#1  \\[-1mm]
-			boy, cap      \\[-1mm]
-			tshirt
-		\end{tabular}}
-
-	\def\attrone{\begin{tabular}{l}
-			people: count = 5
-		\end{tabular}}
-
-	\def\attrtwo{---}
-
-	\def\attrthree{---}
-
-	\def\attrfour{\begin{tabular}{l}
-			girl: hairstyle = ponytail \\[-1mm]
-			tshirt: pattern = striped
-		\end{tabular}}
-
-	\def\tripone{\begin{tabular}{l}
-			---
-		\end{tabular}}
-	\def\triptwo{woman reading book}
-	\def\tripthree{---}
-	\def\tripfour{\begin{tabular}{l}
-			% girl \to\ wearing \to\ swimsuit \#1 \\[-1mm]
-			% boy \to\ wearing \to\ cap
-			girl wearing swimsuit \#1 \\[-1mm]
-			boy wearing cap
-		\end{tabular}}
-
-	\def\senone{\emph{na břehu rybníka je pět osob a několik zvířat}}
-	\def\sentwo{\emph{vlevo sedí žena na lehátku čte si knihu pod slunečníkem}}
-	\def\senthree{\emph{vedle sebe má rozprostřenou piknikovou deku s košíkem a s jídlem na piknik}}
-	\def\senfour{\hspace{-1.5mm}\begin{tabular}{l}
-			\emph{je to děvče s culíkem a v plavkách a chlapec s kšiltovkou a pruhovanym } \\[-1mm]
-			\emph{tričkem a kraťasy}
-		\end{tabular}}
-
-	\begin{tabular}{|l|ccc|}
-		\hline
-		Věta 1                    & \multicolumn{3}{l|}{\senone}                                                                                            \\ \hline
-		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{1}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{1}$} & Vazby $\mathcal V_{1}$ \\ \cline{2-4}
-		                          & \multicolumn{1}{l|}{\objone}                  & \multicolumn{1}{c|}{\attrone}                  & \tripone               \\ \hline
-		\hline
-		Věta 2                    & \multicolumn{3}{l|}{\sentwo}                                                                                            \\ \hline
-		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{2}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{2}$} & Vazby $\mathcal V_{2}$ \\ \cline{2-4}
-		                          & \multicolumn{1}{l|}{\objtwo}                  & \multicolumn{1}{c|}{\attrtwo}                  & \triptwo               \\ \hline
-		\hline
-		Věta 3                    & \multicolumn{3}{l|}{\senthree}                                                                                          \\ \hline
-		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{3}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{3}$} & Vazby $\mathcal V_{3}$ \\ \cline{2-4}
-		                          & \multicolumn{1}{l|}{\objthree}                & \multicolumn{1}{c|}{\attrthree}                & \tripthree             \\ \hline
-		\hline
-		Věta 4                    & \multicolumn{3}{l|}{\senfour}                                                                                           \\ \hline
-		\multirow{2}{*}{Extrakty} & \multicolumn{1}{c|}{Objekty $\mathcal O_{4}$} & \multicolumn{1}{c|}{Atributy $\mathcal A_{4}$} & Vazby $\mathcal V_{4}$ \\ \cline{2-4}
-		                          & \multicolumn{1}{l|}{\objfour}                 & \multicolumn{1}{c|}{\attrfour}                 & \tripfour              \\ \hline
-	\end{tabular}
-	\caption{Příklad konkrétních vět z nich extrahovaných entit}\label{tab:exmple_extracts}
-\end{table}
-
+% \input{src/listings/loss.tex}
 V Tabulce~\ref{tab:exmple_extracts} je několik vět z prvního přepisu, k nimž je vypsána množina extrahovaných objektů $\mathcal{O}$,
 množina extrahovaných atributů $\mathcal A$ a množina extrahovaných vazeb $\mathcal V$.
 Jak je možné na těchto ukázkách vidět, tak navržený systém je schopen z přirozeného textu extrahovat očekávané sémantické informace.
 Dalším pozitivním faktem je to, že všechny extrahované informace jsou skutečně obsažené v původních promluvách a tudíž lze usoudit, že filtrační
 algoritmus pro odstranění falešných detekcí funguje správně.
+
+\input{src/table_results_detail.tex}
 
 V Tabulce~\ref{tab:exmple_extracts} lze dále pozorovat, že nejpočetnější kategorií ve větách jsou objekty, jejichž zachycení je nejjednodušší a především jich věty také obsahují nejvíce.
 Dále lze pozorovat, že detekovaný objekt \emph{swimsuit \#1} ve čtvrté větě má u sebe přiřazené číslování (v popise se vyskytují dvoje plavky, jedny červené na dívce v pozadí
@@ -111,7 +33,7 @@ a jedny bílé na ženě na lehátku).
 To je významné z toho důvodu, že to značí schopnost systému rozlišit objekty stejného typu, jak bylo popsáno v sekci~\ref{subsubsec:cislovani_objektu}.
 
 Předpokladem pro kvalitní výstup je kvalitní referenční popis a SPGF gramatika.
-Oba tyto faktory jsou zcela závislé na expertovi, který vytváří jak referenční popis, tak gramatiku.
+Oba tyto faktory jsou zcela závislé na expertovi, který vytváří jak referenční popis, tak gramatiku použitou pro extrakci sémantiky z textu.
 
 To může představovat problém ve smyslu vysokých počátečních nákladů, protože tvorba referenčního popisu a SPGF gramatiky
 vyžaduje znalost zde navrženého formátu a může být pro lidského experta časově náročná.
@@ -126,9 +48,11 @@ Celé přepisy použité pro další testování a získání ilustračních vý
 
 Dále bylo pro srovnání vygenerováno ještě několik \enquote{umělých} popisu fiktivních obrázků,
 které jsou záměrně sémanticky zcela rozdílné.
-Generování těchto popisů bylo realizováno pomocí volně dostupného softwaru ChatGPT se vstupní úlohou
+Generování těchto popisů bylo realizováno pomocí volně dostupného softwaru ChatGPT\footnote{\href{https://chatgpt.com/}{https://chatgpt.com/}} se vstupní úlohou
 vygenerovat popis obrázku, který zobrazuje scénu na farmě, poté scénu v lese a nakonec scénu v rušném městě.
-Tyto umělé popisy jsou následující:
+
+\newpage
+Tyto uměle generované popisy jsou následující:
 \input{src/prepisy2.tex}
 
 Pro výše zmíněné přepisy bylo podle ztrátové tabulky (viz Výpis~\ref{lst:loss_table_example}) vypočteno hodnocení,
@@ -161,3 +85,34 @@ I přes tyto komplikace je ale možné učinit několik pozorování:
 \end{enumerate}
 
 \input{src/final_table.tex}
+
+\clearpage
+Na závěr bylo použito všech 55 dostupných přepisů z projektu \projekt{}.
+Jedná se o popisy ilustrace zobrazené na Obrázku~\ref{fig:summer}, které byly přepsány do textové podoby.
+
+V těchto datech se vyskytovalo 30 popisů nasbíraných od osob, u kterých nebyla diagnostikována žádná kognitivní porucha.
+Tato data jsou označena hlavičkou \textbf{N01} až \textbf{N30}.
+Dále data obsahovala 25 popisů od osob, u nichž byla diagnostikována nějaká kognitivní porucha.
+Tato data jsou označena hlavičkou \textbf{P01} až \textbf{P30}.
+
+Cílem tohoto finálního experimentu bylo získání širšího přehledu o funkci navržených a implementovaných algoritmů.
+Podle toho byly do výsledné tabulky vybrány pouze ty typy ztrát, u kterých byly hodnoty rozdílné pro různé osoby.
+
+Pro získání zobrazených hodnot byl použit stejný referenční popis, jako během testování, tedy vytvořený autorem této práce a nikoli expertem z oboru.
+Dále je třeba upozornit na to, že ztrátová tabulka byla zrovna tak sestavena pouze pro ilustrační a testovací účely a samotné numerické hodnoty
+tedy není možné interpretovat jako skutečná data, která by byla použita při reálném nasazení.
+
+Výstup je vizuálně zobrazen v Tabulce~\ref{tab:color_table}.
+Barevná škála je vždy vztažená pouze k dané ztrátě (tedy odpovídajícímu řádku, přes obě tabulky).
+
+I přes zmíněná omezení je ale možné pouhým okem sledovat, že spodní část Tabulky~\ref{tab:color_table},
+která obsahuje ztrátové hodnoty popisu od diagnostikovaných pacientů, má dle očekávání celkově vyšší hodnoty ztrát,
+což odpovídá předpokladu, že osoby s kognitivní poruchou budou mít větší problém popsat obrázek zobrazující komplexní scénu.
+Lze tedy usoudit, že navržený systém funguje očekávaným způsobem a při pečlivém vytvoření kritických vstupních dat lze očekávat,
+že výstupní hodnoty budou ještě lépe prezentovat sledované rozdíly v kognitivních schopnostech.
+
+Detailnější testování a analýza reálných, interpretovatelných výsledků je plánována jako součást další budoucí práce, v rámci projektu \projekt.
+Pro toto další pokračování je předpokládáno, že budou vytvořena vstupní data (obrázek, referenční popis, gramatika a ztrátová tabulka)
+pečlivě lidským expertem a výstupní hodnoty tak bude možné interpretovat v kontextu daného nasazení.
+
+\input{src/colored_table.tex}

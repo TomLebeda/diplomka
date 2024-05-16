@@ -8,7 +8,10 @@
 \DeclareFieldFormat{shorthandwidth}{\mkbibbrackets{#1}}
 
 \input{/home/tom/Tools/TeX_tools/templates/protocol/src/_preamble.tex}
-\geometry{left=30mm,right=30mm,top=35mm,bottom=40mm}
+\geometry{left=30mm,right=30mm,top=35mm,bottom=40mm} % okraje pro elektronickou verzi PDF 
+% \geometry{left=30mm,right=30mm,top=35mm,bottom=40mm} % okraje pro tištěnou a vázanou verzi PDF 
+
+% \usepackage[left=30mm,right=30mm,top=35mm,bottom=40mm]{geometry} % nastavuje okraje stranky
 \usepackage{float}
 \usepackage{multirow}
 \usepackage{longtable}
@@ -33,6 +36,8 @@
 \input{src/navrh.tex}
 
 \input{src/implementace.tex}
+
+\input{src/vyhodnoceni.tex}
 
 \clearpage
 \input{src/zaver.tex}

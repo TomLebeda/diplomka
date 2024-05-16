@@ -11,8 +11,10 @@ a zpracovávané větu po větě, výsledky pro jednotlivé věty jsou na konči
 Jak již bylo řečeno v kapitole~\ref{subsec:hodnoceni}, ztrátovou tabulku sestavuje expert, stejně jako referenční popis a SPGF gramatiky.
 Z toho důvodu bylo nutné zvolit nějaký formát, který by byl čitelný člověkem a zároveň zpracovatelný strojem.
 Zvolen byl opět formát \texttt{JSON}, který představuje dobrý kompromis mezi oběma faktory.
+
 Ukázka ztrátové tabulky je na Výpisu~\ref{lst:loss_table_example}.
 
+\newpage
 \input{src/listings/loss.tex}
 
 Význam jednotlivých položek byl detailně popsán v sekci~\ref{subsec:hodnoceni}, proto zde bude pouze stručně shrnuto,
@@ -32,7 +34,9 @@ který klíč odpovídá jakému významu:
 Finálním výstupem hodnotícího algoritmu je množina označených číselných hodnot, získaných akumulací ztrát pro různé druhy chyb.
 Přirozenou datovou strukturou, která by odpovídala tomuto formátu, by bylo asociativní pole.
 
-Příkladem takového výstupu může být Výpis~\ref{lst:output_example}:
+Příkladem takového výstupu může být Výpis~\ref{lst:output_example}.
+
+\newpage
 \begin{lstlisting}[
 	% there are many more options of styling, see the official documentation, these are just the defaults I like
 	frame=single, % make single-line frame around the verbatim
@@ -46,40 +50,50 @@ Příkladem takového výstupu může být Výpis~\ref{lst:output_example}:
 	numberstyle={\scriptsize\ttfamily\color{black!60}}, % the style for line numbers
 	% escapeinside={<@}{@>} % between those sequences are command evaluated
 ]
-missing_objects: 125.5,
-missing_attributes: 79.5,
-missing_triplets: 164.0,
-wrong_values: 0.0,
-grouped_missing_objects: {
-    "group": 21.0,
-    "item": 24.0,
-    "person": 5.5,
-    "animal": 52.0,
-    "clothing": 24.0,
-    ...
-},
-grouped_missing_attributes: {
-    "hairstyle": 1.0,
-    "pattern": 1.0,
-    "action": 5.0,
-    "color": 61.0,
-    ...
-},
-grouped_missing_triplets: {
-    "reading": 0.0,
-    "climbing": 2.0,
-    "throwing": 2.0,
-    "playing with": 6.0,
-    "chasing": 2.0,
-    "swimming in": 2.0,
-    "following": 10.0,
-    ...
-},
-grouped_wrong_values: {
-    "state": 0.0,
-    "facial expression": 0.0,
-    "pattern": 0.0,
-    "color": 0.0,
-    ...
-},
+Score {
+    missing_objects: 125.5,
+    missing_attributes: 79.5,
+    missing_triplets: 164.0,
+    wrong_values: 0.0,
+    grouped_missing_objects: {
+        "group": 21.0,
+        "item": 24.0,
+        "person": 5.5,
+        "animal": 52.0,
+        "clothing": 24.0,
+        "environment": 17.0,
+        "background": 15.0,
+        ...
+    },
+    grouped_missing_attributes: {
+        "hairstyle": 1.0,
+        "pattern": 1.0,
+        "action": 5.0,
+        "color": 61.0,
+        "facial expression": 0.5,
+        ...
+    },
+    grouped_missing_triplets: {
+        "reading": 0.0,
+        "climbing": 2.0,
+        "throwing": 2.0,
+        "playing with": 6.0,
+        "chasing": 2.0,
+        "swimming in": 2.0,
+        "following": 10.0,
+        "running away from": 2.0,
+        "has child object": 70.0,
+        "sitting on": 8.0,
+        "wearing": 20.0,
+        ...
+    },
+    grouped_wrong_values: {
+        "state": 0.0,
+        "facial expression": 0.0,
+        "pattern": 0.0,
+        "color": 0.0,
+        "count": 2.0,
+        ...
+    },
+}
 \end{lstlisting}

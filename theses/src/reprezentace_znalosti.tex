@@ -1,4 +1,5 @@
-\subsection{Reprezentace znalostí}
+\clearpage
+\section{Reprezentace znalostí}
 Pro řešení prakticky každého reálného problému je potřeba mít k dispozici nějaké znalosti minimálně z oblasti, ve které se problém nachází.
 Při řešení problémů pomocí automatický počítačových metod a metod umělé inteligence je pak nutné ještě navíc
 mít nějaký způsob, jak tyto znalosti zapsat a uchovat, jak s nimi manipulovat a provádět na nich operace a algoritmy.
@@ -11,18 +12,18 @@ Nové znalosti je možné získat v základu dvěma způsoby.
 Prvním z nich je pozorování objektů a jevů, což je označováno jako přímé získávání znalostí.
 Druhou metodou, která označována jako nepřímá, je odvození nových znalostí z těch, které jsou již známé.~\cite{prepreze_znal}
 
-\subsubsection{Dělení reprezentace znalostí}
+\subsection{Dělení reprezentace znalostí}
 Podle učebního textu~\cite{prepreze_znal} je možné metody reprezentace znalostí rozdělit do několika kategorií.
 Schématické znázornění tohoto dělení je na Obrázku~\ref{fig:schema_repreznalosti}.
 \begin{figure}[ht!]
 	\centering
 	\begin{tikzpicture}
 		\node[draw] (main) at (0, 0) {\strut\texttt{\phantom{ll}REPREZENTACE ZNALOSTÍ\phantom{ll}}};
-		\node[draw,minimum width=3.5cm, rounded corners=2mm] (procedur) at (-5, -3) {\strut \texttt{procedurální}};
-		\node[draw,minimum width=3.5cm, rounded corners=2mm] (dekl) at (5, -3) {\strut \texttt{deklarativní}};
-		\node[draw,minimum width=3.5cm, rounded corners=2mm] (rámc) at (0, -3) {\strut \texttt{rámcová}};
-		\node[draw,minimum width=3.5cm, minimum height=3cm, rounded corners=2mm] (prodsys) at (-5, -7) {\parbox{3cm}{\centering\texttt{produkční\\systémy}}};
-		\node[draw,minimum width=3.5cm, minimum height=3cm, rounded corners=2mm] (mid) at (5, -7)
+		\node[draw,minimum width=3.5cm, rounded corners=2mm] (procedur) at (-5, -2.5) {\strut \texttt{procedurální}};
+		\node[draw,minimum width=3.5cm, rounded corners=2mm] (dekl) at (5, -2.5) {\strut \texttt{deklarativní}};
+		\node[draw,minimum width=3.5cm, rounded corners=2mm] (rámc) at (0, -2.5) {\strut \texttt{rámcová}};
+		\node[draw,minimum width=3.5cm, minimum height=3cm, rounded corners=2mm] (prodsys) at (-5, -6) {\parbox{3cm}{\centering\texttt{produkční\\systémy}}};
+		\node[draw,minimum width=3.5cm, minimum height=3cm, rounded corners=2mm] (mid) at (5, -6)
 		{
 			\footnotesize
 			\begin{tabular}{c}
@@ -31,7 +32,7 @@ Schématické znázornění tohoto dělení je na Obrázku~\ref{fig:schema_repre
 				\texttt{stavový prostor}    \\[-1mm]
 				\texttt{fuzzy logika}
 			\end{tabular}};
-		\node[draw,minimum width=3.5cm, minimum height=3cm, rounded corners=2mm] (ramce) at (0, -7) {\texttt{rámce}};
+		\node[draw,minimum width=3.5cm, minimum height=3cm, rounded corners=2mm] (ramce) at (0, -6) {\texttt{rámce}};
 		\draw[-] (main.south) to[out=-90, in=90] (procedur.north);
 		\draw[-] (main.south) to[out=-90, in=90] (dekl.north);
 		\draw[-] (main.south) to[out=-90, in=90] (rámc.north);
@@ -62,7 +63,7 @@ Poslední skupina, označená jako rámcová metoda reprezentace znalostí, pře
 Rámce jsou struktury, které popisují různé objekty podle předem dané formy a v průběhu řešení
 problému se doplňují konkrétní hodnoty k daným vlastnostem.~\cite{prepreze_znal}
 
-Schématická ukázka sémantické sítě využívající rámce je na Obrázku~\ref{fig:frames_net}
+Schématická ukázka sémantické sítě využívající rámce je na Obrázku~\ref{fig:frames_net}.
 \begin{figure}[ht!]
 	\centering
 	\begin{tikzpicture}
@@ -77,7 +78,7 @@ Schématická ukázka sémantické sítě využívající rámce je na Obrázku~
 				Father:               & \texttt{(BOWSER)}              \\
 				Mother:               & \texttt{(WEENIE)}              \\
 				Owner:                & \texttt{(MR.-SMITH)}           \\
-				Cost:                 & \ \$12.95                      \\
+				% Cost:                 & \ \$12.95                      \\
 				Has-as-ears:          & \texttt{(LEFT-EAR, RIGHT-EAR)} \\
 				Number-of-ears:       & \texttt{(2)}                   \\
 				\hline
@@ -92,7 +93,7 @@ Schématická ukázka sémantické sítě využívající rámce je na Obrázku~
 \end{figure}
 
 \newpage
-\subsubsection{Sémantické sítě}
+\subsection{Sémantické sítě}
 Sémantické sítě reprezentují znalosti pomocí grafových struktur složených z uzlů a hran.
 Uzly představují koncepty či objekty a hrany reprezentují relace mezi těmito jednotkami.
 Ukázka jednoduché sémantické sítě je na Obrázku~\ref{fig:semantic_net_example}.
@@ -145,13 +146,13 @@ jako je rozdělení sítě do \emph{prostorů}, které se mohou překrývat jako
 Dalším typem rozšíření, který se vyskytuje v \emph{konceptuálních grafech}, je použití \emph{vnořených kontextů},
 jejichž principem je využití metod logiky pro vyjádření složitějších operací skrze zapouzdření (angl.~encapsulation) primitivních operací.~\cite{semantic-nets-LEHMANN19921}
 
-\subsubsection{Ontologie}
+\subsection{Ontologie}
 Samotná forma reprezentace znalostí a způsob práce s nimi je pouze částí problematiky sémantických sítí,
-druhou otázkou, kterou je potřeba řešit, je samotný obsah, neboli \enquote{co reprezentovat}.
+druhou otázkou, kterou je potřeba řešit, je samotný obsah neboli \enquote{co reprezentovat}.
 Tímto problémem se zabývá \emph{ontologie}, která zahrnuje formální označení, strukturu a definice jednotlivých kategorií,
 vlastností, relací a samotných dat, které je potřeba reprezentovat.
 
-Podle~\cite{onto_svatek} je cílem ontologie podpora porozumění mezi lidmi, zejména pak experty v určité oblasti,
+Svátek~\cite{onto_svatek} uvádí, že cílem ontologie je podpora porozumění mezi lidmi, zejména pak experty v určité oblasti,
 podpora komunikace mezi počítačovými systémy a usnadnění návrhu aplikací se znalostním zaměřením.
 
 Rozdělení ontologií do typů či kategorií lze podle~\cite{onto_svatek} dělat podle různých kritérií:
@@ -161,7 +162,7 @@ Rozdělení ontologií do typů či kategorií lze podle~\cite{onto_svatek} děl
 	      na textové zdroje a lze je považovat za pokročilé slovníky, poté \emph{informační ontologie}, které jsou spojené s databázovými systémy a schématy
 	      a \emph{znalostní ontologie}, které jsou spojené s oblastí umělé inteligence a reprezentace znalostí.
 	\item \emph{Dělení podle míry formalizace}:\\
-	      Existují typy ontologií, které nejsou celé striktně formalizované a například používají přirozený jak pro vysvětlení pojmů.
+	      Existují typy ontologií, které nejsou celé striktně formalizované a například používají přirozený jazyk pro vysvětlení pojmů.
 	      Pak ale také existují striktně formalizované ontologie, které využívají formální jazyky.
 	      Podle~\cite{onto_svatek} však většina formálních ontologií obsahuje do nějaké míry i neformální ontologie.
 	\item \emph{Dělení podle obsahu}:\\
@@ -180,6 +181,7 @@ Jiným příkladem může být J. L. Jolleyův \emph{Holotheme}~\cite{jolley1971
 ovšem v rámci jednoho schématu založeného na strukturální komplexitě.
 Dalším příkladem je \emph{Wordtree}~\cite{burger1984wordtree}, který představuje pokus o definici významů slov pomocí kombinování primitivních konceptů a významů.
 
-Jedním z ontologických jazyků je \emph{RDF Schema}~\cite{rdf-schema}, které patří k \emph{Resource Description Framework (RDF)}~\cite{rdf} standardu pod skupinou W3C.
+Jedním z ontologických jazyků je \emph{RDF Schema}~\cite{rdf-schema},
+které patří k \emph{Resource Description Framework (RDF)}~\cite{rdf} standardu pod skupinou W3C\footnote{https://www.w3.org/}.
 RDF je datový model, který byl navržený pro Web, se zaměřením na kompatibilitu dat a schopnost jejich sloučení.
 Je založený na syntaxi značkovacího jazyka XML a hojně využívá URL adresy.

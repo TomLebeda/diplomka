@@ -105,7 +105,27 @@ fn print_eval(args: EvalArgs) {
         std::process::exit(1);
     };
     let score = eval(scene, extracts, loss_table, true);
-    println!("{:#?}", score);
+    if args.parsable {
+        debug!("HERE");
+        println!("all_missing_objects:{}", score.missing_objects);
+        println!("all_missing_attributes:{}", score.missing_attributes);
+        println!("all_missing_triplets:{}", score.missing_triplets);
+        println!("all_wrong_values:{}", score.wrong_values);
+        for (key, val) in score.grouped_missing_objects {
+            println!("missing_obj_with_tag_{}:{}", key, val);
+        }
+        for (key, val) in score.grouped_missing_attributes {
+            println!("missing_attribute_with_name_{}:{}", key, val);
+        }
+        for (key, val) in score.grouped_missing_triplets {
+            println!("missing_triplet_with_predicate_{}:{}", key, val);
+        }
+        for (key, val) in score.grouped_wrong_values {
+            println!("wrong_value_of_attribute_{}:{}", key, val);
+        }
+    } else {
+        println!("{:#?}", score);
+    }
 }
 
 /// Print the process of 'extract' command

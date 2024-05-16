@@ -1,14 +1,101 @@
-\newpage
-\subsection{Popis obrázků}
+\clearpage
+\section{Korespondence obrazu a jeho slovního popisu}
+Korespondence mezi obrazem a jeho popisem je problematika řešená v řadě reálných praktických aplikací.
+Tato kapitola popisuje základní principy práce s obrazem a spojitost s jeho popisem, a některé vybrané příbuzné problémy.
+Na závěr jsou v této kapitole zmíněné rozdíly v přístupu, který byl zvolen pro tuto práci.
+
+\subsection{Práce s obrazovými daty}
 Popis obrázku je v kontextu výpočetní technologie a umělé inteligence rozšířené téma, které nachází uplatnění v mnoha praktických aplikacích.
+Jedná se o jednu z mnoha problematik, které se obecně v úlohách počítačového zpracování obrazových dat řeší.
 
-% Při práci s obrazovými daty je častou úlohou klasifikace obrazu do předem daných kategorií, například zda se jedná o psa nebo kočku.
-% K tomuto účelu byly vyvinuty různé 
+Úlohy, které se týkající zpracování obrazu, lze podle učebního textu~\cite{conv-gruber} rozdělit do čtyř základních typů:
+\begin{enumerate}
+	\item \textbf{Klasifikace}\\
+	      Jedná se o úlohu přiřazování obrázku k nějaké třídě.
+	      Množina tříd, do kterých jsou obrázky přiřazované, jsou často známé předem a může jich být různá množství,
+	      od několika jednotek pro úzce specializované úlohy, například v medicíně, nebo pro obecnější úlohy u tisíce.
 
-{\color{blue}co se pod \enquote{popis obrázku} rozumí}
+	      V úlohách klasifikace není brán ohled na prostorové informace, celý obrázek je chápán jako jeden celek,
+	      jemuž je přiřazena příslušnost do vybrané třídy.
+	      Typickým příkladem může být rozdělení obrázku do kategorií \emph{kočka} nebo \emph{pes} podle toho,
+	      jaké zvíře je na obrázku znázorněno.
+	\item \textbf{Sémantická segmentace}\\
+	      Sémantická segmentace obrázků spočívá v přiřazení nějaké ze tříd každému pixelu.
+	      Tím dojde k rozdělení obrázku do disjunktních oblastí, které jsou (sémanticky) označené danou třídou.
 
-{\color{blue}jaké jsou různé formy popisu obrázku}
+	      V úlohách tohoto typu se již patrně zohledňuje prostorová informace jednotlivých částí,
+	      avšak jednotlivé instance různých objektů pod společnou třídou rozlišené nejsou.
+	      Příkladem typické segmentace může být určení toho, které pixely odpovídají obloze, které zemi, a které třeba člověku.
 
-{\color{blue}využití popisu obrázku}
+	      \newpage
+	\item \textbf{Detekce objektů}\\
+	      Principem detekce objektů je v obraze určit, zda se v něm nachází jeden nebo více hledaných objektů daného typu.
+	      Vstupem bývá obrázek a požadavek na detekci nějakého typu objektu a výstupem může být obrázek s označením
+	      objektů pomocí ohraničujících rámců (angl.~bounding-box) s přiřazeným označením třídy.
 
-{\color{blue}používané metody pro práci s popisem obrázku}
+	      Tento typ úlohy může být vhodný například pro sledování (tracking) lidí či zvířat, pro následnou klasifikaci nebo jinou analýzu.
+
+	\item \textbf{Segmentace instancí}\\
+	      Tento typ úlohy představuje kombinaci předchozích typů úloh.
+	      Princip spočívá v tom, že v obrázku jsou označené pixely odpovídající nějakému hledanému objektu stejně jako při
+	      sémantické segmentaci, ovšem s tím rozdílem, že není nutné takto označit každý pixel v obrázku a naopak je
+	      dbáno na rozlišení jednotlivých instancí daných objektů.
+
+	      Výsledkem je tedy informace o tom, které pixely odpovídají jakému konkrétnímu objektu.
+	      Například na obrázku, kde by bylo zobrazeno více psů a koček, by bylo cílem označit kde přesně se nachází
+	      který pes a která kočka.
+\end{enumerate}
+
+Všechny výše zmíněné typy úloh, respektive jejich výstupy, lze považovat za popis obrázku v tom smyslu,
+že výstupem je jistá forma informace o tom, co daný obraz zachycuje.
+Nejedná se však přímo o hluboké či komplexní sémantické znalosti, spíše o \enquote{hrubé} zařazení do nějaké třídy nebo forma výpisu zobrazených objektů.
+
+V současnosti jsou obrazová data zpracovávána převážně pomocí velkých neuronových sítí.
+Díky pokrokům ve výpočetní síle a dostupnosti datových sad jsou tyto modely stále sofistikovanější a schopné řešit složitější úkoly.
+Součástí tohoto pokroku je také schopnost modelů analyzovat obrazová data a v kombinaci se zpracováním přirozené řeči i
+odpovídat na otázky týkající se komplexnější sémantiky.
+{\footnotesize\color{red} [přidat zdroj, třeba na ten nový GPT-4o, kde je ukázka? Tady nemám přímo nic faktického, tak by to mohlo stačit? Tenhle odstavec je hlavně pro nějaké \enquote{napojení} popisu obrázků na sémantiku]}
+
+\newpage
+\subsection{Sémantický popis obrazu}
+Jednou z oblastí, kde je využívána ontologie a sémantický popis obrázku, jsou systémy pro vyhledávání obrázků (angl.~image retrieval).
+
+Například Sarwar et al.~\cite{SARWAR2013285} prezentuje metodu zabývající se zdokonalením přesnosti vyhledávání obrázků,
+na základě vstupního dotazu v přirozeném jazyce.
+Navrhuje metodu, která má tohoto cíle dosáhnout za využití doménové ontologie, lokální sémantické informace v podobě
+obrazových deskriptorů a jejich kvalitativní prostorové relace.
+% V rámci vyhledávání využívá pro práci s dotazy také dříve zmíněný RDF standard jako náhradu za běžně užívané postupy založené na klíčových slovech.
+Navržená architektura v první fázi předzpracuje poskytnuté obrázky tak, že je rozdělí na jednotlivé sektory, kterým jsou
+přiřazené značky reprezentující obecné, předem určené, koncepty, jako jsou například \enquote{tráva}, \enquote{nebe} nebo \enquote{písek}.
+% Takto anotované obrázky je pak možné rozdělit do předem definovaných kategorií.
+Další část architektury, kterou Sarwar et al.~\cite{SARWAR2013285} prezentuje, slouží k transformování uživatelského vstupu (dotazu)
+do několika předem definovaných forem využívajících RDF triplety.
+Poslední fází zpracování je pak využití doménové ontologie pro určení sémantické podobnosti dotazu a dostupných anotovaných obrázků,
+ze kterého plyne výběr výstupního obrázku odpovídající vstupnímu dotazu.
+
+Další příbuznou problematikou je automatická tvorba sémantických popisků k obrázkům, kterou
+ve své práci prezentuje Meiyu et al.~\cite{img_semantic_descr_annotation}.
+Využívá k tomu SIFT~\cite{sift} deskriptorů, kvůli jejich dobrému poměru mezi výpočetní náročností, informačním objemem a spolehlivostí.
+Následně je v práci~\cite{img_semantic_descr_annotation} prezentováno, že díky internetu a z něj plynoucímu množství koexistujících
+obrázků a jejich textových popisů, byl sestaven model, který je schopen mapovat extrahované příznakové vektory (angl.~feature vector)
+ze SIFT deskriptorů na textové anotace, ze kterých jsou získané sémantické popisy.
+Výsledky, které Meiyu et al.~\cite{img_semantic_descr_annotation} prezentuje, pak zobrazují obrázek,
+k němuž jsou automaticky doplněné anotace objektů a konceptů, které se na něm vyskytují.
+
+Doposud popisované problémy a jejich řešení využívají převážně neuronových sítí a statistických metod,
+jejichž základním předpokladem je dostatečný počet a kvalita trénovacích dat.
+
+Vzhledem k motivaci této práce, kterou je hodnocení kvality popisu daného obrázku na sémantické úrovni pro
+usnadnění detekce kognitivních poruch, byl zvolen expertní přístup se zaměřením na
+kvalitativní analýzu výsledků, průhlednost celého procesu s možností detailních úprav a reprodukovatelnost.
+
+
+% Zde navržený a implementovaný systém se zaměřuje na hodnocení kvality popisu obrázku v přirozené řeči, 
+% kde vstupní 
+% předpokládá pečlivě vytvořená a anotovaná data, která lze využít opakovaně 
+
+% 1. Popisy obrázků jsou nejčastější formou nějaký klasifikace nebo detekce, založený na deskriptorech (sifty, surfy, ...) nebo přes velký neuronovky
+
+% 2. Sémantika se u obrázků řeší spíš formou vytváření popisků (generování textu) nebo opačně - generovat obrázek z textu
+
+% 3. Přímo sémantika obrázku a srovnat se sémantikou textu jsou maximálně nějaký přiřazovačky (vyhledávače obrázků)

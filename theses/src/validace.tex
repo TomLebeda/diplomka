@@ -25,7 +25,6 @@ Tuto ztrátovou tabulku také sestavuje expert, společně s referenčním popis
 
 Výstupem hodnotícího algoritmu je pak množina označených číselných hodnot, které reprezentují celkové ztráty pro různé druhy chyb.
 
-\newpage
 \subsubsection{Chybějící objekty}
 Pokud byl v referenčním popisu expertem označený nějaký objekt,
 který chybí v testovaném popise, předpokládá se, že expert považoval daný objekt za důležitý a uživatel jej nezmínil.
@@ -187,6 +186,7 @@ například vypočítat průměr, sumu nebo maximum či minimum.
 Tento způsob počítání ztráty byl zvolen proto, že poskytuje expertovi další stupeň volnosti,
 jak vyjádřit důležitost objektů.
 
+\newpage
 \subsubsection{Chybějící atributy}
 Pokud expert popsal na daném objektu nějakou vlastnost a odpovídající atribut chybí v testovaném popise,
 je zde stejný předpoklad jako u chybějících objektů, a také se jedná o chybu, která způsobí navýšení ztrátové hodnoty.
@@ -200,7 +200,7 @@ specifikovat, že vynechání atributu \emph{\enquote{barva}} je méně závažn
 Naopak vynechání atributu \emph{\enquote{výraz v obličeji}} (např.~úsměv nebo zamračení) by mohl být považován za důležitý a expert by
 mohl ve ztrátové tabulce definovat, že jeho vynechání bude penalizováno ztrátou $2.0$.
 
-Jednoduchý příklad je znázorněn stejným stylem jako pro chybějící objekty na Obrázku~\ref{fig:example_missing_attrs}.
+Jednoduchý příklad je znázorněn na Obrázku~\ref{fig:example_missing_attrs}.
 
 \begin{figure}[H]
 	\centering

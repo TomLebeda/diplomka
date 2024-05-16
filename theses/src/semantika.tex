@@ -1,5 +1,10 @@
-\subsection{Sémantika a zpracování přirozeného jazyka}
-\subsubsection{Sémantika}
+\clearpage
+\section{Sémantika a zpracování přirozeného jazyka}
+Sémantika a zpracování přirozeného jazyka představují klíčové oblasti výzkumu v oboru počítačové lingvistiky a umělé inteligence.
+Kombinace těchto oblastí je základem pro mnoho metod zabývajících se analýzou vzájemné komunikace mezi lidmi,
+nebo způsobu předávání a uchovávání informací mezi člověkem a strojem.
+
+\subsection{Sémantika}
 Sémantika je vědní obor, který se zabývá zkoumáním významu.
 Je to obor související s lingvistikou a logikou, jelikož jeho předmětem je analýza významu frází, slov, vět a nebo i obecně jiných symbolů,
 pomocí kterých lze předávat informace.~\cite{palmer1981semantics}
@@ -11,11 +16,12 @@ nebo významové vazby, které se nacházejí v daném slovníku.~\cite{lexical-
 
 Formální sémantika studuje význam výrazů v přirozeném jazyce pomocí matematických a logických nástrojů.
 Využívá exaktně definovaných pravidel a formalismů ke zkoumání přirozeného jazyka a souvislostí mezi významem a strukturou frází.
-Také se zabývá modelováním vazeb mezi jazykem, jeho strukturou, významem a informací, kterou popisuje.~\cite{rajman2007speech}~\cite{portner2008formal}
+Také se zabývá modelováním vazeb mezi jazykem, jeho strukturou, významem a informací, kterou popisuje.~\cite{rajman2007speech, portner2008formal}
 
 Frázová sémantika (angl.~phrasal semantics) se zabývá studiem významu vět a frází především z pohledu jejich skladby a kompozice.
 Hlavním předmětem je analýza toho, jak funguje skládání jednotlivých menších částí (slov či dílčích frází),
 jaké jsou významy jednotlivých elementů a jak jejich složení ovlivní celkový význam fráze~\cite{riemer2010introducing-semantic}.
+
 Analýza jednotlivých částí se většinou zaměřuje na rozlišení subjektu, predikátu a argumentu.
 Subjekt většinou referuje na nějaký konkrétní objekt či entitu, predikát reprezentuje vlastnosti a události, které jsou se subjektem spojené
 a argument dodává doplňující informace, jako třeba konkrétní hodnotu dané vlastnosti.~\cite{fasold2006introduction}
@@ -27,7 +33,7 @@ sémantických reprezentací pro výrazy z přirozeného jazyka a inferenční p
 Dále se zabývá řešením neurčitostí, analýzou komplexních frází,
 vliv kontextu na význam a použití získaných znalostí pro automatické rozhodování.~\cite{computational-semantics-blackburn-bos}~\cite{computation-semantics}
 
-\subsubsection{Porozumění řeči}
+\subsection{Porozumění řeči}
 Porozumění řeči (angl.~spoken language understanding, SLU) označuje strojové zpracování lidské přirozené řeči na sémantické úrovni.
 Jedná se tedy o extrakci významu z přirozené řeči pomocí automatických počítačových metod.
 Správné určení významu promluvy je často nezbytným krokem pro mnoho běžných úloh, například interpretace požadavků či příkazů,
@@ -56,7 +62,6 @@ jejichž principy budou rozebrány detailněji později v samostatné sekci~\ref
 	      a bylo jednodušší s nimi pracovat dále.
 	      Typickým příkladem normalizace může být expanze zkratek.~\cite{the_conversational_interface}
 
-	      \newpage
 	\item \textbf{Bag-of-words}\\
 	      Přístup označený jako bag-of-words je jednoduchý způsob, jak analyzovat vstupní text na relativně povrchní úrovni.
 	      Tento způsob zpracování je také označovaný jako \emph{vector space model}.~\cite{the_conversational_interface}
@@ -74,9 +79,11 @@ jejichž principy budou rozebrány detailněji později v samostatné sekci~\ref
 	\item \textbf{Latentní sémantická analýza}\\
 	      Metoda latentní sémantické analýzy je podobná předchozí metodě bag-of-words ve svém základním konceptu vytvoření množiny
 	      sledovaných prvků, spočítání jejich četnosti a následné práce se získaným vektorem hodnot.
+
 	      Rozdíl oproti bag-of-words spočívá v tom, že namísto jednotlivých slov (nebo lemmat) jsou použité jejich významy a koncepty.
 	      Příkladem může být sledování vzorů, kde se často v textu vyskytují stejná slova blízko sebe.~\cite{the_conversational_interface}
 
+	      \newpage
 	\item \textbf{Part-of-speech (POS) tagování}\\
 	      Tento způsob zpracování přirozené řeči spočívá v přiřazení značek - \emph{tagů} - k jednotlivým slovům.
 	      Tyto tagy přidávají dodatečnou informaci k daným slovům a tím tak obohacují vstupní text o sémantickou informaci.
@@ -88,11 +95,12 @@ jejichž principy budou rozebrány detailněji později v samostatné sekci~\ref
 	      podle okolního kontextu.~\cite{the_conversational_interface}
 \end{enumerate}
 
-\subsubsection{Sémantické gramatiky}\label{subsubsec:grammars}
+\subsection{Sémantické gramatiky}\label{subsubsec:grammars}
 Další způsob, jakým lze zpracovat vstupní text, je založený na metodách formální syntaxe.
 Celkový vstupní text lze chápat jako jeden objekt, který lze rozdělit na menší části.
 Tyto menší části lze dále rekurzivně dělit až do okamžiku, než jsou jednotlivé části dále nedělitelné (atomické) - v ten moment se označují jako \emph{primitiva},
-která mají funkci \emph{terminálních symbolů}.
+která mají funkci \emph{terminálních symbolů}.~\cite{PsutkaJ_2006_Mluvimes}
+
 Tento proces rekurzivního dělení vytváří hierarchickou stromovou strukturu, kde kořenovým uzlem je původní vstupní text a
 koncové uzly (označované jako listy) jsou tvořené právě terminálními symboly.~\cite{PsutkaJ_2006_Mluvimes}
 
@@ -196,9 +204,13 @@ $\rho$ označuje množinu substitučních pravidel a $S \in V_{N}$ je počáteč
 Konkrétní příklad ukázkové gramatiky je na Výpisu~\ref{lst:example_grammar} a k ní příslušné dva derivační stromy,
 jeden pro vstupní text \enquote{\emph{malý hnědý pes spokojeně spí}} (Obrázek~\ref{fig:dog_sleep_tree})
 a druhý pro vstupní text \enquote{\emph{bílý medvěd rychle a zdatně plave}} (Obrázek~\ref{fig:bear_swim_tree}).
+
 Gramatika na Výpisu~\ref{lst:example_grammar} je ve formátu SPGF, který je představen v této práci.
-V gramatice i stromech je možné vidět použití některých další konceptů, jako jsou \emph{tagy} (zeleně), které nemají vliv na proces
+V gramatice a derivačních stromech na Obrázkách~\ref{fig:dog_sleep_tree}~a~\ref{fig:bear_swim_tree} je možné vidět
+použití některých dalších konceptů, jako jsou \emph{tagy} (zeleně), které nemají vliv na proces
 vytváření derivačního stromu, ale přidávají do kontextu dodatečné sémantické informace.
+
+\vspace{1cm}
 \input{src/listings/grammar_example.tex}
 \input{src/trees_example.tex}
 
@@ -209,6 +221,24 @@ Tato práce se zabývá pouze deterministickým přístupem.
 Takto definované gramatiky lze rozdělit do čtyř základních kategorií, podle typu jejich pravidel.
 Nejobecnější a nejsložitější jsou \emph{gramatiky typu 0}, poté jsou \emph{kontextové gramatiky},
 dále \emph{bezkontextové gramatiky} a nejjednodušším typem jsou \emph{regulární gramatiky}.
+Schématické znázornění této hierarchie je na Obrázku~\ref{fig:chomsky}.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{tikzpicture}[anchor=south]
+		\node[draw, ellipse, minimum width=1cm, minimum height=1.5cm] (reg) at (0, 0) {\texttt{regulární}};
+
+		\node[draw, ellipse, minimum width=5.0cm, minimum height=2.7cm] (no) at ($(reg.south) + (0, -4pt)$) {};
+		\node[anchor=center] at ($0.5*(no.north) + 0.5*(reg.north) + (0, -2pt)$) {\texttt{bezkontextové}};
+
+		\node[draw, ellipse, minimum width=7.0cm, minimum height=3.9cm] (cont) at ($(no.south) + (0, -4pt)$) {};
+		\node[anchor=center] at ($0.5*(cont.north) + 0.5*(no.north)$) {\texttt{kontextové}};
+
+		\node[draw, ellipse, minimum width=9.0cm, minimum height=5.10cm] (type) at ($(cont.south) + (0, -4pt)$) {};
+		\node[anchor=center] at ($0.5*(type.north) + 0.5*(cont.north)$) {\texttt{typu 0}};
+	\end{tikzpicture}
+	\caption{Schématické znázornění hierarchie formálních gramatik}\label{fig:chomsky}
+\end{figure}
 
 Se složitostí gramatiky je také spojena její vyjadřovací schopnost, tedy pomocí složitějších gramatik je možné zachytit složitější struktury.
 Nejjednodušší regulární gramatiky nejsou například schopné zachytit vztah mezi částmi, které nejsou bezprostředně vedle

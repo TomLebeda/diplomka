@@ -38,10 +38,11 @@ která definuje 4 základní \emph{aspekty popisu}: objekty, jejich hierarchii, 
 Detailnější popis těchto jednotlivých aspektů je v následujících částech,
 konkrétní technická implementace je pak popsána v sekci~\ref{sec:implementace}.
 
+\newpage
 \subsubsection{Objekty ve scéně}\label{subsubsec:objekty_ve_scene}
 \newcommand{\objekt}{{\color{red!70!black}\texttt{objekt}}}
 Cokoli, co lze v obrázku ohraničit rámečkem (angl.~bounding-box)
-a při separaci od zbytku scény (obrázku) neztratí nebo zásadně nezmění svůj význam,
+a při separaci od zbytku scény neztratí nebo nezmění svůj význam,
 lze považovat za \emph{objekt}.
 
 Jako objekt v obrázku lze tedy označit zobrazené fyzické předměty, postavy, zvířata, ale také nehmotné pojmy jako \enquote{nebe},
@@ -62,7 +63,7 @@ Pro aplikaci, kde je podstatné zachycení živých objektů, může být množi
 Pro jiné použití pak ale může být podstatné zachytit prostředí a neživé předměty,
 takže množina objektů by byla tvořena částmi prostředí (např.~stromy, křoví, voda, skály), budovami nebo obecnými předměty.
 
-Příkladem jednoduchého obrázku s několika vyznačenými objekty může být ilustrace zobrazená na Obrázku~\ref{fig:object_image}.
+Příkladem obrázku s několika vyznačenými objekty je ilustrace na Obrázku~\ref{fig:object_image}.
 \begin{figure}[H]
 	\centering
 	\def\dist{1pt}
