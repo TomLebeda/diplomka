@@ -1,6 +1,6 @@
 \subsection{Extrakce sémantické informace}\label{subsec:extrakce_semanticke_informace}
-Dalším klíčovým bodem bylo najít způsob, jak porovnat uživatelský popis obrázku s jeho referenčním popisem.
-To je úlohou subsystému pro získání sémantické informace z textu.
+Dalším klíčovým bodem bylo najít způsob, jak porovnat uživatelský popis obrázku s~jeho referenčním popisem.
+To je úlohou subsystému pro získání sémantické informace z~textu.
 Cílem je z přirozené řeči extrahovat informace v takové podobě, aby je bylo možné porovnat se strukturovaným referenčním popisem.
 
 % Dalším klíčovým bodem při návrhu systému pro hodnocení popisu obrázku bylo najít způsob, jak z získat požadovanou sémantickou informaci.
@@ -8,7 +8,7 @@ Cílem je z přirozené řeči extrahovat informace v takové podobě, aby je by
 % následně vyhodnotit jejich podobnost.
 
 Extrakce sémantiky z přirozené řeči se běžně dělá z textového přepisu dané promluvy.
-I v této práci tedy extrakce sémantických informací probíhá z textu.
+I~v~této práci tedy extrakce sémantických informací probíhá z textu.
 To znamená, že pokud uživatel popíše obrázek mluvenou řečí, tak je potřeba promluvu převést do textu pomocí nějakého systému pro rozpoznání řeči.
 Problematika rozpoznání řeči a převodu audia do textu je nad rámec této práce a bude v praxi řešena nějakou již existující implementací.
 Ve zbytku práce bude tedy pro zjednodušení rovnou uvažovaným vstupem text.
@@ -22,7 +22,7 @@ Gramatika je v tomto kontextu sada pravidel, která definují, jaké promluvy js
 Program pak tato pravidla načte a prochází podle nich vstupní text a hledá, zda nějaké části textu \enquote{pasují} na dané pravidlo.
 Samotný nalezený kus textu, který \enquote{pasuje} na nějaké pravidlo, ale ještě nemá žádný užitečný význam.
 Proto pravidla obsahují zároveň i informaci o tom, jaká je struktura nalezené části textu a jaký význam mají jednotlivé části této struktury.
-V českém jazyce by se jednalo o obdobu větného rozboru, kdy se například určuje, která část věty je podmět a která přísudek.
+V~českém jazyce by se jednalo o obdobu větného rozboru, kdy se například určuje, která část věty je podmět a která přísudek.
 
 Strukturovaná a označkovaná část textu s doplněnou sémantickou informací je pak označována jako \emph{sémantická entita}.
 Konkrétní syntaxe, použití a funkčnost těchto gramatik bude popsán později spolu s implementací v části~\ref{subsec:moje_gramatiky}.

@@ -18,9 +18,9 @@ Nyní bylo potřeba stanovit nějaký datový formát, který by umožnil tuto s
 \newpage
 Základním prvkem referenčního popisu je struktura \enquote{\texttt{Scene}}, která obsahuje informace o obrázku, objekty s atributy a vazby mezi nimi.
 
-Objekty byly definované strukturou \enquote{\texttt{SceneObject}}, která popisuje objekt ve scéně a jeho atributy.
+Objekty byly definované strukturou \enquote{\texttt{SceneObject}}, která popisuje objekt ve scéně a~jeho atributy.
 Každý \texttt{SceneObject} obsahuje informaci o svém názvu, umístění, velikosti a hierarchii vůči ostatním objektům.
-Dále si každý \texttt{SceneObject} udržuje list atributů a tagů, které mu byly expertem přiděleny.
+Dále si každý \texttt{SceneObject} udržuje list atributů a~tagů, které mu byly expertem přiděleny.
 
 Další strukturou, která byla definována jako součást referenčního popisu, je \enquote{\texttt{Triplet}}.
 Tato struktura slouží k popisu vazeb mezi objekty, obsahuje názvy dvou objektů a k nim název vazby.
@@ -89,8 +89,8 @@ druhý typ \texttt{Vec<T>} pak značí vektor (list) objektů typu \texttt{T}.
 \end{figure}
 
 Ve struktuře \texttt{Scene} je význam jednotlivých polí poměrně jednoduchý.
-Pole \texttt{width} a \texttt{height} vyjadřují výšku a šířku obrázku v pixelech, \texttt{image\_path} udává cestu k souboru, který obsahuje samotný obrázek.
-Pole \texttt{objects} a \texttt{triplets} pak obsahují list objektů a tripletů.
+Pole označená \texttt{width} a~\texttt{height} vyjadřují výšku a~šířku obrázku v pixelech, \texttt{image\_path} udává cestu k~souboru, který obsahuje samotný obrázek.
+Pole \texttt{objects} a \texttt{triplets} pak obsahují list objektů a~tripletů.
 
 Struktura \texttt{Triplet} je velmi jednoduchá.
 Její pole \texttt{from} a \texttt{to} jsou názvy zdrojového, respektive cílového, objektu.
@@ -109,7 +109,7 @@ Obě pole mají jako uvedený datový typ \texttt{(u32, u32)}, který reprezentu
 V obrázku je jako počátek souřadnic uvažován levý horní roh.
 
 Pole \texttt{tags} reprezentuje list tagů, které expert obrázku přiřadil.
-Jejich účel byl popsán v kapitole~\ref{subsec:hodnoceni}.
+Jejich účel byl popsán v~kapitole~\ref{subsec:hodnoceni}.
 Další dvojice polí \texttt{parents} a \texttt{children} pak reprezentuje list objektů, které jsou rodiče, respektive potomci, daného objektu.
 
 Po formální definice formátů a datový typů bylo potřeba určit, jakým způsobem bude expert referenční popis tvořit.
@@ -176,7 +176,7 @@ Tyto příkazy slouží obecně k prohlížení a porovnávání referenčních 
 	      Referenční popis nebyl navržen tímto obecnějším způsobem z toho důvodu, že pro komplexnější scény by počet těchto atomických trojic dosahoval tak vysokých hodnot,
 	      že by pro lidského experta bylo velmi obtížné se v datech orientovat.
 	      Pro strojové zpracování a případné vizualizace by ale mohlo být prospěšné, aby byly všechny typy informací prezentované v jednoduchém formátu.
-	      Právě k tomu slouží příkaz \texttt{crumble}, který, jak již název napovídá, daný referenční popis \enquote{rozdrobí} a převede všechny informace do množiny prostých trojic.
+	      Právě k~tomu slouží příkaz \texttt{crumble}, který, jak již název napovídá, daný referenční popis \enquote{rozdrobí} a převede všechny informace do množiny prostých trojic.
 
 	      Schématická ukázka procesu \enquote{rozdrobení} je na Obrázku~\ref{fig:crumble_example}.
 	      % malý kluk v modrém tričku chytá červený míč

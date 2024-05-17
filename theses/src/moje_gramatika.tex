@@ -2,7 +2,7 @@
 Extrakce sémantické informace byla jednou z hlavních řešených problematik.
 Jak již bylo řečeno dříve, byl zvolen přístup založený na parsování textu pomocí sémantických bezkontextových gramatik.
 
-Při prvotních experimentech byla použita již existující implementace tohoto systému v platformě SpeechCloud, používající standard SRGS~\cite{srgs}.
+Při prvotních experimentech byla použita již existující implementace tohoto systému v~platformě SpeechCloud~\cite{SpeechCloud.dialog}, používající standard SRGS~\cite{srgs}.
 
 Během těchto prvních pokusů ale bylo zjištěno, že funkcionalita, kterou nabízí existující implementace,
 nebude pro potřeby této práce postačovat.
@@ -10,10 +10,10 @@ Kvůli tomu byla navržena, implementována a otestována vlastní realizace ste
 analýzy textu pomocí bezkontextových gramatik, která lépe vyhovovala ostatním zde navrženým,
 realizovaným a popsaným postupům a metodám.
 
-Detaily této vlastní implementace a rozdíly oproti existujícím variantám jsou popsány v následujících kapitolách.
+Detaily této vlastní implementace a rozdíly oproti existujícím variantám jsou popsány v~následujících kapitolách.
 
 \subsubsection{Problémy s existující implementací a SRGS}
-Při práci s existující implementací SRGS standardu na platformě SpeechCloud vyvstaly následující problémy:
+Při práci s existující implementací SRGS standardu na platformě SpeechCloud~\cite{SpeechCloud.dialog} vyvstaly následující problémy:
 \begin{enumerate}
 	\item \textbf{Speciální pravidlo \texttt{\$GARBAGE}}\\
 	      První problém, který bylo potřeba vyřešit, byla absence pravidla \texttt{\$GARBAGE}.
@@ -181,7 +181,7 @@ Druhou variantou elementu je \emph{reference}.
 Tímto pojmem se rozumí odkaz na jiné pravidlo, a nebo odkaz na nějaké speciální pravidlo s vyhrazeným názvem.
 Reference začíná symbolem \enquote{\texttt{\$}} po kterém následuje okamžitě (bez mezery) jméno referovaného
 pravidla definovaného ve stejné gramatice, nebo speciálního pravidla.
-SPGF umožňuje referovat pravidla rekurzivně, a to jak přímo (pravidlo obsahuje referenci na samo sebe), tak v cyklu.
+SPGF umožňuje referovat pravidla rekurzivně, a to jak přímo (pravidlo obsahuje referenci na samo sebe), tak v~nějakém delším cyklu.
 
 Například jednoduchá gramatika pro (fiktivní) zápis vybraných matematických operací obsahuje rekurzivní pravidlo \texttt{\$expr}:
 \begin{verbatim}
@@ -232,7 +232,7 @@ V~obou případech se jedná o \emph{alternativy} oddělené znakem \enquote{\te
 list alternativ je ohraničený kulatými, respektive hranatými, závorkami.
 
 Důvodem pro existenci \emph{sekvencí} je to, že umožňují seskupování elementů a přehlednější tvorbu složitějších konstrukcí,
-podobně jako jsou v matematice používané závorky v aritmetických či algebraických výrazech.
+podobně jako jsou v matematice používané závorky v~aritmetických či algebraických výrazech.
 Volitelná sekvence (s hranatými závorkami) je pouze syntaktická zkratka pro \enquote{obyčejnou} sekvenci,
 která má minimální počet opakování roven nule (takže se nemusí vůbec v textu vyskytovat) a
 maximální počet opakování roven jedné.
@@ -539,7 +539,7 @@ Pokud element žádné opakování nemá specifikované, implicitní hodnota je 
 
 S opakovaným použitím stejného elementu je úzce spojena i strategie parsování.
 Jedná se o způsob, jakým jsou řešené neurčité situace, kde je možné postupovat vícero způsoby.
-Tyto situace mohou vznikat právě v místech opakování elementů, nebo tam, kde je k dispozici vícero aplikovatelných alternativ.
+Tyto situace mohou vznikat právě v místech opakování elementů, nebo tam, kde je k~dispozici vícero aplikovatelných alternativ.
 
 Konkrétní příklad jedné z možných nejednoznačných situací (přímo převzatý ze SRGS specifikace~\cite{srgs}) je v Tabulace~\ref{tab:ambiguity_example}.
 Představuje situaci, kdy dvě alternativy mají různé tagy, ale stejné tokeny a tudíž není jasné, kterou z nich použít.
@@ -600,7 +600,7 @@ Při zpracování textu pak ale dochází k problému, že \emph{greedy} algorit
 Jak je na derivačním stromu na Obrázku~\ref{fig:parsing_tree_greedy} vidět, následující sémantická analýza by došla pravděpodobně k závěru,
 že v textu byla informace o hnědé veverce - což je chyba.
 Zde speciální pravidlo \texttt{\$GARBAGE} s neomezeným počtem opakování v kombinaci s \emph{greedy} algoritmem způsobilo,
-že toto speciální pravidlo bylo \enquote{příliš agresivní} a aktivovalo se i v případech, kdy by již bylo možné použít následující element.
+že toto speciální pravidlo bylo \enquote{příliš agresivní} a aktivovalo se i~v~případech, kdy by již bylo možné použít následující element.
 
 Z tohoto důvody byla do systému implementována druhá strategie, která se běžně označuje jako \emph{lazy matching}.
 Zatímco \emph{greedy} matching se v každém okamžiku snaží posunout parsování co nejdále, tato \emph{lazy} strategie se naopak snaží použít element co nejméněkrát.
@@ -656,7 +656,7 @@ Derivační strom tohoto příkladu je zakreslen na Obrázku~\ref{fig:parsing_tr
 \end{figure}
 Z derivačního stromu na Obrázku~\ref{fig:parsing_tree_lazy} je možné usoudit, že následující sémantická analýza by pravděpodobně detekovala,
 že v textu se nacházela informace o hnědém psovi - to je správně.
-Nicméně je dále možné pozorovat, že v textu se vyskytovala také informace o oranžové veverce, kterou by systém nedokázal takto zachytit.
+Nicméně je dále možné pozorovat, že v textu se vyskytovala také informace o~oranžové veverce, kterou by systém nedokázal takto zachytit.
 
 Z toho důvodu byl implementována ještě třetí strategie, která byla označena jako \enquote{\emph{thorough matching}}.
 Myšlenka byla taková, že by bylo vhodné, aby algoritmus v místě nejednoznačnosti nemusel rozhodovat o tom,
@@ -681,7 +681,7 @@ a SPGF pravidlem:
 	\texttt{public \$has\_color = \$GARBAGE<*> \$color \$GARBAGE<*> \$animal;}
 \end{center}
 by výstupem byly 3 derivační stromy.
-Dva z nich by byly shodné s výstupem \emph{greedy} a \emph{lazy} strategie (viz Obrázky~\ref{fig:parsing_tree_greedy} a~\ref{fig:parsing_tree_lazy}),
+Dva z nich by byly shodné s výstupem \emph{greedy} a~\emph{lazy} strategie (viz Obrázky~\ref{fig:parsing_tree_greedy} a~\ref{fig:parsing_tree_lazy}),
 třetí (nový) derivační strom je na Obrázku~\ref{fig:parsing_tree_thorough}.
 
 \begin{figure}[ht!]
@@ -724,7 +724,7 @@ Tímto způsobem je pak v testovaném popisu pouze podmnožina referenčního po
 Jedná se o jednoduchý a efektivní způsob řešení falešně detekovaných sémantických informací.
 Také ale bohužel představuje omezení v tom smyslu, že neumožňuje detekovat sémantiku, která se v textu skutečně nacházela,
 ale nebyla zanesena do referenčního popisu - to klade očekávání na kvalitu referenčního popisu od experta.
-Sestavení nějakého složitějšího algoritmu pro detekci falešně extrahované sémantiky představuje jedno z možných rozšíření do budoucna.
+Sestavení nějakého složitějšího algoritmu pro detekci falešně extrahované sémantiky představuje jedno z~možných rozšíření do budoucna.
 
 Další nevýhodou \emph{thorough} strategie je její výpočetní náročnost.
 Vzhledem k rekurzivnímu charakteru algoritmu a způsobu vytváření nových paralelních větví

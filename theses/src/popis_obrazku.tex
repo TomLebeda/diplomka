@@ -37,7 +37,7 @@ Jedná se o jednu z mnoha problematik, které se obecně v úlohách počítačo
 
 	\item \textbf{Segmentace instancí}\\
 	      Tento typ úlohy představuje kombinaci předchozích typů úloh.
-	      Princip spočívá v tom, že v obrázku jsou označené pixely odpovídající nějakému hledanému objektu stejně jako při
+	      Princip spočívá v~tom, že v obrázku jsou označené pixely odpovídající nějakému hledanému objektu stejně jako při
 	      sémantické segmentaci, ovšem s tím rozdílem, že není nutné takto označit každý pixel v obrázku a naopak je
 	      dbáno na rozlišení jednotlivých instancí daných objektů.
 
@@ -52,8 +52,7 @@ Nejedná se však přímo o hluboké či komplexní sémantické znalosti, spí�
 
 V současnosti jsou obrazová data zpracovávána převážně pomocí velkých neuronových sítí.
 Díky pokrokům ve výpočetní síle a dostupnosti datových sad jsou tyto modely stále sofistikovanější a schopné řešit složitější úkoly.
-Součástí tohoto pokroku je také schopnost modelů analyzovat obrazová data a v kombinaci se zpracováním přirozené řeči i
-odpovídat na otázky týkající se komplexnější sémantiky.
+Součástí tohoto pokroku je také schopnost modelů analyzovat obrazová data a v kombinaci se zpracováním přirozené řeči i~odpovídat na otázky týkající se komplexnější sémantiky.
 {\footnotesize\color{red} [přidat zdroj, třeba na ten nový GPT-4o, kde je ukázka? Tady nemám přímo nic faktického, tak by to mohlo stačit? Tenhle odstavec je hlavně pro nějaké \enquote{napojení} popisu obrázků na sémantiku]}
 
 \newpage
@@ -70,7 +69,7 @@ přiřazené značky reprezentující obecné, předem určené, koncepty, jako 
 % Takto anotované obrázky je pak možné rozdělit do předem definovaných kategorií.
 Další část architektury, kterou Sarwar et al.~\cite{SARWAR2013285} prezentuje, slouží k transformování uživatelského vstupu (dotazu)
 do několika předem definovaných forem využívajících RDF triplety.
-Poslední fází zpracování je pak využití doménové ontologie pro určení sémantické podobnosti dotazu a dostupných anotovaných obrázků,
+Poslední fází zpracování je pak využití doménové ontologie pro určení sémantické podobnosti dotazu a~dostupných anotovaných obrázků,
 ze kterého plyne výběr výstupního obrázku odpovídající vstupnímu dotazu.
 
 Další příbuznou problematikou je automatická tvorba sémantických popisků k obrázkům, kterou
@@ -82,12 +81,12 @@ ze SIFT deskriptorů na textové anotace, ze kterých jsou získané sémantick�
 Výsledky, které Meiyu et al.~\cite{img_semantic_descr_annotation} prezentuje, pak zobrazují obrázek,
 k němuž jsou automaticky doplněné anotace objektů a konceptů, které se na něm vyskytují.
 
-Doposud popisované problémy a jejich řešení využívají převážně neuronových sítí a statistických metod,
+Doposud popisované problémy a jejich řešení využívají převážně neuronových sítí a~statistických metod,
 jejichž základním předpokladem je dostatečný počet a kvalita trénovacích dat.
 
 Vzhledem k motivaci této práce, kterou je hodnocení kvality popisu daného obrázku na sémantické úrovni pro
 usnadnění detekce kognitivních poruch, byl zvolen expertní přístup se zaměřením na
-kvalitativní analýzu výsledků, průhlednost celého procesu s možností detailních úprav a reprodukovatelnost.
+kvalitativní analýzu výsledků, průhlednost celého procesu s~možností detailních úprav a reprodukovatelnost.
 
 
 % Zde navržený a implementovaný systém se zaměřuje na hodnocení kvality popisu obrázku v přirozené řeči, 

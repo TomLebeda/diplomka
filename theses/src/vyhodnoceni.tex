@@ -5,7 +5,7 @@ K tomu bylo potřeba získat vhodná data, konkrétně obrázek a k němu přiro
 Tato data byla získána z projektu \projekt.
 
 Popisovanou scénou byla kresba zobrazená na Obrázku~\ref{fig:summer}.
-K tomuto obrázku bylo k dispozici několik přepisů, které byly použité pro účely testování.
+K tomuto obrázku bylo k~dispozici několik přepisů, které byly použité pro účely testování.
 
 Referenční popis daného obrázku, stejně jako SPGF gramatika a ztrátová tabulka,
 byly vytvořené autorem této práce a nikoli expertem z oboru, odkud pocházejí nasbíraná data.
@@ -27,7 +27,7 @@ algoritmus pro odstranění falešných detekcí funguje správně.
 \input{src/table_results_detail.tex}
 
 V Tabulce~\ref{tab:exmple_extracts} lze dále pozorovat, že nejpočetnější kategorií ve větách jsou objekty, jejichž zachycení je nejjednodušší a především jich věty také obsahují nejvíce.
-Dále lze pozorovat, že detekovaný objekt \emph{swimsuit \#1} ve čtvrté větě má u sebe přiřazené číslování (v popise se vyskytují dvoje plavky, jedny červené na dívce v pozadí
+Dále lze pozorovat, že detekovaný objekt \emph{swimsuit \#1} ve čtvrté větě má u sebe přiřazené číslování (v~popise se vyskytují dvoje plavky, jedny červené na dívce v pozadí
 a jedny bílé na ženě na lehátku).
 To je významné z toho důvodu, že to značí schopnost systému rozlišit objekty stejného typu, jak bylo popsáno v sekci~\ref{subsubsec:cislovani_objektu}.
 
@@ -37,7 +37,7 @@ Oba tyto faktory jsou zcela závislé na expertovi, který vytváří jak refere
 To může představovat problém ve smyslu vysokých počátečních nákladů, protože tvorba referenčního popisu a SPGF gramatiky
 vyžaduje znalost zde navrženého formátu a může být pro lidského experta časově náročná.
 Naopak výhodou zvoleného přístupu je ale možnost upravovat a vylepšovat jak referenční popis, tak SPGF gramatiku i v budoucnu,
-protože oba tyto vstupy jsou navržené tak, aby byly čitelné člověkem a bylo možné je v případě potřeby kdykoli upravit.
+protože oba tyto vstupy jsou navržené tak, aby byly čitelné člověkem a bylo možné je v~případě potřeby kdykoli upravit.
 
 Dále tento expertní přístup a manuální správa vstupních dat umožňuje přesnou kontrolu, na rozdíl od jiných přístupů, například neuronových sítí, jejichž funkce je spíše black-box a
 potřeba provést detailní změny nebo přímo kontrolovat některé aspekty procesu jsou velmi obtížné.
@@ -68,7 +68,7 @@ I přes tyto komplikace je ale možné učinit několik pozorování:
 \begin{enumerate}
 	\item Popisy č.~4 a 5, které jsou ve své celkové délce výrazně kratší a používají velmi strohé nerozvité věty, mají vyšší ztrátu pro chybějící vazby (triplety).
 	      To odpovídá tomu, že v těchto popisech je většina obsahu pouze vyjmenovávání objektů z obrázku a téměř žádná pozornost není věnována
-	      jejich vzájemným vazbám a vztahům mezi nimi.
+	      jejich vzájemným vazbám a~vztahům mezi nimi.
 	\item Dalším znatelným rozdílem ve výstupních hodnotách, který je možné sledovat, je značný rozdíl ztráty pro chybějící objekty s tagem \enquote{\emph{person}}.
 	      To odpovídá faktu, že zmínky osob se v jednotlivých popisech skutečně výrazně liší, konkrétně pak popisy 4 a 5 zmiňují omezené množství osob z obrázku ve srovnání s prvními třemi popisy.
 	\item Obdobně je možné v Tabulce~\ref{tab:out_values} pozorovat, že přepisy č.~1 a 5 mají relativně vysoké ztráty pro objekty s chybějícím tagem \enquote{\emph{animal}}.

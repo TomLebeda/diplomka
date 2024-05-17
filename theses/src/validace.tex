@@ -26,8 +26,8 @@ Tuto ztrátovou tabulku také sestavuje expert, společně s referenčním popis
 Výstupem hodnotícího algoritmu je pak množina označených číselných hodnot, které reprezentují celkové ztráty pro různé druhy chyb.
 
 \subsubsection{Chybějící objekty}
-Pokud byl v referenčním popisu expertem označený nějaký objekt,
-který chybí v testovaném popise, předpokládá se, že expert považoval daný objekt za důležitý a uživatel jej nezmínil.
+Pokud byl v~referenčním popisu expertem označený nějaký objekt,
+který chybí v~testovaném popise, předpokládá se, že expert považoval daný objekt za důležitý a uživatel jej nezmínil.
 
 Uživatel si třeba nemusel objektu všimnout, nebo jej nepovažoval za dostatečně důležitý.
 V obou případech se však jedná o nějaký rozpor se vzorovým popisem, který je třeba penalizovat.
@@ -188,8 +188,8 @@ jak vyjádřit důležitost objektů.
 
 \newpage
 \subsubsection{Chybějící atributy}
-Pokud expert popsal na daném objektu nějakou vlastnost a odpovídající atribut chybí v testovaném popise,
-je zde stejný předpoklad jako u chybějících objektů, a také se jedná o chybu, která způsobí navýšení ztrátové hodnoty.
+Pokud expert popsal na daném objektu nějakou vlastnost a odpovídající atribut chybí v~testovaném popise,
+je zde stejný předpoklad jako u~chybějících objektů, a~také se jedná o chybu, která způsobí navýšení ztrátové hodnoty.
 
 Způsob hodnocení je obdobný jako pro chybějící objekty, pouze s tím rozdílem, že atributům nejsou přiřazovány žádné tagy.
 Tagy u objektů sloužily k detailnějšímu určení důležitosti objektu a později ke sčítání ztrátových hodnot,
@@ -198,7 +198,7 @@ v případě atributů tuto funkci zastává samotný název atributu.
 Například pokud by byl libovolný chybějící atributu penalizován ztrátou $1.0$, pak by bylo možné
 specifikovat, že vynechání atributu \emph{\enquote{barva}} je méně závažné než všechny ostatní a penalizovat pouze ztrátou $0.5$.
 Naopak vynechání atributu \emph{\enquote{výraz v obličeji}} (např.~úsměv nebo zamračení) by mohl být považován za důležitý a expert by
-mohl ve ztrátové tabulce definovat, že jeho vynechání bude penalizováno ztrátou $2.0$.
+mohl ve~ztrátové tabulce definovat, že jeho vynechání bude penalizováno ztrátou $2.0$.
 
 Jednoduchý příklad je znázorněn na Obrázku~\ref{fig:example_missing_attrs}.
 
@@ -356,7 +356,7 @@ Příkladem takové neshody by mohlo být:
 pak je možné předpokládat, že uživatel udělal při popisu chybu a řekl špatnou barvu.
 
 Způsob počítání ztrátové hodnoty z těchto chybných hodnot je v principu stejný jako u chybějících objektů a atributů.
-Expert ve ztrátové tabulce definuje výchozí hodnotu a k tomu případně specifické případy, kdy je tato ztrátová hodnota jiná.
+Expert ve ztrátové tabulce definuje výchozí hodnotu a~k~tomu případně specifické případy, kdy je tato ztrátová hodnota jiná.
 
 % Expert ve ztrátové tabulce definuje, jaká je výchozí ztráta pro chybně určenou hodnotu atributu a případně jaké konkrétní situace tuto hodnotu přepisují na jinou.
 Rozdíl oproti předchozím výpočtům ovšem spočívá v tom, že různé hodnoty si mohou být různě blízko.
