@@ -1,7 +1,7 @@
 \section{Závěr}
 % NOTE: co bylo cílem
 Cílem této práce bylo navrhnout a implementovat systém pro hodnocení míry korespondence mezi
-obrázkem a jeho popisem v přirozeném řeči.
+obrázkem a jeho popisem v přirozené řeči.
 Motivací pro takovýto systém bylo jeho využití pro usnadnění diagnostických testů pro detekci kognitivních poruch.
 Zvolené řešení bylo založeno na expertním přístupu, který byl pro toto použití shledán vhodným.
 
@@ -17,6 +17,8 @@ Výsledná architektura celého systému se skládá z referenčního popisu obr
 který porovná referenční popis se získanou sémantikou a na základě ztrátové tabulky vygeneruje
 vektor hodnot, které reprezentují míru sémantické shody mezi vzorovým a testovaným popisem.
 Tento výstupní vektor je pak možné použít jako výchozí bod pro další zpracování, například jako vektor příznaků pro klasifikační metody.
+Je vhodné zdůraznit, že realizovaný způsob hodnocení umožňuje pracovat s různými úrovněmi detailu, od více obecných, až po velmi detailní.
+Tato přizpůsobitelná granularita výstupu umožňuje precizní nastavení pro konkrétní potřeby využití v reálném nasazení.
 
 % NOTE: popis procesu, výhody a nevýhody jednotlivých částí
 % Celkový návrh systému je založený na expertním přístupu k řešení dané problematiky.
@@ -24,6 +26,7 @@ Od lidského experta v daném oboru je vyžadováno, aby vybral obrázek a sesta
 jak by měl vypadat ideální popis vybraného obrázku.
 Dále je nutné vytvořit gramatiku pro sémantické zpracování řeči a nakonec je na expertovi, aby vytvořil podle referenčního popisu
 ztrátovou tabulku, pomocí které specifikuje závažnost různých druhů chyb v popisu.
+Referenční popis i ztrátová tabulka mají podobu JSON souborů s určitým formátem, což představuje dobrý kompromis mezi čitelností člověkem a strojovou zpracovatelností.
 
 % NOTE: jaké jsou omezení a nevýhody
 Tento expertní přístup s sebou přináší omezení ve smyslu vysokých počátečních nákladů a náročné přípravy,
@@ -46,9 +49,8 @@ která vedla k tomu, že vytvořený referenční popis obrázku a ztrátovou ta
 To však ve výsledku nepředstavovalo výrazný problém, jelikož účelem práce bylo navrhnout systém pro výše popsaný účel,
 na jehož otestování ilustrační vstupní data postačovala.
 
-
 % NOTE: jak dopadly výsledky
-Výsledky prezentované v kapitole~\ref{sec:vyhodnoceni} ukazují, že navržený systém je schopen extrahovat z přirozeného
+Výsledky prezentované v kapitole~\ref{sec:vyhodnoceni} ukazují, že navržený systém je schopen extrahovat z~přirozeného
 textu požadované sémantické informace, za předpokladu dobře navrženého referenčního popisu a především kvalitně sestavených gramatik.
 Vzhledem k již popsaným problémům s absencí expertem poskytnutých dat bylo vyhodnocení porovnávacího a hodnotícího algoritmu
 obtížnější, avšak dosažené výsledky nasvědčují tomu, že skutečně méně kvalitním popisům obrázku odpovídají vyšší hodnoty
