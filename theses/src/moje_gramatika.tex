@@ -449,9 +449,9 @@ Dále je možné pozorovat, že tagy jsou přiřazené pouze k nejbližšímu p�
 	\begin{tikzpicture}[inner sep=2pt]
 		\node (pes) at (0, 0) {\strut\emph{pes}};
 		\node (spí) at (2.2, 0) {\strut\emph{spí}};
-		\node (zvíře) at (0, 2.5) {\texttt{\$zvíře}};
-		\node (činnost) at (2.2, 2.5) {\texttt{\$činnost}};
-		\node (věta) at (1.1, 4) {\texttt{\$věta}};
+		\node (zvíře) at (0, 1.7) {\texttt{\$zvíře}};
+		\node (činnost) at (2.2, 1.7) {\texttt{\$činnost}};
+		\node (věta) at (1.1, 3.2) {\texttt{\$věta}};
 		\draw[->] (pes.north) --
 		node[pos=0.35, green!60!black,fill=white] {\scriptsize \texttt{nohy=4}}
 		node[pos=0.65, green!60!black,fill=white] {\scriptsize \texttt{savec}}
@@ -464,9 +464,9 @@ Dále je možné pozorovat, že tagy jsou přiřazené pouze k nejbližšímu p�
 	\begin{tikzpicture}[inner sep=2pt]
 		\node (kapr) at (0, 0) {\strut\emph{kapr}};
 		\node (plave) at (2.2, 0) {\strut\emph{plave}};
-		\node (zvíře) at (0, 2.5) {\texttt{\$zvíře}};
-		\node (činnost) at (2.2, 2.5) {\texttt{\$činnost}};
-		\node (věta) at (1.1, 4) {\texttt{\$věta}};
+		\node (zvíře) at (0, 1.7) {\texttt{\$zvíře}};
+		\node (činnost) at (2.2, 1.7) {\texttt{\$činnost}};
+		\node (věta) at (1.1, 3.2) {\texttt{\$věta}};
 		\draw[->] (kapr.north) --
 		node[pos=0.35, green!60!black,fill=white] {\scriptsize \texttt{nohy=0}}
 		node[pos=0.65, green!60!black,fill=white] {\scriptsize \texttt{ryba}}
@@ -479,9 +479,9 @@ Dále je možné pozorovat, že tagy jsou přiřazené pouze k nejbližšímu p�
 	\begin{tikzpicture}[inner sep=2pt]
 		\node (delfín) at (0, 0) {\strut\emph{delfín}};
 		\node (plave) at (2.2, 0) {\strut\emph{plave}};
-		\node (zvíře) at (0, 2.5) {\texttt{\$zvíře}};
-		\node (činnost) at (2.2, 2.5) {\texttt{\$činnost}};
-		\node (věta) at (1.1, 4) {\texttt{\$věta}};
+		\node (zvíře) at (0, 1.7) {\texttt{\$zvíře}};
+		\node (činnost) at (2.2, 1.7) {\texttt{\$činnost}};
+		\node (věta) at (1.1, 3.2) {\texttt{\$věta}};
 		\draw[->] (delfín.north) --
 		node[pos=0.35, green!60!black,fill=white] {\scriptsize \texttt{nohy=0}}
 		node[pos=0.65, green!60!black,fill=white] {\scriptsize \texttt{savec}}
@@ -493,6 +493,7 @@ Dále je možné pozorovat, že tagy jsou přiřazené pouze k nejbližšímu p�
 	\caption{Derivační stromy s tagy}\label{fig:derivacni_stromy_tagy}
 \end{figure}
 
+\newpage
 Syntaxe SPGF je na Výpise~\ref{lst:spgf_syntax}, detaily implementace je možné
 prozkoumat ve zdrojových kódech.
 \input{src/listings/spgf_syntax.tex}

@@ -14,7 +14,7 @@
 % \usepackage[left=30mm,right=30mm,top=35mm,bottom=40mm]{geometry} % nastavuje okraje stranky
 \usepackage{float}
 \usepackage{multirow}
-\usepackage{longtable}
+% \usepackage{longtable}
 \usepackage{pdfpages}
 \usetikzlibrary{decorations.pathreplacing, calligraphy}
 \usepackage{hyperref}
@@ -23,6 +23,7 @@
 	{\color{red}\textsuperscript{\tiny \texttt{TODO}}\footnotemark\footnotetext{\scriptsize{}#1}}
 }
 \renewcommand\lstlistingname{Výpis}
+\renewcommand\lstlistlistingname{Seznam výpisů}
 
 \begin{document}
 \def\projekt{TAČR SIGMA\_DC3 \enquote{\emph{Telemedicínské samovyšetření řeči a paměti pro rychlou detekci kognitivních poruch metodami strojového učení}}}
@@ -53,5 +54,14 @@
 
 \clearpage
 \printbibliography[title=Zdroje a použitá literatura]
+\addcontentsline{toc}{section}{Zdroje a použitá literatura}
+\newpage
+\listoffigures
+\addcontentsline{toc}{section}{Seznam obrázků}
+\newpage
+\listoftables
+\addcontentsline{toc}{section}{Seznam tabulek}
+\lstlistoflistings
+\addcontentsline{toc}{section}{Seznam výpisů}
 
 \end{document}
