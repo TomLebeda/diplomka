@@ -13,8 +13,8 @@ za případné vhodnější alternativy pro konkrétní aplikace v různých obl
 
 % NOTE: jak dopadla architektura
 Výsledná architektura celého systému se skládá z referenčního popisu obrázku, subsystému pro zpracování přirozené
-řeči a extrakce sémantické informace, která je v ní obsažena, a hodnotícího algoritmu,
-který porovná referenční popis se získanou sémantikou a na základě ztrátové tabulky vygeneruje
+řeči a extrakce sémantické informace, která je v ní obsažena, a hodnotícího algoritmu.
+Hodnotící algoritmus porovná referenční popis se získanou sémantikou a na základě ztrátové tabulky vygeneruje
 vektor hodnot, které reprezentují míru sémantické shody mezi vzorovým a testovaným popisem.
 Tento výstupní vektor je pak možné použít jako výchozí bod pro další zpracování, například jako vektor příznaků pro klasifikační metody.
 Je vhodné zdůraznit, že realizovaný způsob hodnocení umožňuje pracovat s různými úrovněmi detailu, od více obecných, až po velmi detailní.
@@ -26,7 +26,8 @@ Od lidského experta v daném oboru je vyžadováno, aby vybral obrázek a sesta
 jak by měl vypadat ideální popis vybraného obrázku.
 Dále je nutné vytvořit gramatiku pro sémantické zpracování řeči a nakonec je na expertovi, aby vytvořil podle referenčního popisu
 ztrátovou tabulku, pomocí které specifikuje závažnost různých druhů chyb v popisu.
-Referenční popis i ztrátová tabulka mají podobu JSON souborů s určitým formátem, což představuje dobrý kompromis mezi čitelností člověkem a strojovou zpracovatelností.
+Referenční popis i ztrátová tabulka mají podobu JSON souborů s formátem popsaným v předchozích kapitolách.
+Zvolený způsobu zápisu představuje dobrý kompromis mezi čitelností člověkem a strojovou zpracovatelností.
 
 % NOTE: jaké jsou omezení a nevýhody
 Tento expertní přístup s sebou přináší omezení ve smyslu vysokých počátečních nákladů a náročné přípravy,
